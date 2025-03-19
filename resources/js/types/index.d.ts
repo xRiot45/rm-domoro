@@ -11,7 +11,7 @@ export interface BreadcrumbItem {
 }
 
 export interface NavGroup {
-    title: string;
+    group: string;
     items: NavItem[];
 }
 
@@ -20,6 +20,7 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    menu?: NavItem[];
 }
 
 export interface SharedData {

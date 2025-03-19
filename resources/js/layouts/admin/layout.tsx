@@ -1,4 +1,4 @@
-import AdminLayoutTemplate from '@/layouts/admin/layouts/admin-sidebar-layout';
+import HydrogenLayoutTemplate from '@/layouts/admin/layouts/hydrogen-layout/layout';
 import { type BreadcrumbItem } from '@/types';
 import { type ReactNode } from 'react';
 
@@ -8,7 +8,7 @@ interface AppLayoutProps {
 }
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-    <AdminLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+    <HydrogenLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
         {children}
-    </AdminLayoutTemplate>
+    </HydrogenLayoutTemplate>
 );

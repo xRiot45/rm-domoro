@@ -1,6 +1,6 @@
-import AppLogoIcon from './app-logo-icon';
+import AppLogoIcon from './logo-icon';
 
-export default function AppLogo() {
+export default function Logo() {
     return (
         <>
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
