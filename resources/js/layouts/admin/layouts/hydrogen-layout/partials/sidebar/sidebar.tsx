@@ -76,7 +76,7 @@ export function HydrogenSidebar() {
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton asChild size="lg">
                             <Link href="/admin/dashboard" prefetch>
                                 <Logo />
                             </Link>

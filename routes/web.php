@@ -25,6 +25,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'index')->name('admin.roles.index');
             Route::get('/create', 'create')->name('admin.roles.create');
             Route::post('/create', 'store')->name('admin.roles.store');
+            Route::get('/edit/{id}', 'edit')->name('admin.roles.edit');
+            Route::put('/edit/{id}', 'update')->name('admin.roles.update');
+            Route::delete('/delete/{id}', 'destroy')->name('admin.roles.destroy');
         });
 });
 

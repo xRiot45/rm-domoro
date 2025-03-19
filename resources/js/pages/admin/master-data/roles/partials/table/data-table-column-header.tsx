@@ -19,7 +19,7 @@ export function DataTableColumnHeader<TData, TValue>({ column, title, className 
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent -ml-3 h-8">
-                        <span className="text-xs font-bold text-gray-900 dark:text-gray-200">{title}</span>
+                        <span className="text-md font-medium text-gray-900 dark:text-gray-200">{title}</span>
                         {column.getIsSorted() === 'desc' ? (
                             <ArrowDownIcon className="ml-2 h-4 w-4" />
                         ) : column.getIsSorted() === 'asc' ? (

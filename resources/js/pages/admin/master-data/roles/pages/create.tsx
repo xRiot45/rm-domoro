@@ -36,7 +36,7 @@ export default function RoleContainer() {
         post(route('admin.roles.store'), {
             onSuccess: () => {
                 reset('name');
-                toast('Sukses', {
+                toast('Success', {
                     description: 'Role Berhasil Ditambahkan!',
                     action: {
                         label: 'Tutup',
@@ -83,12 +83,12 @@ const RoleView = ({
                 <InputError message={errors.name} />
 
                 <div className="mt-4 flex justify-end space-x-3">
-                    <Link href={route('admin.roles.index')}>
+                    <Link href={route('admin.roles.index')} className="cursor-pointer">
                         <Button variant="destructive">
                             Batalkan <Icon icon="iconoir:cancel" />
                         </Button>
                     </Link>
-                    <Button type="submit" tabIndex={4} disabled={processing}>
+                    <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Tambah Role <Icon icon="heroicons:plus" />
                     </Button>

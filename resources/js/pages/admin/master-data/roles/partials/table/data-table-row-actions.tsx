@@ -1,3 +1,14 @@
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -7,10 +18,30 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Role } from '@/models/role';
 import { Icon } from '@iconify/react';
+import { Link, useForm } from '@inertiajs/react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { Row } from '@tanstack/react-table';
+import { toast } from 'sonner';
 
-export function DataTableRowActions() {
+export function DataTableRowActions({ row }: { row: Row<Role> }) {
+    const { delete: destroy } = useForm();
+
+    const handleDelete = (id: number) => {
+        destroy(route('admin.roles.destroy', { id }), {
+            onSuccess: () => {
+                toast('Success', {
+                    description: 'Role Berhasil Dihapus!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+            },
+        });
+    };
+
     return (
         <>
             <DropdownMenu>
@@ -21,19 +52,37 @@ export function DataTableRowActions() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem>
-                        Edit
-                        <DropdownMenuShortcut>
-                            <Icon icon={'material-symbols:edit'} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    <Link href={route('admin.roles.edit', { id: row.original.id })} className="cursor-po">
+                        <DropdownMenuItem className="cursor-pointer">
+                            Edit Data
+                            <DropdownMenuShortcut>
+                                <Icon icon={'material-symbols:edit'} />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="!text-red-500">
-                        Delete
-                        <DropdownMenuShortcut>
-                            <Icon icon={'material-symbols:delete'} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <DropdownMenuItem className="cursor-pointer !text-red-500" onSelect={(e) => e.preventDefault()}>
+                                Hapus Data
+                                <DropdownMenuShortcut>
+                                    <Icon icon={'material-symbols:delete'} className="!text-red-500" />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Hapus Data</AlertDialogTitle>
+                                <AlertDialogDescription>Apakah Kamu Yakin Ingin Menghapus Data ini?</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(row.original.id)} className="cursor-pointer bg-red-600 transition-all">
+                                    Hapus
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
