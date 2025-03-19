@@ -1,25 +1,26 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 
 type RegisterForm = {
-    name: string;
+    full_name: string;
     email: string;
+    phone_number: string;
     password: string;
     password_confirmation: string;
 };
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        name: '',
+        full_name: '',
         email: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
     });
@@ -37,24 +38,24 @@ export default function Register() {
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="full_name">Nama Lengkap</Label>
                         <Input
-                            id="name"
+                            id="full_name"
                             type="text"
                             required
                             autoFocus
                             tabIndex={1}
-                            autoComplete="name"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            autoComplete="full_name"
+                            value={data.full_name}
+                            onChange={(e) => setData('full_name', e.target.value)}
                             disabled={processing}
-                            placeholder="Full name"
+                            placeholder="Masukkan nama lengkap anda"
                         />
-                        <InputError message={errors.name} className="mt-2" />
+                        <InputError message={errors.full_name} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email">Alamat Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -67,6 +68,22 @@ export default function Register() {
                             placeholder="email@example.com"
                         />
                         <InputError message={errors.email} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="phone_number">Nomor Telepon</Label>
+                        <Input
+                            id="phone_number"
+                            type="number"
+                            required
+                            tabIndex={2}
+                            autoComplete="phone_number"
+                            value={data.phone_number}
+                            onChange={(e) => setData('phone_number', e.target.value)}
+                            disabled={processing}
+                            placeholder="Masukkan nomor telepon anda"
+                        />
+                        <InputError message={errors.phone_number} />
                     </div>
 
                     <div className="grid gap-2">
@@ -86,7 +103,7 @@ export default function Register() {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
+                        <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -103,12 +120,12 @@ export default function Register() {
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
+                        Register
                     </Button>
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    Already have an account?{' '}
+                    Sudah memiliki akun?{' '}
                     <TextLink href={route('login')} tabIndex={6}>
                         Log in
                     </TextLink>
