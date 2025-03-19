@@ -1,35 +1,41 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AdminLayout from '@/layouts/admin/layout';
+import { Role } from '@/models/role';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import ButtonPartials from './partials/buttons';
+import Table from './partials/table';
+import { columns } from './partials/table/columns';
+
+interface RolePageProps {
+    data: Role[];
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
+        title: 'Master Data',
+        href: '#',
+    },
+    {
+        title: 'Roles',
+        href: '/admin/master-data/roles',
     },
 ];
 
-export default function RolesPage() {
+export default function RolePage({ data }: RolePageProps) {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
                 <Head title="Roles" />
-                <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
+                <div className="mb-2 flex flex-wrap justify-between space-y-2 p-4">
+                    <div>
+                        <h2 className="text-2xl font-black tracking-tight text-gray-700 dark:text-gray-200">Daftar Role</h2>
+                        <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola role untuk mengatur hak akses user</p>
                     </div>
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+                    <ButtonPartials />
+                </div>
+
+                <div className="p-4">
+                    <Table data={data} columns={columns} />
                 </div>
             </AdminLayout>
         </>

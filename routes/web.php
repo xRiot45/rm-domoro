@@ -19,7 +19,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
     // Roles
-    Route::get('/admin/master-data/roles', [RoleController::class, 'index'])->name('role.index');
+    Route::prefix('/admin/master-data/roles')
+        ->controller(RoleController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('admin.roles.index');
+            Route::get('/create', 'create')->name('admin.roles.create');
+            Route::post('/create', 'store')->name('admin.roles.store');
+        });
 });
 
 
