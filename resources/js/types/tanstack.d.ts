@@ -1,5 +1,3 @@
-
-
 export interface DataTableProps<T> {
     columns: ColumnDef<T>[];
     data: T[];
