@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,17 +19,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
-    // Roles
-    Route::prefix('/admin/manajemen-kontrol-akses/roles')
-        ->controller(RoleController::class)
+    Route::prefix('/admin/manajemen-kontrol-akses')
         ->group(function () {
-            Route::get('/', 'index')->name('admin.roles.index');
-            Route::get('/create', 'create')->name('admin.roles.create');
-            Route::post('/create', 'store')->name('admin.roles.store');
-            Route::get('/edit/{id}', 'edit')->name('admin.roles.edit');
-            Route::put('/edit/{id}', 'update')->name('admin.roles.update');
-            Route::delete('/delete/{id}', 'destroy')->name('admin.roles.destroy');
-            Route::delete('/delete-all', 'destroy_all')->name('admin.roles.destroy_all');
+            // Roles
+            Route::prefix('/roles')
+                ->controller(RoleController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('admin.roles.index');
+                    Route::get('/create', 'create')->name('admin.roles.create');
+                    Route::post('/create', 'store')->name('admin.roles.store');
+                    Route::get('/edit/{id}', 'edit')->name('admin.roles.edit');
+                    Route::put('/edit/{id}', 'update')->name('admin.roles.update');
+                    Route::delete('/delete/{id}', 'destroy')->name('admin.roles.destroy');
+                    Route::delete('/delete-all', 'destroy_all')->name('admin.roles.destroy_all');
+                });
+
+            // Permissions
+            Route::prefix('/permissions')
+                ->controller(PermissionController::class)
+                ->group(function () {
+                    Route::get('/', 'index')->name('admin.permissions.index');
+                    Route::get('/create', 'create')->name('admin.permissions.create');
+                    Route::post('/create', 'store')->name('admin.permissions.store');
+                    Route::get('/edit/{id}', 'edit')->name('admin.permissions.edit');
+                    Route::put('/edit/{id}', 'update')->name('admin.permissions.update');
+                    Route::delete('/delete/{id}', 'destroy')->name('admin.permissions.destroy');
+                    Route::delete('/delete-all', 'destroy_all')->name('admin.permissions.destroy_all');
+                });
         });
 });
 
