@@ -14,20 +14,20 @@ import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Master Data',
+        title: 'Manajemen Kontrol Akses',
         href: '#',
     },
     {
-        title: 'Roles',
-        href: '/admin/master-data/roles',
+        title: 'Roles / Peran',
+        href: '/admin/manajemen-kontrol-akses/roles',
     },
     {
-        title: 'Tambah Role',
-        href: '/admin/master-data/roles/create',
+        title: 'Tambah Role / Peran',
+        href: '/admin/manajemen-kontrol-akses/roles/create',
     },
 ];
 
-export default function RoleContainer() {
+export default function CreatePage() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RoleForm>>({
         name: '',
     });
@@ -48,27 +48,11 @@ export default function RoleContainer() {
         });
     };
 
-    return <RoleView data={data} setData={setData} processing={processing} errors={errors} submit={submit} />;
-}
-
-const RoleView = ({
-    data,
-    setData,
-    processing,
-    errors,
-    submit,
-}: {
-    data: RoleForm;
-    setData: (key: keyof RoleForm, value: string) => void;
-    processing: boolean;
-    errors: Record<string, string>;
-    submit: FormEventHandler<HTMLFormElement>;
-}) => {
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Role" />
             <form onSubmit={submit} className="p-4">
-                <Label htmlFor="name">Nama Role</Label>
+                <Label htmlFor="name">Nama Role / Peran</Label>
                 <Input
                     id="name"
                     type="text"
@@ -77,7 +61,7 @@ const RoleView = ({
                     autoComplete="name"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
-                    placeholder="Masukkan nama role"
+                    placeholder="Masukkan nama role / peran"
                     className={cn('mt-2', errors.name && 'border border-red-500')}
                 />
                 <InputError message={errors.name} className="mt-2" />
@@ -96,4 +80,4 @@ const RoleView = ({
             </form>
         </AdminLayout>
     );
-};
+}
