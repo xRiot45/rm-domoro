@@ -3,7 +3,7 @@ import { Role } from '@/models/role';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import ButtonPartials from './partials/buttons';
-import Table from './partials/table';
+import RoleTable from './partials/table';
 import { columns } from './partials/table/columns';
 
 interface RolePageProps {
@@ -35,7 +35,7 @@ export default function RolePage({ data }: RolePageProps) {
                 </div>
 
                 <div className="p-4">
-                    <Table data={data} columns={columns} />
+                    <RoleTable data={data} columns={columns} />
                 </div>
             </AdminLayout>
         </>
