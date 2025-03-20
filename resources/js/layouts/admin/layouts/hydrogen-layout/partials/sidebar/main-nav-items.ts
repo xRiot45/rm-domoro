@@ -24,6 +24,11 @@ const mainNavItems: NavGroup[] = [
                 href: '/admin/manajemen-kontrol-akses/permissions',
                 icon: 'material-symbols:security',
             },
+            {
+                title: 'Kelola Izin Peran',
+                href: '/admin/manajemen-kontrol-akses/manage-role-permissions',
+                icon: 'material-symbols:manage-accounts-outline-rounded',
+            },
         ],
     },
 ];

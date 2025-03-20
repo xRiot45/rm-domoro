@@ -1,16 +1,15 @@
 import { NavItem } from '@/types';
-import { BookOpen, Folder } from 'lucide-react';
 
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
         href: '#',
-        icon: Folder,
+        icon: 'simple-icons:github',
     },
     {
         title: 'Documentation',
         href: '#',
-        icon: BookOpen,
+        icon: 'material-symbols:help-outline-rounded',
     },
 ];
 
