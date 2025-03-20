@@ -1,5 +1,4 @@
 import { NavGroup } from '@/types';
-import { DatabaseIcon, LayoutGrid } from 'lucide-react';
 
 const mainNavItems: NavGroup[] = [
     {
@@ -8,22 +7,22 @@ const mainNavItems: NavGroup[] = [
             {
                 title: 'Dashboard',
                 href: '/admin/dashboard',
-                icon: LayoutGrid,
+                icon: 'material-symbols:dashboard',
+            },
+        ],
+    },
+    {
+        group: 'Manajemen Kontrol Akses',
+        items: [
+            {
+                title: 'Roles / Peran',
+                href: '/admin/manajemen-kontrol-akses/roles',
+                icon: 'eos-icons:role-binding',
             },
             {
-                title: 'Master Data',
-                href: '#',
-                icon: DatabaseIcon,
-                menu: [
-                    {
-                        title: 'Users',
-                        href: '/admin/master-data/users',
-                    },
-                    {
-                        title: 'Roles',
-                        href: '/admin/master-data/roles',
-                    },
-                ],
+                title: 'Permissions / Izin',
+                href: '/admin/manajemen-kontrol-akses/permissions',
+                icon: 'material-symbols:security',
             },
         ],
     },

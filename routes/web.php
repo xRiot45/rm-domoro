@@ -19,7 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
     // Roles
-    Route::prefix('/admin/master-data/roles')
+    Route::prefix('/admin/manajemen-kontrol-akses/roles')
         ->controller(RoleController::class)
         ->group(function () {
             Route::get('/', 'index')->name('admin.roles.index');

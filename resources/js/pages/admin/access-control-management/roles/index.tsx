@@ -12,12 +12,12 @@ interface RolePageProps {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Master Data',
+        title: 'Manajemen Kontrol Akses',
         href: '#',
     },
     {
         title: 'Roles',
-        href: '/admin/master-data/roles',
+        href: '/admin/manajemen-kontrol-akses/roles',
     },
 ];
 

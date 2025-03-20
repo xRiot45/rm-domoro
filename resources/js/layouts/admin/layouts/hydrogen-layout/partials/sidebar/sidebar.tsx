@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
+import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
@@ -28,7 +29,7 @@ function SidebarGroupContent({ item }: { item: NavItem }) {
             <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="flex w-full items-center justify-between px-4 py-6">
                     <div className="flex min-w-0 items-center gap-x-3 px-3">
-                        {item.icon && <item.icon className="h-5 w-5 flex-shrink-0" />}
+                        <Icon icon={item.icon} />
                         <span className="truncate">{item.title}</span>
                     </div>
                     <ChevronDown className={cn('h-4 w-4 flex-shrink-0 transition-transform', isOpen && 'rotate-180')} />
@@ -59,7 +60,7 @@ function NavMain({ items = [] }: { items: NavItem[] }) {
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild isActive={item.href === page.url} className="px-4 py-6">
                             <Link href={item.href} prefetch className="flex min-w-0 items-center gap-x-3">
-                                {item.icon && <item.icon className="h-5 w-5 flex-shrink-0" />}
+                                <Icon icon={item.icon} />
                                 <span className="truncate">{item.title}</span>
                             </Link>
                         </SidebarMenuButton>
