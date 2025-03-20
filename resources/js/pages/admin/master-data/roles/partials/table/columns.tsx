@@ -38,7 +38,7 @@ export const columns: ColumnDef<Role>[] = [
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">No</span>,
         cell: ({ row }) => <span className="text-sm text-gray-600 dark:text-gray-200">{row.index + 1}</span>,
         meta: {
-            className: cn('sticky w-36'),
+            className: cn('sticky'),
         },
         enableSorting: false,
         enableHiding: false,

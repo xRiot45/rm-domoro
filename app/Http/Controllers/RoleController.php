@@ -62,4 +62,14 @@ class RoleController extends Controller
                 'success' => 'Delete role successfully',
             ]);
     }
+
+    public function destroy_all(): RedirectResponse
+    {
+        Role::query()->delete();
+        return redirect()
+            ->route('admin.roles.index')
+            ->with([
+                'success' => 'Delete all role successfully',
+            ]);
+    }
 }

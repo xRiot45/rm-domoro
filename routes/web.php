@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/edit/{id}', 'edit')->name('admin.roles.edit');
             Route::put('/edit/{id}', 'update')->name('admin.roles.update');
             Route::delete('/delete/{id}', 'destroy')->name('admin.roles.destroy');
+            Route::delete('/delete-all', 'destroy_all')->name('admin.roles.destroy_all');
         });
 });
 

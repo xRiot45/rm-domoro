@@ -20,16 +20,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Role } from '@/models/role';
 import { Icon } from '@iconify/react';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
 
 export function DataTableRowActions({ row }: { row: Row<Role> }) {
-    const { delete: destroy } = useForm();
-
     const handleDelete = (id: number) => {
-        destroy(route('admin.roles.destroy', { id }), {
+        router.delete(route('admin.roles.destroy', { id }), {
             onSuccess: () => {
                 toast('Success', {
                     description: 'Role Berhasil Dihapus!',
