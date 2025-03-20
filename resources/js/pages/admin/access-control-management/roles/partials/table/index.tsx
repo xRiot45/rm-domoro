@@ -50,7 +50,7 @@ export default function RoleTable({ columns, data }: DataTableProps<Role>) {
         <>
             <div className="space-y-4">
                 <DataTableToolbar table={table} />
-                <div className="rounded-md border">
+                <div className="grid grid-cols-1 rounded-md border">
                     <Table>
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
