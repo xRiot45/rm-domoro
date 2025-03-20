@@ -19,7 +19,7 @@ export const columns: ColumnDef<Role>[] = [
             />
         ),
         meta: {
-            className: cn('sticky left-6 w-20'),
+            className: cn('sticky left-6 w-16'),
         },
         cell: ({ row }) => (
             <Checkbox
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Role>[] = [
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">No</span>,
         cell: ({ row }) => <span className="text-sm text-gray-600 dark:text-gray-200">{row.index + 1}</span>,
         meta: {
-            className: cn('sticky'),
+            className: cn('sticky w-36'),
         },
         enableSorting: false,
         enableHiding: false,

@@ -1,12 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { DataTableViewOptionsProps } from '@/types/tanstack';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
-
-interface DataTableViewOptionsProps<TData> {
-    table: Table<TData>;
-}
+import { Column } from '@tanstack/react-table';
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
     return (
@@ -22,19 +19,17 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                 <DropdownMenuSeparator />
                 {table
                     .getAllColumns()
-                    .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
-                    .map((column) => {
-                        return (
-                            <DropdownMenuCheckboxItem
-                                key={column.id}
-                                className="capitalize"
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                            >
-                                {column.id}
-                            </DropdownMenuCheckboxItem>
-                        );
-                    })}
+                    .filter((column: Column<TData>) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
+                    .map((column: Column<TData>) => (
+                        <DropdownMenuCheckboxItem
+                            key={column.id}
+                            className="capitalize"
+                            checked={column.getIsVisible()}
+                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                        >
+                            {column.id}
+                        </DropdownMenuCheckboxItem>
+                    ))}
             </DropdownMenuContent>
         </DropdownMenu>
     );

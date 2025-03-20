@@ -19,4 +19,13 @@ class RoleRequest extends FormRequest
             'name' => 'required|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama role tidak boleh kosong',
+            'name.string' => 'Nama role harus berupa string',
+            'name.max' => 'Nama role tidak boleh lebih dari 255 karakter',
+        ];
+    }
 }

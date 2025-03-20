@@ -1,11 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DataTableToolbarProps } from '@/types/tanstack';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
-
-interface DataTableToolbarProps<TData> {
-    table: Table<TData>;
-}
 
 export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0;

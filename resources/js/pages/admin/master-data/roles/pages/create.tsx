@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AdminLayout from '@/layouts/admin/layout';
+import { cn } from '@/lib/utils';
 import { RoleForm } from '@/models/role';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
@@ -71,16 +72,15 @@ const RoleView = ({
                 <Input
                     id="name"
                     type="text"
-                    required
                     autoFocus
                     tabIndex={1}
                     autoComplete="name"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
                     placeholder="Masukkan nama role"
-                    className="mt-2"
+                    className={cn('mt-2', errors.name && 'border border-red-500')}
                 />
-                <InputError message={errors.name} />
+                <InputError message={errors.name} className="mt-2" />
 
                 <div className="mt-4 flex justify-end space-x-3">
                     <Link href={route('admin.roles.index')} className="cursor-pointer">
@@ -90,7 +90,7 @@ const RoleView = ({
                     </Link>
                     <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Tambah Role <Icon icon="heroicons:plus" />
+                        Tambah Data <Icon icon="heroicons:plus" />
                     </Button>
                 </div>
             </form>

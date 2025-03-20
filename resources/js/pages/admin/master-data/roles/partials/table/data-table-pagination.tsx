@@ -1,15 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DataTablePaginationProps } from '@/types/tanstack';
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
-
-interface DataTablePaginationProps<TData> {
-    table: Table<TData>;
-}
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
     return (
-        <div className="flex items-center justify-between overflow-clip px-2" style={{ overflowClipMargin: 1 }}>
+        <div className="flex items-center justify-center overflow-clip px-2" style={{ overflowClipMargin: 1 }}>
             <div className="text-muted-foreground hidden flex-1 text-sm sm:block">
                 {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
