@@ -55,6 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::get('/', 'index')->name('admin.manage-role-permission.index');
                     Route::get('/create', 'create')->name('admin.manage-role-permission.create');
                     Route::post('/create', 'store')->name('admin.manage-role-permission.store');
+                    Route::get('/edit/{id}', 'edit')->name('admin.manage-role-permission.edit');
+                    Route::put('/edit/{id}', 'update')->name('admin.manage-role-permission.update');
                 });
         });
 });

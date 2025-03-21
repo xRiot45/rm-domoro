@@ -33,4 +33,22 @@ class ManageRolePermissionController extends Controller
             ->route('admin.manage-role-permission.index')
             ->with(['success' => 'Set role permission successfully']);
     }
+
+    public function edit(int $id): Response
+    {
+        $role_has_permissions = Role::with('permissions:id,name')->findOrFail($id);
+        return Inertia::render('admin/access-control-management/manage-role-permissions/pages/edit', [
+            'role_has_permissions' => $role_has_permissions,
+        ]);
+    }
+
+    public function update(ManageRolePermissionRequest $request, int $id): RedirectResponse
+    {
+        $role = Role::findOrFail($id);
+        $permissions = Permission::whereIn('id', $request->permission_id)->pluck(column: 'name')->toArray();
+        $role->syncPermissions($permissions);
+        return redirect()
+            ->route('admin.manage-role-permission.index')
+            ->with(['success' => 'Set role permission successfully']);
+    }
 }

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin/layout';
-import { ManageRolePermissionForm } from '@/models/manage-role-permission';
+import { ManageRolePermission, ManageRolePermissionForm } from '@/models/manage-role-permission';
 import { Permission } from '@/models/permission';
 import { Role } from '@/models/role';
 import { BreadcrumbItem } from '@/types';
@@ -24,26 +24,27 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/admin/manajemen-kontrol-akses/manage-role-permissions',
     },
     {
-        title: 'Tambah Izin Peran',
-        href: '/admin/manajemen-kontrol-akses/manage-role-permissions/create',
+        title: 'Edit Izin Peran',
+        href: '/admin/manajemen-kontrol-akses/manage-role-permissions/edit',
     },
 ];
 
-export default function CreatePage() {
+export default function EditPage({ role_has_permissions }: { role_has_permissions: ManageRolePermission }) {
     const { roles, permissions }: { roles: Role[]; permissions: Permission[] } = usePage<{ roles: Role[]; permissions: Permission[] }>().props;
-    const { data, setData, post, processing, errors, reset } = useForm<Required<ManageRolePermissionForm>>({
-        permission_id: [] as number[],
-        role_id: 0,
+    const { data, setData, put, processing, errors, reset } = useForm<Required<ManageRolePermissionForm>>({
+        permission_id: role_has_permissions.permissions.map((p) => p.id),
+        role_id: role_has_permissions.id,
     });
 
-    const submit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
-        post(route('admin.manage-role-permission.store'), {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        put(route('admin.manage-role-permission.update', { id: role_has_permissions.id }), {
             onSuccess: () => {
                 reset('permission_id');
                 reset('role_id');
-                toast.success('Success', {
-                    description: 'Izin Peran Berhasil Ditambahkan!',
+
+                toast.success('Success!', {
+                    description: 'Izin Peran Berhasil Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -57,12 +58,14 @@ export default function CreatePage() {
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
                 <Head title="Tambah Permission / Izin" />
-                <form onSubmit={submit} className="p-4">
+                <form onSubmit={handleSubmit} className="p-4">
                     <div id="role">
                         <Label htmlFor="name">Role / Peran</Label>
                         <Select onValueChange={(value) => setData('role_id', parseInt(value))}>
-                            <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Role / Peran" />
+                            <SelectTrigger className="pointer-events-none mt-2 w-full disabled:bg-gray-200" disabled>
+                                <SelectValue
+                                    placeholder={roles.find((role: Role) => role.id === role_has_permissions.id)?.name || 'Pilih Role / Peran'}
+                                />
                             </SelectTrigger>
                             <SelectContent>
                                 {roles.map((role: Role) => (
@@ -95,14 +98,14 @@ export default function CreatePage() {
                     </div>
 
                     <div className="mt-4 flex justify-end space-x-3">
-                        <Link href={route('admin.permissions.index')} className="cursor-pointer">
+                        <Link href={route('admin.manage-role-permission.index')} className="cursor-pointer">
                             <Button variant="destructive">
                                 Batalkan <Icon icon="iconoir:cancel" />
                             </Button>
                         </Link>
                         <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Tambah Izin Peran <Icon icon="heroicons:plus" />
+                            Edit Izin Peran <Icon icon="material-symbols:edit" />
                         </Button>
                     </div>
                 </form>

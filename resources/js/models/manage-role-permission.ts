@@ -18,7 +18,7 @@ interface ManageRolePermission {
     permissions: Permission[];
 }
 
-interface ManageRolePermissionForm extends ManageRolePermission {
+interface ManageRolePermissionForm {
     permission_id: number[];
     role_id: number;
 }

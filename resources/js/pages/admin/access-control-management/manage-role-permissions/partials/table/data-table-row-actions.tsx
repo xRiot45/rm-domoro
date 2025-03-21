@@ -17,7 +17,7 @@ export function DataTableRowActions({ row }: { row: Row<ManageRolePermission> })
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={route('admin.permissions.edit', { id: row.original.id })} className="cursor-po">
+                    <Link href={route('admin.manage-role-permission.edit', { id: row.original.id })} className="cursor-po">
                         <DropdownMenuItem className="cursor-pointer">
                             Edit Data
                             <DropdownMenuShortcut>

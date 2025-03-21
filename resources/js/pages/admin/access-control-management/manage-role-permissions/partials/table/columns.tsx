@@ -5,7 +5,7 @@ import { ColumnDef, Row } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 
-export const columns: ColumnDef<Permission>[] = [
+export const columns: ColumnDef<ManageRolePermission>[] = [
     {
         id: 'no',
         accessorKey: 'no',
@@ -29,21 +29,21 @@ export const columns: ColumnDef<Permission>[] = [
         cell: ({ row }) => {
             const permissions: Permission[] = row.getValue('permissions');
             return (
-                <span className="max-w-36">
+                <ul className="max-w-36 list-inside list-disc space-y-1">
                     {permissions?.length ? (
-                        permissions.map((permission, index: number) => (
-                            <span key={permission.id} className="mr-2">
-                                {index > 0 && ','}
+                        permissions.map((permission) => (
+                            <li key={permission.id} className="truncate">
                                 {permission.name}
-                            </span>
+                            </li>
                         ))
                     ) : (
                         <span>-</span>
                     )}
-                </span>
+                </ul>
             );
         },
     },
+
     {
         id: 'created_at',
         accessorKey: 'created_at',
