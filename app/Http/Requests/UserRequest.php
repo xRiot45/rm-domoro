@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
 class UserRequest extends FormRequest
@@ -17,10 +18,24 @@ class UserRequest extends FormRequest
     {
         return [
             'full_name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($this->route('id')),
+            ],
+            'password' => [
+                $this->isMethod('post') ? 'required' : 'nullable',
+                'confirmed',
+                Rules\Password::defaults(),
+            ],
             'phone_number' => 'required|string|min:12|max:255',
-            'roles' => 'required|exists:roles,name',
+            'roles' => [
+                $this->isMethod('post') ? 'required' : 'nullable',
+                'exists:roles,name',
+            ],
         ];
     }
 

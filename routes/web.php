@@ -69,8 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/', 'index_all_users')->name('admin.all-users.index');
                 Route::get('/create', 'create')->name('admin.all-users.create');
                 Route::post('/create', 'store')->name('admin.all-users.store');
-                // Route::get('/edit/{id}', 'edit')->name('admin.users.edit');
-                // Route::put('/edit/{id}', 'update')->name('admin.users.update');
+                Route::get('/edit/{id}', 'edit')->name('admin.all-users.edit');
+                Route::put('/edit/{id}', 'update')->name('admin.all-users.update');
                 // Route::delete('/delete/{id}', 'destroy')->name('admin.users.destroy');
                 // Route::delete('/delete-all', 'destroy_all')->name('admin.users.destroy_all');
             });

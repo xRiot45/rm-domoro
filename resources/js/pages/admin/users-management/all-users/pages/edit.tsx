@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AdminLayout from '@/layouts/admin/layout';
 import { cn } from '@/lib/utils';
 import { Role } from '@/models/role';
-import { UserForm } from '@/models/user';
+import { User, UserForm } from '@/models/user';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
@@ -24,25 +24,27 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/admin/users-management/all-users',
     },
     {
-        title: 'Tambah Penguna',
-        href: '/admin/users-management/all-users/create',
+        title: 'Edit Penguna',
+        href: '/admin/users-management/all-users/edit',
     },
 ];
 
-export default function CreatePage() {
+export default function EditPage({ user }: { user: User }) {
     const { roles }: { roles: Role[] } = usePage<{ roles: Role[] }>().props;
-    const { data, setData, post, processing, errors, reset } = useForm<Required<UserForm>>({
-        full_name: '',
-        email: '',
-        phone_number: '',
-        password: '',
-        password_confirmation: '',
-        roles: [],
+    const { data, setData, put, processing, errors, reset } = useForm<Required<UserForm>>({
+        full_name: user?.full_name,
+        email: user?.email,
+        phone_number: user?.phone_number,
+        password: user?.password,
+        password_confirmation: user?.password_confirmation,
+        roles: user.roles.map((role) => role.name),
     });
 
-    const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
-        post(route('admin.all-users.store'), {
+    console.log(user);
+
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+        put(route('admin.all-users.update', { id: user?.id }), {
             onSuccess: () => {
                 reset('full_name');
                 reset('email');
@@ -51,7 +53,7 @@ export default function CreatePage() {
                 reset('password_confirmation');
                 reset('roles');
                 toast.success('Success', {
-                    description: 'Pengguna Berhasil Ditambahkan!',
+                    description: 'Pengguna Berhasil Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -64,8 +66,8 @@ export default function CreatePage() {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
-                <Head title="Tambah Pengguna" />
-                <form onSubmit={handleSubmit} className="space-y-4 p-4">
+                <Head title="Edit Pengguna" />
+                <form onSubmit={handleSubmit} className="space-y-4 p-4" method="PUT">
                     <div id="full_name">
                         <Label htmlFor="full_name">Nama Lengkap</Label>
                         <Input
@@ -148,8 +150,9 @@ export default function CreatePage() {
                         <Label htmlFor="roles">Role / Peran</Label>
                         <Select onValueChange={(value) => setData('roles', [value])}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Role / Peran" />
+                                <SelectValue placeholder={data.roles.length > 0 ? data.roles[0] : 'Pilih Role'} />
                             </SelectTrigger>
+
                             <SelectContent>
                                 {roles.map((role: Role) => (
                                     <SelectItem key={role.id} value={String(role.name)}>
@@ -158,7 +161,6 @@ export default function CreatePage() {
                                 ))}
                             </SelectContent>
                         </Select>
-
                         <InputError message={errors.roles} className="mt-2" />
                     </div>
 
@@ -170,7 +172,7 @@ export default function CreatePage() {
                         </Link>
                         <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Tambah Data <Icon icon="heroicons:plus" />
+                            Edit Data <Icon icon="material-symbols:edit" />
                         </Button>
                     </div>
                 </form>

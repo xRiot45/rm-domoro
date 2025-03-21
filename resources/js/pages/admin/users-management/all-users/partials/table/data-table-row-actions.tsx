@@ -50,7 +50,7 @@ export function DataTableRowActions({ row }: { row: Row<User> }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={route('admin.roles.edit', { id: row.original.id })} className="cursor-po">
+                    <Link href={route('admin.all-users.edit', { id: row.original.id })} className="cursor-po">
                         <DropdownMenuItem className="cursor-pointer">
                             Edit Data
                             <DropdownMenuShortcut>

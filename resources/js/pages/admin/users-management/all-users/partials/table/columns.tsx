@@ -73,7 +73,7 @@ export const columns: ColumnDef<User>[] = [
                 customer: 'bg-blue-600',
                 cashier: 'bg-yellow-600',
                 chef: 'bg-red-600',
-                courier: 'bg-orange-600',
+                courier: 'bg-indigo-600',
             };
 
             if (!Array.isArray(roles) || roles.length === 0) return <Badge className="bg-gray-500 shadow-none">-</Badge>;

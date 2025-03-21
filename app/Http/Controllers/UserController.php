@@ -12,17 +12,19 @@ class UserController extends Controller
 {
     public function index_all_users(): Response
     {
-        $users = User::with('roles')->get()->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'full_name' => $user->full_name,
-                'email' => $user->email,
-                'phone_number' => $user->phone_number,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
-                'roles' => $user->getRoleNames(),
-            ];
-        });
+        $users = User::with('roles')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'full_name' => $user->full_name,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                    'roles' => $user->getRoleNames(),
+                ];
+            });
 
         return Inertia::render('admin/users-management/all-users/index', [
             'data' => $users,
@@ -36,10 +38,32 @@ class UserController extends Controller
 
     public function store(UserRequest $request): RedirectResponse
     {
-        $user = User::create($request->all());
+        $user = User::create($request->validated());
         $user->syncRoles($request->roles);
         return redirect()
             ->route('admin.all-users.index')
-            ->with(['success' => 'Add user successfully']);
+            ->with(['success' => 'User berhasil ditambahkan']);
+    }
+
+    public function edit(int $id): Response
+    {
+        $user = User::findOrFail($id);
+        $user->getRoleNames();
+        return Inertia::render('admin/users-management/all-users/pages/edit', [
+            'user' => $user,
+        ]);
+    }
+
+    public function update(UserRequest $request, int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->validated());
+        if ($request->filled('roles')) {
+            $user->syncRoles($request->roles);
+        }
+
+        return redirect()
+            ->route('admin.all-users.index')
+            ->with(['success' => 'User berhasil diperbarui']);
     }
 }
