@@ -2,7 +2,7 @@ import { NavGroup } from '@/types';
 
 const mainNavItems: NavGroup[] = [
     {
-        group: 'Platform',
+        group: 'DASHBOARD',
         items: [
             {
                 title: 'Dashboard',
@@ -12,7 +12,7 @@ const mainNavItems: NavGroup[] = [
         ],
     },
     {
-        group: 'Manajemen Kontrol Akses',
+        group: 'MANAJEMEN KONTROL AKSES',
         items: [
             {
                 title: 'Roles / Peran',
@@ -28,6 +28,36 @@ const mainNavItems: NavGroup[] = [
                 title: 'Kelola Izin Peran',
                 href: '/admin/manajemen-kontrol-akses/manage-role-permissions',
                 icon: 'material-symbols:manage-accounts-outline-rounded',
+            },
+        ],
+    },
+    {
+        group: 'MANAJEMEN PENGGUNA',
+        items: [
+            {
+                title: 'Semua Pengguna',
+                href: '/admin/users-management/all-users',
+                icon: 'la:users',
+            },
+            {
+                title: 'Customer',
+                href: '/admin/users-management/customer',
+                icon: 'carbon:customer',
+            },
+            {
+                title: 'Admin',
+                href: '/admin/users-management/admin',
+                icon: 'ri:admin-line',
+            },
+            {
+                title: 'Chef',
+                href: '/admin/users-management/chef',
+                icon: 'hugeicons:chef',
+            },
+            {
+                title: 'Cashier',
+                href: '/admin/users-management/cashier',
+                icon: 'hugeicons:cashier',
             },
         ],
     },

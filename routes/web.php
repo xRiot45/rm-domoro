@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -59,6 +60,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::put('/edit/{id}', 'update')->name('admin.manage-role-permission.update');
                 });
         });
+
+    Route::prefix('/admin/users-management')->group(function () {
+        // All Users
+        Route::prefix('/all-users')
+            ->controller(UserController::class)
+            ->group(function () {
+                Route::get('/', 'index_all_users')->name('admin.all-users.index');
+                Route::get('/create', 'create')->name('admin.all-users.create');
+                Route::post('/create', 'store')->name('admin.all-users.store');
+                // Route::get('/edit/{id}', 'edit')->name('admin.users.edit');
+                // Route::put('/edit/{id}', 'update')->name('admin.users.update');
+                // Route::delete('/delete/{id}', 'destroy')->name('admin.users.destroy');
+                // Route::delete('/delete-all', 'destroy_all')->name('admin.users.destroy_all');
+            });
+    });
 });
 
 
