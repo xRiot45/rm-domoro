@@ -1,4 +1,3 @@
-import { Checkbox } from '@/components/ui/checkbox';
 import { ManageRolePermission } from '@/models/manage-role-permission';
 import { Permission } from '@/models/permission';
 import { formatDate } from '@/utils/format-date';
@@ -7,29 +6,6 @@ import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Permission>[] = [
-    {
-        id: 'select',
-        accessorKey: 'id',
-        size: 20,
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
     {
         id: 'no',
         accessorKey: 'no',
