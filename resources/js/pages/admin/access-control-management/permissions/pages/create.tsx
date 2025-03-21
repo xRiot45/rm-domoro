@@ -37,7 +37,7 @@ export default function CreatePage() {
         post(route('admin.permissions.store'), {
             onSuccess: () => {
                 reset('name');
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Permission / izin Berhasil Ditambahkan!',
                     action: {
                         label: 'Tutup',

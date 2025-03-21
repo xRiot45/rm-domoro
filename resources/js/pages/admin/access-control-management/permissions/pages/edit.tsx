@@ -37,7 +37,7 @@ export default function EditPage({ permission }: { permission: Permission }) {
         put(route('admin.permissions.update', { id: permission?.id }), {
             onSuccess: () => {
                 reset('name');
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Permission / Izin Berhasil Diedit!',
                     action: {
                         label: 'Tutup',

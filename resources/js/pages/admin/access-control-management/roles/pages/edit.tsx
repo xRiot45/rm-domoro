@@ -37,7 +37,7 @@ export default function EditPage({ role }: { role: Role }) {
         put(route('admin.roles.update', { id: role?.id }), {
             onSuccess: () => {
                 reset('name');
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Role Berhasil Diedit!',
                     action: {
                         label: 'Tutup',

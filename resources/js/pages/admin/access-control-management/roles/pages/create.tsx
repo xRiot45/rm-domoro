@@ -37,7 +37,7 @@ export default function CreatePage() {
         post(route('admin.roles.store'), {
             onSuccess: () => {
                 reset('name');
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Role Berhasil Ditambahkan!',
                     action: {
                         label: 'Tutup',
