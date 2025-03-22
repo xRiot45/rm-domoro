@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -65,5 +67,29 @@ class UserController extends Controller
         return redirect()
             ->route('admin.all-users.index')
             ->with(['success' => 'User berhasil diperbarui']);
+    }
+
+    public function destroy(Request $request, int $userId): RedirectResponse
+    {
+        $request->validate(
+            [
+                'password' => 'required',
+            ],
+            [
+                'password.required' => 'Password harus diisi',
+            ]
+        );
+
+        $user = User::findOrFail($userId);
+
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return back()->withErrors(['password' => 'Password salah']);
+        }
+
+        $user->delete();
+
+        return redirect()
+            ->route('admin.all-users.index')
+            ->with(['success' => 'User berhasil dihapus']);
     }
 }

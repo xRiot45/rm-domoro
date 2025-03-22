@@ -19,4 +19,8 @@ interface UserForm {
     roles: string[];
 }
 
-export type { User, UserForm };
+interface UserDeleteForm {
+    password: string;
+}
+
+export type { User, UserDeleteForm, UserForm };

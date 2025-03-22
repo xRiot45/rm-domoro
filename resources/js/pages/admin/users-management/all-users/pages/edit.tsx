@@ -44,12 +44,6 @@ export default function EditPage({ user }: { user: User }) {
         event.preventDefault();
         put(route('admin.all-users.update', { id: user?.id }), {
             onSuccess: () => {
-                reset('full_name');
-                reset('email');
-                reset('phone_number');
-                reset('password');
-                reset('password_confirmation');
-                reset('roles');
                 toast.success('Success', {
                     description: 'Pengguna Berhasil Diedit!',
                     action: {
@@ -57,6 +51,7 @@ export default function EditPage({ user }: { user: User }) {
                         onClick: () => toast.dismiss(),
                     },
                 });
+                reset();
             },
         });
     };

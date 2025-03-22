@@ -71,8 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/create', 'store')->name('admin.all-users.store');
                 Route::get('/edit/{id}', 'edit')->name('admin.all-users.edit');
                 Route::put('/edit/{id}', 'update')->name('admin.all-users.update');
-                // Route::delete('/delete/{id}', 'destroy')->name('admin.users.destroy');
-                // Route::delete('/delete-all', 'destroy_all')->name('admin.users.destroy_all');
+                Route::delete('/delete/{id}', 'destroy')->name('admin.all-users.destroy');
             });
     });
 });

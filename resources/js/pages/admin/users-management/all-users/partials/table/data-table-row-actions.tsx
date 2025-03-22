@@ -18,19 +18,38 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { UserDeleteForm } from '@/models/user';
 import { User } from '@/types';
 import { Icon } from '@iconify/react';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, useForm } from '@inertiajs/react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
+import { LoaderCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function DataTableRowActions({ row }: { row: Row<User> }) {
-    const handleDelete = (id: number) => {
-        router.delete(route('admin.roles.destroy', { id }), {
+    const { data, setData, processing, reset } = useForm<Required<UserDeleteForm>>({
+        password: '',
+    });
+
+    const handleDelete = (userId: number) => {
+        router.delete(route('admin.all-users.destroy', { id: userId }), {
+            data: { password: data.password },
             onSuccess: () => {
-                toast('Success', {
-                    description: 'Role Berhasil Dihapus!',
+                toast.success('Success', {
+                    description: 'Pengguna Berhasil Dihapus!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+                reset();
+            },
+            onError: (error) => {
+                reset();
+                toast.error('Error', {
+                    description: error.message || 'Pengguna Gagal Dihapus!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -73,10 +92,17 @@ export function DataTableRowActions({ row }: { row: Row<User> }) {
                                 <AlertDialogTitle>Hapus Data</AlertDialogTitle>
                                 <AlertDialogDescription>Apakah Kamu Yakin Ingin Menghapus Data ini?</AlertDialogDescription>
                             </AlertDialogHeader>
+                            <Input
+                                type="password"
+                                placeholder="Password"
+                                value={data?.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                            />
                             <AlertDialogFooter>
                                 <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
                                 <AlertDialogAction onClick={() => handleDelete(row.original.id)} className="cursor-pointer bg-red-600 transition-all">
-                                    Hapus
+                                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                    Hapus Pengguna
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>

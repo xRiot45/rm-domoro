@@ -44,12 +44,6 @@ export default function CreatePage() {
         e.preventDefault();
         post(route('admin.all-users.store'), {
             onSuccess: () => {
-                reset('full_name');
-                reset('email');
-                reset('phone_number');
-                reset('password');
-                reset('password_confirmation');
-                reset('roles');
                 toast.success('Success', {
                     description: 'Pengguna Berhasil Ditambahkan!',
                     action: {
@@ -57,6 +51,7 @@ export default function CreatePage() {
                         onClick: () => toast.dismiss(),
                     },
                 });
+                reset();
             },
         });
     };

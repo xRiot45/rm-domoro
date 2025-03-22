@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
                 'confirmed',
                 Rules\Password::defaults(),
             ],
-            'phone_number' => 'required|string|min:12|max:255',
+            'phone_number' => 'required|string|min:12|max:12',
             'roles' => [
                 $this->isMethod('post') ? 'required' : 'nullable',
                 'exists:roles,name',
