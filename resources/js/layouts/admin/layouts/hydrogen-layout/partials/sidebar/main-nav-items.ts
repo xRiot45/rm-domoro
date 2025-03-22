@@ -61,6 +61,21 @@ const mainNavItems: NavGroup[] = [
             },
         ],
     },
+    {
+        group: 'MANAJEMEN MENU',
+        items: [
+            {
+                title: 'Kategori Menu',
+                href: '/admin/menu-management/menu-categories',
+                icon: 'material-symbols:category',
+            },
+            {
+                title: 'Menu',
+                href: '/admin/menu-management/menu-items',
+                icon: 'material-symbols:menu',
+            },
+        ],
+    },
 ];
 
 export default mainNavItems;

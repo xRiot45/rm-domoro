@@ -73,7 +73,7 @@ function NavMain({ items = [] }: { items: NavItem[] }) {
 
 export function HydrogenSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="offcanvas" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -86,7 +86,7 @@ export function HydrogenSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="no-scrollbar">
                 {mainNavItems.map(({ group, items }) => (
                     <SidebarGroup key={group}>
                         <SidebarGroupLabel>{group}</SidebarGroupLabel>
