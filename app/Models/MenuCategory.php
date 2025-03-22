@@ -11,4 +11,9 @@ class MenuCategory extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function menuItems()
+    {
+        return $this->hasMany(MenuItem::class);
+    }
 }
