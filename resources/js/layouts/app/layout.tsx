@@ -1,4 +1,4 @@
-import AppLayoutTemplate from '@/layouts/app/layouts/app-header-layout';
+import AppLayoutTemplate from '@/layouts/app/layouts/lithium-layout/layout';
 import { type BreadcrumbItem } from '@/types';
 import { type ReactNode } from 'react';
 
