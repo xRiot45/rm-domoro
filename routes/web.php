@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
+use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -71,6 +72,21 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::get('/edit/{id}', 'edit')->name('admin.all-users.edit');
                 Route::put('/edit/{id}', 'update')->name('admin.all-users.update');
                 Route::delete('/delete/{id}', 'destroy')->name('admin.all-users.destroy');
+            });
+    });
+
+    Route::prefix('/admin/menu-management')->group(function () {
+        // Menu Categories
+        Route::prefix('/menu-categories')
+            ->controller(MenuCategoryController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('admin.menu-categories.index');
+                Route::get('/create', 'create')->name('admin.menu-categories.create');
+                Route::post('/create', 'store')->name('admin.menu-categories.store');
+                Route::get('/edit/{id}', 'edit')->name('admin.menu-categories.edit');
+                Route::put('/edit/{id}', 'update')->name('admin.menu-categories.update');
+                Route::delete('/delete/{id}', 'destroy')->name('admin.menu-categories.destroy');
+                Route::delete('/delete-all', 'destroy_all')->name('admin.menu-categories.destroy_all');
             });
     });
 });
