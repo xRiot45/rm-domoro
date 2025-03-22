@@ -17,7 +17,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function AllUsersPage({ data }: { data: User[] }) {
-    console.log(data);
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>

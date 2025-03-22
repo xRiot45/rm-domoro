@@ -40,8 +40,6 @@ export default function EditPage({ user }: { user: User }) {
         roles: user.roles.map((role) => role.name),
     });
 
-    console.log(user);
-
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
         put(route('admin.all-users.update', { id: user?.id }), {
