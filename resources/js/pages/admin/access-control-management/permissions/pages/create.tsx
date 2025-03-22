@@ -32,13 +32,22 @@ export default function CreatePage() {
         name: '',
     });
 
-    const submit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
         post(route('admin.permissions.store'), {
             onSuccess: () => {
-                reset('name');
                 toast.success('Success', {
                     description: 'Permission / izin Berhasil Ditambahkan!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+                reset();
+            },
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Permission / izin Gagal Ditambahkan!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -51,7 +60,7 @@ export default function CreatePage() {
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Permission / Izin" />
-            <form onSubmit={submit} className="p-4">
+            <form onSubmit={handleSubmit} className="p-4">
                 <Label htmlFor="name">Nama Permission / Izin</Label>
                 <Input
                     id="name"

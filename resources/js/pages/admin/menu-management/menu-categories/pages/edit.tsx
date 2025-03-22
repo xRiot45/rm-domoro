@@ -59,7 +59,7 @@ export default function EditPage({ menu_category }: { menu_category: MenuCategor
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Kategori Menu" />
+            <Head title="Edit Kategori Menu" />
             <form onSubmit={handleSubmit} className="p-4">
                 <Label htmlFor="name">Nama Katagori menu</Label>
                 <Input

@@ -32,13 +32,22 @@ export default function EditPage({ role }: { role: Role }) {
         name: role?.name,
     });
 
-    const submit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
         put(route('admin.roles.update', { id: role?.id }), {
             onSuccess: () => {
-                reset('name');
                 toast.success('Success', {
                     description: 'Role Berhasil Diedit!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+                reset();
+            },
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Role Gagal Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -50,8 +59,8 @@ export default function EditPage({ role }: { role: Role }) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Role" />
-            <form onSubmit={submit} className="p-4">
+            <Head title="Edit Role" />
+            <form onSubmit={handleSubmit} className="p-4">
                 <Label htmlFor="name">Nama Role / Peran</Label>
                 <Input
                     id="name"

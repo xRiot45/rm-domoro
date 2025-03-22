@@ -26,11 +26,21 @@ import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
 
 export function DataTableRowActions({ row }: { row: Row<Permission> }) {
-    const handleDelete = (id: number) => {
-        router.delete(route('admin.permissions.destroy', { id }), {
+    const handleDelete = (permissionId: number) => {
+        router.delete(route('admin.permissions.destroy', { id: permissionId }), {
             onSuccess: () => {
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Permission / Izin Berhasil Dihapus!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+            },
+
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Permission / Izin Gagal Dihapus!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),

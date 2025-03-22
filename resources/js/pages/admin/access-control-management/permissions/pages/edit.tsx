@@ -32,13 +32,22 @@ export default function EditPage({ permission }: { permission: Permission }) {
         name: permission?.name,
     });
 
-    const submit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
         put(route('admin.permissions.update', { id: permission?.id }), {
             onSuccess: () => {
-                reset('name');
                 toast.success('Success', {
                     description: 'Permission / Izin Berhasil Diedit!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+                reset();
+            },
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Permission / Izin Gagal Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -50,9 +59,9 @@ export default function EditPage({ permission }: { permission: Permission }) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Role" />
-            <form onSubmit={submit} className="p-4">
-                <Label htmlFor="name">Nama Role</Label>
+            <Head title="Edit Permission / Izin" />
+            <form onSubmit={handleSubmit} className="p-4">
+                <Label htmlFor="name">Nama Permission / Izin</Label>
                 <Input
                     id="name"
                     type="text"
@@ -61,13 +70,13 @@ export default function EditPage({ permission }: { permission: Permission }) {
                     autoComplete="name"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
-                    placeholder="Masukkan nama role"
+                    placeholder="Masukkan nama permission / izin"
                     className={cn('mt-2', errors.name && 'border border-red-500')}
                 />
                 <InputError message={errors.name} className="mt-2" />
 
                 <div className="mt-4 flex justify-end space-x-3">
-                    <Link href={route('admin.roles.index')}>
+                    <Link href={route('admin.permissions.index')}>
                         <Button variant="destructive" className="cursor-pointer">
                             Batalkan <Icon icon="iconoir:cancel" />
                         </Button>

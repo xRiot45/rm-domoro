@@ -26,11 +26,20 @@ import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
 
 export function DataTableRowActions({ row }: { row: Row<Role> }) {
-    const handleDelete = (id: number) => {
-        router.delete(route('admin.roles.destroy', { id }), {
+    const handleDelete = (roleId: number) => {
+        router.delete(route('admin.roles.destroy', { id: roleId }), {
             onSuccess: () => {
-                toast('Success', {
+                toast.success('Success', {
                     description: 'Role Berhasil Dihapus!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+            },
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Role Gagal Dihapus!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),

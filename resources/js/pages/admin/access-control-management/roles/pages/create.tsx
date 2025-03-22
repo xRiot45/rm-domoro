@@ -32,13 +32,22 @@ export default function CreatePage() {
         name: '',
     });
 
-    const submit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
+    const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
         post(route('admin.roles.store'), {
             onSuccess: () => {
-                reset('name');
                 toast.success('Success', {
                     description: 'Role Berhasil Ditambahkan!',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+                reset();
+            },
+            onError: (errors) => {
+                toast.error('Failed', {
+                    description: errors.message || 'Role Gagal Ditambahkan!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -50,8 +59,8 @@ export default function CreatePage() {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Role" />
-            <form onSubmit={submit} className="p-4">
+            <Head title="Tambah Role / Peran" />
+            <form onSubmit={handleSubmit} className="p-4">
                 <Label htmlFor="name">Nama Role / Peran</Label>
                 <Input
                     id="name"
