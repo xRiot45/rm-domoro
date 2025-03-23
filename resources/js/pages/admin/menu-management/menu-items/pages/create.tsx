@@ -1,3 +1,4 @@
+import FileDropzone from '@/components/file-dropzone';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,13 +40,13 @@ export default function CreateMenuItemPage() {
         menu_category_id: 0,
     });
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        setData('image_url', file || null);
+    const handleFileChange = (file: File | null) => {
+        setData('image_url', file);
     };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
+
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('price', data.price.toString());
@@ -118,15 +119,7 @@ export default function CreateMenuItemPage() {
 
                     <div id="image_url">
                         <Label htmlFor="image_url">Gambar Menu</Label>
-                        <Input
-                            id="image_url"
-                            type="file"
-                            tabIndex={3}
-                            onChange={handleFileChange}
-                            placeholder="Masukkan URL gambar"
-                            accept="image/*"
-                            className={cn('mt-2', errors.image_url && 'border border-red-500')}
-                        />
+                        <FileDropzone onFileChange={handleFileChange} error={errors.image_url} />
                         <InputError message={errors.image_url} className="mt-2" />
                     </div>
 
@@ -144,7 +137,6 @@ export default function CreateMenuItemPage() {
                                 ))}
                             </SelectContent>
                         </Select>
-
                         <InputError message={errors.menu_category_id} className="mt-2" />
                     </div>
 
@@ -162,7 +154,6 @@ export default function CreateMenuItemPage() {
                                 ))}
                             </SelectContent>
                         </Select>
-
                         <InputError message={errors.status} className="mt-2" />
                     </div>
 
