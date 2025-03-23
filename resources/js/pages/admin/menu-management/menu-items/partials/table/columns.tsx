@@ -61,9 +61,12 @@ export const columns: ColumnDef<MenuItems>[] = [
     {
         id: 'menu_category',
         accessorKey: 'menu_category',
-        accessorFn: (row) => row.menu_category?.name || 'Tanpa Kategori',
+        accessorFn: (row) => row.menu_category?.name,
         header: ({ column }) => <DataTableColumnHeader column={column} title="Kategori" />,
         cell: ({ row }) => <span>{row.getValue('menu_category')}</span>,
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
         enableHiding: true,
         enableSorting: true,
     },
@@ -78,6 +81,7 @@ export const columns: ColumnDef<MenuItems>[] = [
     {
         id: 'status',
         accessorKey: 'status',
+        accessorFn: (row) => row.status,
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         cell: ({ row }) => {
             const status: string = row.getValue('status') ?? '';
@@ -87,6 +91,9 @@ export const columns: ColumnDef<MenuItems>[] = [
             };
 
             return <Badge className={`${statusColors[status] || 'bg-gray-500'} capitalize shadow-none`}>{status}</Badge>;
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
         },
         enableHiding: true,
         enableSorting: true,
