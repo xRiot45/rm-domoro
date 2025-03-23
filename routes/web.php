@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
+use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -87,6 +88,19 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::put('/edit/{id}', 'update')->name('admin.menu-categories.update');
                 Route::delete('/delete/{id}', 'destroy')->name('admin.menu-categories.destroy');
                 Route::delete('/delete-all', 'destroy_all')->name('admin.menu-categories.destroy_all');
+            });
+
+        // Menu Items
+        Route::prefix('/menu-items')
+            ->controller(MenuItemController::class)
+            ->group(function () {
+                Route::get('/', 'index_admin')->name('admin.menu-items.index');
+                Route::get('/create', 'create')->name('admin.menu-items.create');
+                Route::post('/create', 'store')->name('admin.menu-items.store');
+                // Route::get('/edit/{id}', 'edit')->name('admin.menu-items.edit');
+                // Route::put('/edit/{id}', 'update')->name('admin.menu-items.update');
+                // Route::delete('/delete/{id}', 'destroy')->name('admin.menu-items.destroy');
+                // Route::delete('/delete-all', 'destroy_all')->name('admin.menu-items.destroy_all');
             });
     });
 });
