@@ -115,6 +115,13 @@ Route::middleware(['auth', 'verified', 'role:courier'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     Route::get('/cashier/dashboard', [DashboardController::class, 'index_cashier'])->name('cashier.dashboard');
+
+    // Menu Items
+    Route::prefix('/cashier/menu')
+        ->controller(MenuItemController::class)
+        ->group(function () {
+            Route::get('/', 'index_cashier')->name('cashier.menu-items.index');
+        });
 });
 
 require __DIR__ . '/settings.php';

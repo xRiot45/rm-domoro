@@ -8,33 +8,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
 import { Menu, Search } from 'lucide-react';
-import Logo from './logo';
-import LogoIcon from './logo-icon';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: 'material-symbols:dashboard',
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: '#',
-        icon: 'simple-icons:github',
-    },
-    {
-        title: 'Documentation',
-        href: '#',
-        icon: 'material-symbols:help-outline-rounded',
-    },
-];
+import Logo from '../logo';
+import LogoIcon from '../logo-icon';
+import mainNavItems from './main-nav-items';
+import rightNavItems from './right-nav-items';
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
@@ -46,10 +27,11 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+
     return (
         <>
             <div className="border-sidebar-border/80 border-b">
-                <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
+                <div className="mx-auto flex h-16 items-center px-4 lg:px-10">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
