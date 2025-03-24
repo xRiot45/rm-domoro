@@ -21,7 +21,7 @@ export default function MenuItemsPage({ data }: { data: MenuItems[] }) {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
-                <Head title="Kategori Menu" />
+                <Head title="Menu" />
                 <div className="mb-2 flex flex-wrap justify-between space-y-2 p-4">
                     <div>
                         <h2 className="text-2xl font-black tracking-tight text-gray-700 dark:text-gray-200">Daftar Menu</h2>
