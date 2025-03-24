@@ -20,7 +20,7 @@ interface MenuItems {
 interface MenuItemForm {
     name: string;
     price: number;
-    image_url: File | null;
+    image_url: string | File | null;
     status: MenuItemStatusEnum;
     menu_category_id: number;
 }

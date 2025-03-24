@@ -98,7 +98,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::get('/create', 'create')->name('admin.menu-items.create');
                 Route::post('/create', 'store')->name('admin.menu-items.store');
                 Route::get('/edit/{id}', 'edit')->name('admin.menu-items.edit');
-                // Route::put('/edit/{id}', 'update')->name('admin.menu-items.update');
+                Route::put('/edit/{id}', 'update')->name('admin.menu-items.update');
                 Route::delete('/delete/{id}', 'destroy')->name('admin.menu-items.destroy');
                 Route::delete('/delete-all', 'destroy_all')->name('admin.menu-items.destroy_all');
             });

@@ -46,7 +46,7 @@ export const columns: ColumnDef<MenuItems>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
         cell: ({ row }) => (
             <div className="flex items-center space-x-3">
-                <img src={`/${row.original.image_url}`} alt={row.getValue('name')} className="h-16 w-16 rounded-md object-cover" />
+                <img src={`${row.original.image_url}`} alt={row.getValue('name')} className="h-16 w-16 rounded-md object-cover" />
                 <div>
                     <span className="block font-medium">{row.getValue('name')}</span>
                 </div>

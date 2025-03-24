@@ -7,10 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AdminLayout from '@/layouts/admin/layout';
 import { cn } from '@/lib/utils';
 import { MenuCategory } from '@/models/menu-categories';
-import { MenuItemForm, MenuItemStatusEnum } from '@/models/menu-items';
+import { MenuItemForm, MenuItems, MenuItemStatusEnum } from '@/models/menu-items';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
@@ -25,19 +25,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/admin/menu-management/menu-items',
     },
     {
-        title: 'Tambah Menu',
-        href: '/admin/menu-management/menu-items/create',
+        title: 'Edit Menu',
+        href: '/admin/menu-management/menu-items/edit',
     },
 ];
 
-export default function CreateMenuItemPage() {
+export default function EditPage({ menu_item }: { menu_item: MenuItems }) {
     const { menuCategories } = usePage<{ menuCategories: MenuCategory[] }>().props;
-    const { data, setData, post, processing, errors, reset } = useForm<Required<MenuItemForm>>({
-        name: '',
-        price: 0,
-        image_url: null,
-        status: MenuItemStatusEnum.AVAILABLE,
-        menu_category_id: 0,
+    const { data, setData, processing, errors, reset } = useForm<Required<MenuItemForm>>({
+        name: menu_item?.name,
+        price: menu_item?.price,
+        image_url: menu_item?.image_url,
+        status: menu_item?.status,
+        menu_category_id: menu_item?.menu_category_id,
     });
 
     const handleFileChange = (file: File | null) => {
@@ -48,20 +48,21 @@ export default function CreateMenuItemPage() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('price', data.price.toString());
-        formData.append('status', data.status);
-        formData.append('menu_category_id', data.menu_category_id.toString());
+        Object.entries(data).forEach(([key, value]) => {
+            if (value !== menu_item[key as keyof MenuItems]) {
+                if (key === 'image_url' && value instanceof File) {
+                    formData.append(key, value);
+                } else {
+                    formData.append(key, String(value));
+                }
+            }
+        });
 
-        if (data.image_url) {
-            formData.append('image_url', data.image_url);
-        }
-
-        formData.append('_method', 'POST');
-        post(route('admin.menu-items.store'), {
+        formData.append('_method', 'PUT');
+        router.post(route('admin.menu-items.update', { id: menu_item?.id }), formData, {
             onSuccess: () => {
                 toast.success('Success', {
-                    description: 'Menu Berhasil Ditambahkan!',
+                    description: 'Menu Berhasil Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -71,7 +72,7 @@ export default function CreateMenuItemPage() {
             },
             onError: (errors) => {
                 toast.error('Failed', {
-                    description: errors.message || 'Gagal Menambahkan Menu',
+                    description: errors.message || 'Gagal Mengedit Menu',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -84,7 +85,7 @@ export default function CreateMenuItemPage() {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
-                <Head title="Tambah Menu" />
+                <Head title="Edit Menu" />
                 <form onSubmit={handleSubmit} className="space-y-4 p-4" encType="multipart/form-data">
                     <div id="name">
                         <Label htmlFor="name">Nama Menu</Label>
@@ -119,15 +120,18 @@ export default function CreateMenuItemPage() {
 
                     <div id="image_url">
                         <Label htmlFor="image_url">Gambar Menu</Label>
-                        <FileDropzone onFileChange={handleFileChange} error={errors.image_url} />
-                        <InputError message={errors.image_url} className="mt-2" />
+                        <FileDropzone
+                            onFileChange={handleFileChange}
+                            error={errors.image_url}
+                            initialImage={data.image_url instanceof File ? undefined : data.image_url}
+                        />
                     </div>
 
                     <div id="menu_category_id">
                         <Label htmlFor="menu_category_id">Kategori Menu</Label>
                         <Select onValueChange={(value) => setData('menu_category_id', parseInt(value))}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Kategori Menu" />
+                                <SelectValue placeholder={menuCategories.find((item: MenuCategory) => item.id === data.menu_category_id)?.name} />
                             </SelectTrigger>
                             <SelectContent>
                                 {menuCategories.map((item: MenuCategory) => (
@@ -144,7 +148,7 @@ export default function CreateMenuItemPage() {
                         <Label htmlFor="status">Status Menu</Label>
                         <Select onValueChange={(value) => setData('status', value as MenuItemStatusEnum)}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Status Menu" />
+                                <SelectValue datatype="status" placeholder={data?.status || 'Pilih Status Menu'} />
                             </SelectTrigger>
                             <SelectContent>
                                 {Object.values(MenuItemStatusEnum).map((value) => (
@@ -165,7 +169,7 @@ export default function CreateMenuItemPage() {
                         </Link>
                         <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Tambah Data <Icon icon="heroicons:plus" />
+                            Edit Data <Icon icon="heroicons:plus" />
                         </Button>
                     </div>
                 </form>
