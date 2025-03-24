@@ -69,4 +69,25 @@ class MenuItemController extends Controller
                 'success' => 'Menu item deleted successfully.',
             ]);
     }
+
+    public function destroy_all(): RedirectResponse
+    {
+        $menu_items = MenuItem::all();
+        foreach ($menu_items as $menu_item) {
+            if ($menu_item->image_url) {
+                $path = str_replace('storage/', '', $menu_item->image_url);
+
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
+        }
+
+        MenuItem::truncate();
+        return redirect()
+            ->route('admin.menu-items.index')
+            ->with([
+                'success' => 'All menu items deleted successfully.',
+            ]);
+    }
 }
