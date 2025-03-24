@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MenuItemRequest;
 use App\Models\MenuItem;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,6 +40,33 @@ class MenuItemController extends Controller
             ->route('admin.menu-items.index')
             ->with([
                 'success' => 'Menu item created successfully.',
+            ]);
+    }
+
+    public function edit(int $id): Response
+    {
+        $menu_item = MenuItem::findOrFail($id);
+        return Inertia::render('admin/menu-management/menu-items/pages/edit', [
+            'menu_item' => $menu_item,
+        ]);
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $menu_item = MenuItem::findOrFail($id);
+        if ($menu_item->image_url) {
+            $path = str_replace('storage/', '', $menu_item->image_url);
+
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        $menu_item->delete();
+        return redirect()
+            ->route('admin.menu-items.index')
+            ->with([
+                'success' => 'Menu item deleted successfully.',
             ]);
     }
 }
