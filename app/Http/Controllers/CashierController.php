@@ -26,12 +26,18 @@ class CashierController extends Controller
     public function store(CashierRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
-        Cashier::create($validatedData);
+        if (Cashier::where('user_id', $validatedData['user_id'])->exists()) {
+            return redirect()
+                ->route('admin.cashiers.index')
+                ->with('error', 'User ini sudah terdaftar sebagai kasir');
+        }
 
+        Cashier::create($validatedData);
         return redirect()
             ->route('admin.cashiers.index')
             ->with(['success' => 'Cashier berhasil ditambahkan']);
     }
+
 
     public function edit(int $id): Response
     {

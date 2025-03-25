@@ -95,7 +95,7 @@ export function DataTableRowActions({ row }: { row: Row<Cashier> }) {
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
-                    {row.original.stopped_at ? (
+                    {row.original.stopped_at && row.original.status === CashierStatusEnum.LEAVE ? (
                         <>
                             <DropdownMenuSeparator />
                             <AlertDialog>

@@ -23,7 +23,7 @@ interface CashierForm {
     user_id: number;
     hired_at: Date | null;
     stopped_at?: Date | null;
-    salary: number;
+    salary: number | string;
     gender: GenderEnum.MALE | GenderEnum.FEMALE;
     shift: ShiftEnum.MORNING | ShiftEnum.EVENING | ShiftEnum.NIGHT;
     job_type: JobTypeEnum.FULL_TIME | JobTypeEnum.PART_TIME;

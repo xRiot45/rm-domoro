@@ -36,6 +36,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function CreatePage() {
     const { usersCashier } = usePage<{ usersCashier: User[] }>().props;
+    const { existingCashiers } = usePage<{ existingCashiers: number[] }>().props;
+
+    const availableUsers = usersCashier.filter((user) => !existingCashiers.includes(user.id));
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<CashierForm>>({
         user_id: 0,
         hired_at: null,
@@ -63,7 +67,7 @@ export default function CreatePage() {
             },
             onError: (errors) => {
                 toast.error('Failed', {
-                    description: errors.message || 'Gagal Menambahkan Kasir',
+                    description: errors.user_id || 'Gagal Menambahkan Kasir',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -80,18 +84,27 @@ export default function CreatePage() {
                 <form onSubmit={handleSubmit} className="space-y-5 p-4">
                     <div id="user_id">
                         <Label htmlFor="user_id">Pengguna</Label>
-                        <Select onValueChange={(value) => setData('user_id', parseInt(value))}>
-                            <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Pengguna" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {usersCashier.map((item: User) => (
-                                    <SelectItem key={item.id} value={String(item.id)}>
-                                        {item.full_name} - {item.phone_number}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        {availableUsers.length > 0 ? (
+                            <Select onValueChange={(value) => setData('user_id', parseInt(value))}>
+                                <SelectTrigger className="mt-2 w-full">
+                                    <SelectValue placeholder="Pilih Pengguna" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {availableUsers.map((item: User) => (
+                                        <SelectItem key={item.id} value={String(item.id)}>
+                                            {item.full_name} - {item.phone_number}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        ) : (
+                            <Select disabled>
+                                <SelectTrigger className="mt-2 w-full">
+                                    <SelectValue placeholder="Pilih Pengguna" />
+                                </SelectTrigger>
+                            </Select>
+                        )}
+
                         <InputError message={errors.user_id} className="mt-2" />
                     </div>
 
@@ -148,7 +161,13 @@ export default function CreatePage() {
 
                     <div id="salary">
                         <Label htmlFor="salary">Gaji</Label>
-                        <Input type="number" className="mt-2" value={data.salary} onChange={(e) => setData('salary', parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            className="mt-2"
+                            value={data.salary ?? ''}
+                            onChange={(e) => setData('salary', e.target.value === '' ? '' : parseInt(e.target.value))}
+                        />
+
                         <InputError message={errors.salary} className="mt-2" />
                     </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Cashier;
 use App\Models\MenuCategory;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -39,7 +40,8 @@ class HandleInertiaRequests extends Middleware
             'menuCategories' => MenuCategory::all(),
             'usersCashier' => User::whereHas('roles', function ($query) {
                 $query->where('name', 'cashier');
-            })->get()
+            })->get(),
+            'existingCashiers' => Cashier::pluck('user_id')->toArray(),
         ];
     }
 }
