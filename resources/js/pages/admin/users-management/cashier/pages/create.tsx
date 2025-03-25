@@ -103,7 +103,7 @@ export default function CreatePage() {
                                     {data.hired_at ? (
                                         <span>{data.hired_at.toDateString()}</span>
                                     ) : (
-                                        <span className="text-sm text-gray-400">Pilih Tanggal</span>
+                                        <span className="text-sm text-gray-400">Pilih Tanggal Diterima</span>
                                     )}
                                     <CalendarIcon className="ml-auto h-5 w-5 text-gray-500" />
                                 </Button>
@@ -129,7 +129,7 @@ export default function CreatePage() {
                                     {data.stopped_at ? (
                                         <span>{data.stopped_at.toDateString()}</span>
                                     ) : (
-                                        <span className="text-sm text-gray-400">Pilih Tanggal</span>
+                                        <span className="text-sm text-gray-400">Pilih Tanggal Berhenti</span>
                                     )}
                                     <CalendarIcon className="ml-auto h-5 w-5 text-gray-500" />
                                 </Button>
