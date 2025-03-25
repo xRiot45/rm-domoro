@@ -55,8 +55,8 @@ const mainNavItems: NavGroup[] = [
                 icon: 'hugeicons:chef',
             },
             {
-                title: 'Cashier',
-                href: '/admin/users-management/cashier',
+                title: 'Kasir',
+                href: '/admin/users-management/cashiers',
                 icon: 'hugeicons:cashier',
             },
         ],

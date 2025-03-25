@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\MenuCategory;
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -35,7 +36,10 @@ class HandleInertiaRequests extends Middleware
             // Data
             'roles' => Role::all(),
             'permissions' => Permission::all(),
-            'menuCategories' => MenuCategory::all()
+            'menuCategories' => MenuCategory::all(),
+            'usersCashier' => User::whereHas('roles', function ($query) {
+                $query->where('name', 'cashier');
+            })->get()
         ];
     }
 }

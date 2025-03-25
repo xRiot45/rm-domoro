@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CashierStatusEnum;
+use App\Enums\GenderEnum;
 use App\Enums\JobTypeEnum;
 use App\Enums\ShiftEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,9 @@ class Cashier extends Model
     protected $fillable = [
         'user_id',
         'hired_at',
+        'stopped_at',
         'salary',
+        'gender',
         'shift',
         'status',
         'job_type',
@@ -25,7 +28,9 @@ class Cashier extends Model
     {
         return [
             'hired_at' => 'datetime',
+            'stopped_at' => 'datetime',
             'shift' => ShiftEnum::class,
+            'gender' => GenderEnum::class,
             'status' => CashierStatusEnum::class,
             'job_type' => JobTypeEnum::class
         ];
