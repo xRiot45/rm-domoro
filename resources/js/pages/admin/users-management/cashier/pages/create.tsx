@@ -13,8 +13,9 @@ import AdminLayout from '@/layouts/admin/layout';
 import { CashierForm } from '@/models/cashier';
 import { User } from '@/models/user';
 import { BreadcrumbItem } from '@/types';
+import { formattedDateForInput } from '@/utils/format-date';
 import { Icon } from '@iconify/react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
@@ -37,10 +38,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function CreatePage() {
     const { usersCashier } = usePage<{ usersCashier: User[] }>().props;
     const { existingCashiers } = usePage<{ existingCashiers: number[] }>().props;
-
     const availableUsers = usersCashier.filter((user) => !existingCashiers.includes(user.id));
 
-    const { data, setData, post, processing, errors, reset } = useForm<Required<CashierForm>>({
+    const { data, setData, processing, errors, reset } = useForm<Required<CashierForm>>({
         user_id: 0,
         hired_at: null,
         stopped_at: null,
@@ -54,7 +54,13 @@ export default function CreatePage() {
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
 
-        post(route('admin.cashiers.store'), {
+        const formattedData = {
+            ...data,
+            hired_at: formattedDateForInput(data.hired_at),
+            stopped_at: formattedDateForInput(data.stopped_at),
+        };
+
+        router.post(route('admin.cashiers.store'), formattedData, {
             onSuccess: () => {
                 toast.success('Success', {
                     description: 'Kasir Berhasil Ditambahkan!',

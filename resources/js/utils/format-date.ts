@@ -17,3 +17,8 @@ export const formatDate = (dateString: string, locale: string = 'id-ID', options
 
     return new Intl.DateTimeFormat(locale, { ...defaultOptions, ...options }).format(date);
 };
+
+export const formattedDateForInput = (date: Date | null) => {
+    if (!date) return null;
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+};
