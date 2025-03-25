@@ -36,52 +36,63 @@ export default function MenuPage({ data }: { data: MenuItems[] }) {
                         <Input placeholder="Cari menu" className="w-full lg:w-lg" />
                     </div>
 
-                    <div className="mty relative space-x-6 lg:flex">
+                    <div className="relative mt-4 space-x-6 lg:flex">
                         {/* Menu Feed Start */}
-                        <div className="grid w-full flex-1 auto-rows-min gap-6 space-y-5 md:grid-cols-3 lg:grid-cols-4">
-                            {data?.map((item, index) => (
-                                <div key={index} className={cn('pb-0.5')}>
-                                    <div className="relative">
-                                        <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-md">
-                                            <img
-                                                alt={item?.name}
-                                                src={`${item?.image_url}`}
-                                                sizes="(max-width: 768px) 100vw"
-                                                className={cn(
-                                                    'h-full w-full object-cover transition-all',
-                                                    item?.status === 'habis' ? 'opacity-50 grayscale' : '',
-                                                )}
-                                            />
+                        {data?.length > 0 ? (
+                            <div className="grid w-full flex-1 auto-rows-min gap-6 space-y-5 md:grid-cols-3 lg:grid-cols-4">
+                                {data?.map(
+                                    (
+                                        item,
+                                        index, // Tambahkan {} di sini
+                                    ) => (
+                                        <div key={index} className={cn('pb-0.5')}>
+                                            <div className="relative">
+                                                <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-md">
+                                                    <img
+                                                        alt={item?.name}
+                                                        src={`${item?.image_url}`}
+                                                        sizes="(max-width: 768px) 100vw"
+                                                        className={cn(
+                                                            'h-full w-full object-cover transition-all',
+                                                            item?.status === 'habis' ? 'opacity-50 grayscale' : '',
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="pt-3">
+                                                <h1 className="mb-1 truncate font-bold">{item?.name}</h1>
+                                                <span className="flex items-center text-sm font-medium text-gray-800">
+                                                    {formatCurrency(Number(item?.price))}
+                                                </span>
+                                                <div className="mt-4">
+                                                    <Button
+                                                        disabled={item?.status === 'habis'}
+                                                        className={cn(
+                                                            'w-full cursor-pointer rounded-md py-5 text-white shadow-none transition-all',
+                                                            item?.status === 'habis'
+                                                                ? 'cursor-not-allowed bg-gray-400 dark:bg-gray-600'
+                                                                : 'bg-black hover:opacity-100 dark:bg-white dark:text-black dark:hover:opacity-50',
+                                                        )}
+                                                    >
+                                                        {item?.status === 'habis' ? (
+                                                            <Icon icon={'ph:empty-duotone'} className="text-background" />
+                                                        ) : (
+                                                            <Icon icon={'mdi:cart-outline'} className="text-background" />
+                                                        )}
+                                                        {item?.status === 'habis' ? 'Habis' : 'Tambah ke Keranjang'}
+                                                    </Button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div className="pt-3">
-                                        <h1 className="mb-1 truncate font-bold">{item?.name}</h1>
-                                        <span className="flex items-center text-sm font-medium text-gray-800">
-                                            {formatCurrency(Number(item?.price))}
-                                        </span>
-                                        <div className="mt-4">
-                                            <Button
-                                                disabled={item?.status === 'habis'}
-                                                className={cn(
-                                                    'w-full cursor-pointer rounded-md py-5 text-white shadow-none transition-all',
-                                                    item?.status === 'habis'
-                                                        ? 'cursor-not-allowed bg-gray-400 dark:bg-gray-600'
-                                                        : 'bg-black hover:opacity-100 dark:bg-white dark:text-black dark:hover:opacity-50',
-                                                )}
-                                            >
-                                                {item?.status === 'habis' ? (
-                                                    <Icon icon={'ph:empty-duotone'} className="text-background" />
-                                                ) : (
-                                                    <Icon icon={'mdi:cart-outline'} className="text-background" />
-                                                )}
-                                                {item?.status === 'habis' ? 'Habis' : 'Tambah ke Keranjang'}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                    ),
+                                )}
+                            </div>
+                        ) : (
+                            <div className="mx-auto flex h-full w-full flex-col items-center justify-center">
+                                <img src={EmptyImg} alt="Error" className="mx-auto h-96 w-96" />
+                                <p className="text-md text-center font-black text-gray-500">Menu Sedang Kosong</p>
+                            </div>
+                        )}
                         {/* Menu Feed End */}
 
                         {/* Cart Sidebar */}
@@ -136,7 +147,7 @@ function CartContent({ cartItems }) {
                 <button className="text-sm text-gray-500 hover:text-gray-700">Hapus semua</button>
             </div>
             <Separator />
-            <ScrollArea className="h-[550px] lg:h-[350px]">
+            <ScrollArea className="h-[35vh]">
                 {cartItems.length > 0 ? (
                     cartItems.map((item) => (
                         <div key={item.id} className="flex items-center gap-4 space-y-8">
