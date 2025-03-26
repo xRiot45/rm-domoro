@@ -135,6 +135,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
         Route::controller(CartController::class)->group(function () {
             Route::get('/', 'index')->name('cashier.cart.index');
             Route::post('/cart', 'store')->name('cashier.cart.store');
+            Route::put('/cart/{id}', 'update_quantity')->name('cashier.cart.update_quantity');
             Route::delete('/cart/{id}', 'destroy')->name('cashier.cart.destroy');
             Route::delete('/cart-all', 'destroy_all')->name('cashier.cart.destroy_all');
         });

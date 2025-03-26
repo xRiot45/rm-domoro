@@ -14,7 +14,7 @@ interface CartContentProps {
 }
 
 export default function CartContent({ cartItems }: CartContentProps) {
-    const { handleDeleteAllItemFromCart, handleDeleteItemFromCart } = useCart();
+    const { handleDeleteAllItemFromCart, handleDeleteItemFromCart, handleUpdateQuantity } = useCart();
     const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
     const total = subtotal;
 
@@ -47,6 +47,7 @@ export default function CartContent({ cartItems }: CartContentProps) {
 
                             <div className="flex items-center gap-2 pe-4">
                                 <Button
+                                    onClick={() => handleUpdateQuantity(item?.id, false)}
                                     className="cursor-pointer text-black transition-all hover:bg-gray-200 dark:text-white dark:hover:bg-gray-800"
                                     variant="ghost"
                                 >
@@ -54,6 +55,7 @@ export default function CartContent({ cartItems }: CartContentProps) {
                                 </Button>
                                 <span>{item?.quantity}</span>
                                 <Button
+                                    onClick={() => handleUpdateQuantity(item?.id, true)}
                                     className="cursor-pointer text-black transition-all hover:bg-gray-200 dark:text-white dark:hover:bg-gray-800"
                                     variant="ghost"
                                 >

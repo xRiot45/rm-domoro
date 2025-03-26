@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\MenuItem;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -75,6 +76,22 @@ class CartController extends Controller
         }
 
         return redirect()->back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
+    }
+
+    public function update_quantity(Request $request, int $id): RedirectResponse
+    {
+        $cart = Cart::findOrFail($id);
+        $increment = $request->input('increment', true);
+
+        if ($increment) {
+            $cart->increment('quantity');
+        } elseif ($cart->quantity > 1) {
+            $cart->decrement('quantity');
+        } else {
+            $cart->delete();
+        }
+
+        return redirect()->back()->with('success', 'Jumlah menu berhasil diubah.');
     }
 
     public function destroy(int $id): RedirectResponse

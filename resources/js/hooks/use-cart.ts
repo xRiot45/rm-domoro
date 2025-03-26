@@ -32,6 +32,10 @@ export function useCart() {
         });
     };
 
+    const handleUpdateQuantity = (cartId: number, increment: boolean) => {
+        router.put(route('cashier.cart.update_quantity', { id: cartId }), { increment });
+    };
+
     const handleDeleteItemFromCart = (cartId: number) => {
         router.delete(route('cashier.cart.destroy', { id: cartId }), {
             onSuccess: () => {
@@ -78,5 +82,5 @@ export function useCart() {
         });
     };
 
-    return { addMenuToCart, handleDeleteItemFromCart, handleDeleteAllItemFromCart };
+    return { addMenuToCart, handleUpdateQuantity, handleDeleteItemFromCart, handleDeleteAllItemFromCart };
 }
