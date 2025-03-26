@@ -1,4 +1,3 @@
-import EmptyImg from '@/assets/errors/empty.svg';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,6 +7,7 @@ import { Carts } from '@/models/cart';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
 import { Minus, Plus, Trash } from 'lucide-react';
+import EmptyState from './empty-state';
 
 interface CartContentProps {
     cartItems: Carts[];
@@ -64,8 +64,7 @@ export default function CartContent({ cartItems }: CartContentProps) {
                     ))
                 ) : (
                     <>
-                        <img src={EmptyImg} alt="Error" className="mx-auto h-64 w-64" />
-                        <p className="text-md text-center font-black text-gray-500">Keranjang kosong</p>
+                        <EmptyState description="Keranjang kosong" />
                     </>
                 )}
             </ScrollArea>
