@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
@@ -130,11 +131,14 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     Route::get('/cashier/dashboard', [DashboardController::class, 'index_cashier'])->name('cashier.dashboard');
 
     // Menu Items
-    Route::prefix('/cashier/menu')
-        ->controller(MenuItemController::class)
-        ->group(function () {
-            Route::get('/', 'index_cashier')->name('cashier.menu-items.index');
+    Route::prefix('/cashier/menu')->group(function () {
+        Route::controller(CartController::class)->group(function () {
+            Route::get('/', 'index')->name('cashier.cart.index');
+            Route::post('/cart', 'store')->name('cashier.cart.store');
+            Route::delete('/cart/{id}', 'destroy')->name('cashier.cart.destroy');
+            Route::delete('/cart-all', 'destroy_all')->name('cashier.cart.destroy_all');
         });
+    });
 });
 
 require __DIR__ . '/settings.php';

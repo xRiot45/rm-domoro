@@ -11,7 +11,6 @@ use Inertia\Response;
 
 class MenuItemController extends Controller
 {
-
     private function getDataMenuItems(): array
     {
         return MenuItem::with('menuCategory')->get()->toArray();
@@ -20,13 +19,6 @@ class MenuItemController extends Controller
     public function index_admin(): Response
     {
         return Inertia::render('admin/menu-management/menu-items/index', [
-            'data' => $this->getDataMenuItems(),
-        ]);
-    }
-
-    public function index_cashier(): Response
-    {
-        return Inertia::render('cashier/menu/index', [
             'data' => $this->getDataMenuItems(),
         ]);
     }
