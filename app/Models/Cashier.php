@@ -8,6 +8,7 @@ use App\Enums\JobTypeEnum;
 use App\Enums\ShiftEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cashier extends Model
 {
@@ -39,5 +40,10 @@ class Cashier extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class, 'cashier_id');
     }
 }
