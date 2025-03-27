@@ -41,7 +41,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('chef.dashboard', absolute: false));
         }
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        return redirect()->intended(route('home', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse
