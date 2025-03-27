@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 import { MenuItems } from '@/models/menu-items';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
+import { useCart } from '../hooks/use-cart';
 
 interface MenuItemCardProps {
     menuItems: MenuItems[];

@@ -10,18 +10,14 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+// Route for customer
+Route::middleware([])->group(function () {
+    Route::get('/', [MenuItemController::class, 'index_customer'])->name('home');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 });
 
+// Route for admin
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
 
@@ -119,14 +115,17 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     });
 });
 
+// Route for chef
 Route::middleware(['auth', 'verified', 'role:chef'])->group(function () {
     Route::get('/chef/dashboard', [DashboardController::class, 'index_chef'])->name('chef.dashboard');
 });
 
+// Route for courier
 Route::middleware(['auth', 'verified', 'role:courier'])->group(function () {
     Route::get('/courier/dashboard', [DashboardController::class, 'index_courier'])->name('courier.dashboard');
 });
 
+// Route for customer
 Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     Route::get('/cashier/dashboard', [DashboardController::class, 'index_cashier'])->name('cashier.dashboard');
 

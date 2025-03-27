@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useCart } from '@/hooks/use-cart';
 import { Carts } from '@/models/cart';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
 import { Minus, Plus, Trash } from 'lucide-react';
+import { useCart } from '../../hooks/use-cart';
 import EmptyState from './empty-state';
 
 interface CartContentProps {
