@@ -40,8 +40,8 @@ const mainNavItems: NavGroup[] = [
                 icon: 'la:users',
             },
             {
-                title: 'Customer',
-                href: '/admin/users-management/customer',
+                title: 'Pelanggan',
+                href: '/admin/users-management/customers',
                 icon: 'carbon:customer',
             },
             {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,6 +43,12 @@ class UserController extends Controller
     {
         $user = User::create($request->validated());
         $user->syncRoles($request->roles);
+
+        if ($user->hasRole('customer')) {
+            Customer::create([
+                'user_id' => $user->id,
+            ]);
+        }
         return redirect()
             ->route('admin.all-users.index')
             ->with(['success' => 'User berhasil ditambahkan']);

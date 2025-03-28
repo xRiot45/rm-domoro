@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
@@ -83,6 +84,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::get('/edit/{id}', 'edit')->name('admin.cashiers.edit');
                 Route::put('/edit/{id}', 'update')->name('admin.cashiers.update');
                 Route::delete('/delete/{id}', 'destroy')->name('admin.cashiers.destroy');
+            });
+
+        // Customer
+        Route::prefix('/customers')
+            ->controller(CustomerController::class)
+            ->group(function () {
+                Route::get('/', 'index_admin')->name('admin.customers.index');
+                Route::get('/edit/{id}', 'edit')->name('admin.customers.edit');
+                Route::put('/edit/{id}', 'update')->name('admin.customers.update');
             });
     });
 

@@ -179,7 +179,7 @@ export default function EditPage({ cashier }: { cashier: Cashier }) {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <InputError message={errors.status} className="mt-2" />
+                        <InputError message={errors.gender} className="mt-2" />
                     </div>
 
                     <div id="shift">
