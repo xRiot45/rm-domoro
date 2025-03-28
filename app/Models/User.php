@@ -25,6 +25,15 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            if (!$user->hasRole('customer')) {
+                $user->customer()->delete();
+            }
+        });
+    }
+
     public function cashiers(): HasOne
     {
         return $this->hasOne(Cashier::class);

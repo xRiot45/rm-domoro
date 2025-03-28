@@ -59,9 +59,16 @@ class UserController extends Controller
     public function update(UserRequest $request, int $id): RedirectResponse
     {
         $user = User::findOrFail($id);
+        $oldRoles = $user->getRoleNames();
+
         $user->update($request->validated());
         if ($request->filled('roles')) {
             $user->syncRoles($request->roles);
+        }
+
+        $newRoles = $user->getRoleNames();
+        if ($oldRoles->contains('customer') && !$newRoles->contains('customer')) {
+            $user->customer()->delete();
         }
 
         return redirect()
@@ -77,7 +84,7 @@ class UserController extends Controller
             ],
             [
                 'password.required' => 'Password harus diisi',
-            ]
+            ],
         );
 
         $user = User::findOrFail($userId);
