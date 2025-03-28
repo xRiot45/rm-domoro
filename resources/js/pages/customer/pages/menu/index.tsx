@@ -33,7 +33,7 @@ export default function MenuPage({ data }: { data: MenuItems[] }) {
 
                 <div className="grid grid-cols-1 space-y-6 lg:grid-cols-3 lg:gap-6">
                     {/* Filter Form */}
-                    <div className="sticky h-auto w-full self-start rounded-lg border border-gray-200 p-6 lg:top-4 lg:mb-0">
+                    <div className="sticky h-auto w-full self-start rounded-lg border border-gray-200 p-6 lg:top-4 lg:mb-0 dark:border-gray-800">
                         <h1 className="text-xl font-bold">Filter</h1>
                         <Separator className="my-4" />
                         <div className="space-y-4">

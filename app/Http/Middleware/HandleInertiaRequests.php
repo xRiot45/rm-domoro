@@ -31,6 +31,7 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'wishlist' => $request->user() ? $request->user()->wishlists()->pluck('menu_item_id') : [],
             ],
             'ziggy' => fn(): array => [...(new Ziggy())->toArray(), 'location' => $request->url()],
 
@@ -42,6 +43,9 @@ class HandleInertiaRequests extends Middleware
                 $query->where('name', 'cashier');
             })->get(),
             'existingCashiers' => Cashier::pluck('user_id')->toArray(),
+            'flash' => [
+                'status' => session('status'),
+            ],
         ];
     }
 }

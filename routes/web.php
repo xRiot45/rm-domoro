@@ -10,6 +10,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 // Route for customer
@@ -22,6 +23,9 @@ Route::middleware([])->group(function () {
     Route::delete('/cart-all', [CartController::class, 'destroy_all'])->name('cart.destroy_all');
 
     Route::get('/menu', [MenuItemController::class, 'menu_customer'])->name('menu.index');
+
+    Route::get('/wishlist', [WishlistController::class, 'index_customer'])->name('wishlist.index');
+    Route::post('/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 // Route for admin
