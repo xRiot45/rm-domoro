@@ -17,7 +17,7 @@ use Inertia\Response;
 
 class CartController extends Controller
 {
-    public function index(): RedirectResponse|Response
+    private function getCartItems(): array|RedirectResponse
     {
         $user = Auth::user();
 
@@ -29,17 +29,41 @@ class CartController extends Controller
         }
 
         $menuItems = MenuItem::with('menuCategory')->get();
-
         $carts = Cart::with(['menuItem'])
             ->when($cashier?->id, fn($query, $id) => $query->where('cashier_id', $id))
             ->when($customer?->id, fn($query, $id) => $query->where('customer_id', $id))
             ->get();
 
-        $view = $cashier ? 'cashier/menu/index' : 'customer/menu/index';
-
-        return Inertia::render($view, [
+        return [
             'menuItems' => $menuItems,
             'carts' => $carts,
+        ];
+    }
+
+    public function index_cashier(): RedirectResponse|Response
+    {
+        $data = $this->getCartItems();
+
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
+
+        return Inertia::render('cashier/menu/index', [
+            'menuItems' => $data['menuItems'],
+            'carts' => $data['carts'],
+        ]);
+    }
+
+    public function index_customer(): RedirectResponse|Response
+    {
+        $data = $this->getCartItems();
+
+        if ($data instanceof RedirectResponse) {
+            return $data;
+        }
+
+        return Inertia::render('customer/cart/index', [
+            'carts' => $data['carts'],
         ]);
     }
 

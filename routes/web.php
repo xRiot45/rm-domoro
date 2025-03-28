@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 // Route for customer
 Route::middleware([])->group(function () {
     Route::get('/', [MenuItemController::class, 'index_customer'])->name('home');
+    Route::get('/cart', [CartController::class, 'index_customer'])->name('cart.index');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/cart/{id}', [CartController::class, 'update_quantity'])->name('cart.update_quantity');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::delete('/cart-all', [CartController::class, 'destroy_all'])->name('cart.destroy_all');
 });
 
 // Route for admin
@@ -135,14 +139,14 @@ Route::middleware(['auth', 'verified', 'role:courier'])->group(function () {
     Route::get('/courier/dashboard', [DashboardController::class, 'index_courier'])->name('courier.dashboard');
 });
 
-// Route for customer
+// Route for cashier
 Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     Route::get('/cashier/dashboard', [DashboardController::class, 'index_cashier'])->name('cashier.dashboard');
 
     // Menu Items
     Route::prefix('/cashier/menu')->group(function () {
         Route::controller(CartController::class)->group(function () {
-            Route::get('/', 'index')->name('cashier.cart.index');
+            Route::get('/', 'index_cashier')->name('cashier.cart.index');
             Route::post('/cart', 'store')->name('cashier.cart.store');
             Route::put('/cart/{id}', 'update_quantity')->name('cashier.cart.update_quantity');
             Route::delete('/cart/{id}', 'destroy')->name('cashier.cart.destroy');

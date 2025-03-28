@@ -13,7 +13,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
     const { addMenuToCart } = useCart();
     return (
         <>
-            <div className="grid w-full flex-1 auto-rows-min grid-cols-2 gap-6 space-y-5 md:grid-cols-2 lg:grid-cols-5">
+            <div className="mb-20 grid w-full flex-1 auto-rows-min grid-cols-2 gap-6 space-y-5 md:grid-cols-2 lg:grid-cols-4">
                 {menuItems?.map((item, index) => (
                     <div key={index} className={cn('pb-0.5')}>
                         <div className="relative">

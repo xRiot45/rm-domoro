@@ -34,11 +34,11 @@ export function useCart() {
     };
 
     const handleUpdateQuantity = (cartId: number, increment: boolean) => {
-        router.put(route('cashier.cart.update_quantity', { id: cartId }), { increment });
+        router.put(route('cart.update_quantity', { id: cartId }), { increment });
     };
 
     const handleDeleteItemFromCart = (cartId: number) => {
-        router.delete(route('cashier.cart.destroy', { id: cartId }), {
+        router.delete(route('cart.destroy', { id: cartId }), {
             onSuccess: () => {
                 toast.success('Success', {
                     description: 'Menu Berhasil Dihapus!',
@@ -61,7 +61,7 @@ export function useCart() {
     };
 
     const handleDeleteAllItemFromCart = () => {
-        router.delete(route('cashier.cart.destroy_all'), {
+        router.delete(route('cart.destroy_all'), {
             onSuccess: () => {
                 toast.success('Success', {
                     description: 'Berhasil Menghapus Semua Menu Dari Keranjang',

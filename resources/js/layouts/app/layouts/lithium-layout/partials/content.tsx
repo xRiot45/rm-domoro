@@ -11,7 +11,7 @@ export function LithiumContent({ variant = 'header', children, ...props }: AppCo
     }
 
     return (
-        <main className="container mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-xl px-4 lg:px-0" {...props}>
+        <main className="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-4 rounded-xl px-4 lg:px-0" {...props}>
             {children}
         </main>
     );

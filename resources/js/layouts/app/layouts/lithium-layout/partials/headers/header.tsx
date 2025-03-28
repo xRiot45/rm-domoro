@@ -31,7 +31,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
     return (
         <>
             <div className="border-sidebar-border/80 border-b">
-                <div className="container mx-auto flex h-16 items-center px-4 lg:px-0">
+                <div className="mx-auto flex h-16 max-w-7xl items-center px-4 lg:px-0">
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
@@ -75,7 +75,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             </SheetContent>
                         </Sheet>
                     </div>
-                    <Link href="/dashboard" prefetch className="flex items-center space-x-2">
+                    <Link href="/" prefetch className="flex items-center space-x-2">
                         <Logo />
                     </Link>
 
