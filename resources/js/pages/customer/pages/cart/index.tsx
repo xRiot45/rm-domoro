@@ -4,12 +4,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app/layout';
 import { Carts } from '@/models/cart';
-import EmptyState from '@/pages/cashier/menu/components/cart/empty-state';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
 import { Head, Link } from '@inertiajs/react';
 import { Minus, Plus, Trash } from 'lucide-react';
-import { useCart } from '../hooks/use-cart';
+import { useCart } from '../../hooks/use-cart';
+import EmptyState from './empty-state';
 
 export default function CartPage({ carts }: { carts: Carts[] }) {
     return (

@@ -20,6 +20,8 @@ Route::middleware([])->group(function () {
     Route::put('/cart/{id}', [CartController::class, 'update_quantity'])->name('cart.update_quantity');
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::delete('/cart-all', [CartController::class, 'destroy_all'])->name('cart.destroy_all');
+
+    Route::get('/menu', [MenuItemController::class, 'menu_customer'])->name('menu.index');
 });
 
 // Route for admin

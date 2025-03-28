@@ -82,9 +82,9 @@ export default function CartContent({ cartItems }: CartContentProps) {
                 <span>Total:</span>
                 <span>{formatCurrency(total)}</span>
             </div>
-            <Button className="mt-4 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black">
-                <Icon icon={'lets-icons:order'} />
-                Order Sekarang
+            <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black">
+                <Icon icon={'tdesign:undertake-transaction'} />
+                Lanjutkan Ke Pembayaran
             </Button>
         </Card>
     );

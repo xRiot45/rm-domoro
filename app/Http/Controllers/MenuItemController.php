@@ -30,6 +30,13 @@ class MenuItemController extends Controller
         ]);
     }
 
+    public function menu_customer(): Response
+    {
+        return Inertia::render('customer/pages/menu/index', [
+            'data' => $this->getDataMenuItems(),
+        ]);
+    }
+
     public function create(): Response
     {
         return Inertia::render('admin/menu-management/menu-items/pages/create');

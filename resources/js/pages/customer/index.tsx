@@ -8,12 +8,11 @@ import { Head } from '@inertiajs/react';
 import Autoplay from 'embla-carousel-autoplay';
 import MenuItemCard from './components/menu-item-card';
 
-export default function App({ data }: { data: MenuItems[] }) {
+export default function CustomerPage({ data }: { data: MenuItems[] }) {
     return (
         <>
             <AppLayout>
                 <Head title="Beranda" />
-
                 <Carousel
                     className="w-auto rounded-2xl"
                     plugins={[
@@ -33,7 +32,7 @@ export default function App({ data }: { data: MenuItems[] }) {
                     <h1 className="text-3xl font-black">Jelajahi Hidangan Lezat Kami</h1>
                     <p className="text-muted-foreground mt-1 text-lg">Temukan berbagai pilihan menu spesial dari restoran kami</p>
                 </div>
-                <MenuItemCard menuItems={data} />
+                <MenuItemCard menuItems={data.slice(0, 8)} />
             </AppLayout>
         </>
     );

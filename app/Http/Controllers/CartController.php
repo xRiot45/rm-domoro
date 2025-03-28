@@ -62,7 +62,7 @@ class CartController extends Controller
             return $data;
         }
 
-        return Inertia::render('customer/cart/index', [
+        return Inertia::render('customer/pages/cart/index', [
             'carts' => $data['carts'],
         ]);
     }
