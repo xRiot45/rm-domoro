@@ -21,7 +21,6 @@ export function useCart() {
                 });
             },
             onError: (errors) => {
-                console.log(errors);
                 toast.error('Failed', {
                     description: errors.message || 'Menu gagal ditambahkan ke keranjang',
                     action: {

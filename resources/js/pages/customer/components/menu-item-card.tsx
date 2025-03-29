@@ -41,7 +41,6 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                     });
                 },
                 onError: (errors) => {
-                    console.log(errors);
                     toast.error('Failed', {
                         description: errors.message || 'Terjadi kesalahan',
                         action: {
@@ -92,7 +91,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                                 </span>
                             </div>
                         </div>
-                        <div className="mt-4 flex items-center justify-between gap-2">
+                        <div className="mt-4 space-y-3">
                             <Button
                                 onClick={() => (user ? addMenuToCart(item) : null)}
                                 disabled={!user || item?.status === 'habis'}

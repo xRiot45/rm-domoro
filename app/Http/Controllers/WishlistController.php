@@ -13,9 +13,12 @@ class WishlistController extends Controller
 {
     public function index_customer(): Response
     {
-        $wishlists = Wishlist::all();
+        $wishlists = Wishlist::with('menuItem.menuCategory')
+            ->where('user_id', Auth::user()->id)
+            ->get();
+
         return Inertia::render('customer/pages/wishlist/index', [
-            'data' => $wishlists,
+            'wishlists' => $wishlists,
         ]);
     }
 
