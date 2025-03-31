@@ -150,6 +150,9 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                                     />
                                 </Label>
                             </div>
+
+                            <h1 className="mt-5 mb-1 text-lg font-bold text-gray-800 dark:text-white">{data?.full_name}</h1>
+                            <span className="text-sm text-gray-500 dark:text-white">{data?.email}</span>
                         </div>
 
                         <div id="full_name">
