@@ -5,6 +5,7 @@ interface User {
     full_name: string;
     email: string;
     phone_number: string;
+    avatar: File | null;
     password: string;
     password_confirmation: string;
     roles: Role[];

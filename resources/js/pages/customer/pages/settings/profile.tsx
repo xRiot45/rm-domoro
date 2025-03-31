@@ -1,6 +1,7 @@
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AddressLabelEnum } from '@/enums/address-label';
 import { GenderEnum } from '@/enums/gender';
+import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app/layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { cn } from '@/lib/utils';
@@ -17,6 +19,7 @@ import { CustomerProfileForm } from '@/models/settings/customer-profile';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { formattedDateForInput } from '@/utils/format-date';
 import { Transition } from '@headlessui/react';
+import { Icon } from '@iconify/react';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { CalendarIcon } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
@@ -30,11 +33,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Profile({ mustVerifyEmail, status, customer }: { mustVerifyEmail: boolean; status?: string; customer: Customer }) {
-    const { auth } = usePage<SharedData>().props;
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
+    const getInitials = useInitials();
+
     const { data, setData, errors, processing, recentlySuccessful, reset, setError } = useForm<Required<CustomerProfileForm>>({
         full_name: customer?.user?.full_name,
         email: customer?.user?.email,
         phone_number: customer?.user?.phone_number,
+        avatar: customer?.user?.avatar,
         birthplace: customer?.birthplace,
         birthdate: new Date(customer?.birthdate ?? ''),
         address: customer?.address,
@@ -44,6 +51,7 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
     });
 
     const [inputValue, setInputValue] = useState(data.birthdate ? data.birthdate.toISOString().split('T')[0] : '');
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     const handleInputBirthdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
@@ -53,15 +61,34 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
         }
     };
 
+    const handleFileChange = (file: File | null) => {
+        if (file) {
+            setAvatarPreview(URL.createObjectURL(file));
+            setData('avatar', file);
+        }
+    };
+
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
 
-        const formattedData = {
-            ...data,
-            birthdate: formattedDateForInput(data.birthdate),
-        };
+        const formData = new FormData();
+        formData.append('full_name', data.full_name ?? '');
+        formData.append('email', data.email ?? '');
+        formData.append('phone_number', data.phone_number ?? '');
 
-        router.put(route('customer.profile.update_profile', { id: customer?.id }), formattedData, {
+        if (data.avatar instanceof File) {
+            formData.append('avatar', data.avatar);
+        }
+
+        formData.append('birthplace', data.birthplace ?? '');
+        formData.append('birthdate', data.birthdate ? String(formattedDateForInput(data.birthdate)) : '');
+        formData.append('address', data.address ?? '');
+        formData.append('address_label', data.address_label ?? '');
+        formData.append('note', data.note ?? '');
+        formData.append('gender', data.gender ?? '');
+
+        router.post(route('customer.profile.update_profile', { id: customer?.id }), formData, {
+            forceFormData: true,
             preserveState: true,
             onSuccess: () => {
                 toast.success('Success', {
@@ -97,7 +124,34 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                 <div className="space-y-6">
                     <HeadingSmall title="Informasi Pribadi" description="Update data pribadi anda" />
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
+                        <div className="mt-10 flex flex-col items-center justify-center">
+                            <div className="relative">
+                                <Avatar className="h-28 w-28 overflow-hidden rounded-full">
+                                    <AvatarImage
+                                        className="h-full w-full object-cover"
+                                        src={avatarPreview || auth.user.avatar}
+                                        alt={auth.user.full_name}
+                                    />
+                                    <AvatarFallback>{getInitials(auth.user.full_name)}</AvatarFallback>
+                                </Avatar>
+
+                                <Label
+                                    htmlFor="file-input"
+                                    className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-black p-2 transition-all hover:bg-gray-600 dark:bg-white hover:dark:bg-gray-600"
+                                >
+                                    <Icon icon="tabler:camera-filled" className="h-5 w-5 text-white dark:text-black" />
+                                    <Input
+                                        id="file-input"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+                                    />
+                                </Label>
+                            </div>
+                        </div>
+
                         <div id="full_name">
                             <Label htmlFor="full_name">Nama Lengkap</Label>
                             <Input

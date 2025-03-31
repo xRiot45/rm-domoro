@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,10 +29,24 @@ class CustomerProfileController extends Controller
             return redirect()->back()->with('error', 'Customer not found');
         }
 
-        $customer->update($request->except(['full_name', 'phone_number']));
+        $avatarPath = $customer->user->avatar;
+        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+            if ($customer->user->avatar && Storage::disk('public')->exists(str_replace('/storage/', '', $customer->user->avatar))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $customer->user->avatar));
+            }
+
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('', $filename, 'public');
+
+            $avatarPath = '/storage/' . $path;
+        }
+
+        $customer->update($request->except(['full_name', 'phone_number', 'avatar']));
         $customer->user->update([
-            'full_name' => $request->input('full_name'),
-            'phone_number' => $request->input('phone_number'),
+            'full_name' => $request->input('full_name', $customer->user->full_name),
+            'phone_number' => $request->input('phone_number', $customer->user->phone_number),
+            'avatar' => $avatarPath,
         ]);
 
         return redirect()->back()->with('success', 'Profile updated successfully');

@@ -18,8 +18,9 @@ class CustomerProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|min:12|max:12',
+            'full_name' => 'filled|string|max:255',
+            'phone_number' => 'filled|string|min:12|max:12',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'birthplace' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date',
             'address' => 'nullable|string|max:255',

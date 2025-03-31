@@ -58,7 +58,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
                                         <div className="flex flex-col space-y-4">
                                             {rightNavItems.map((item) => (
-                                                <a
+                                                <Link
                                                     key={item.title}
                                                     href={item.href}
                                                     target="_blank"
@@ -67,7 +67,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                 >
                                                     {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
                                                     <span>{item.title}</span>
-                                                </a>
+                                                </Link>
                                             ))}
                                         </div>
                                     </div>
@@ -148,7 +148,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <DropdownMenuTrigger>
                                     <Button variant="ghost" className="size-10 cursor-pointer rounded-full p-1">
                                         <Avatar className="size-8 overflow-hidden rounded-full">
-                                            <AvatarImage src={auth.user.avatar} alt={auth.user.full_name} />
+                                            <AvatarImage src={auth.user.avatar} alt={auth.user.full_name} className="h-full w-full object-cover" />
                                             <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                                 {getInitials(auth.user.full_name)}
                                             </AvatarFallback>

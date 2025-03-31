@@ -41,7 +41,7 @@ Route::middleware([])->group(function () {
         ->name('customer.profile.')
         ->group(function () {
             Route::get('/', [CustomerProfileController::class, 'index_profile'])->name('index_profile');
-            Route::put('/', [CustomerProfileController::class, 'update_profile'])->name('update_profile');
+            Route::post('/', [CustomerProfileController::class, 'update_profile'])->name('update_profile');
         });
 });
 
