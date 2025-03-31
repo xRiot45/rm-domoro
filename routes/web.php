@@ -9,6 +9,7 @@ use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Settings\CustomerProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -16,16 +17,32 @@ use Illuminate\Support\Facades\Route;
 // Route for customer
 Route::middleware([])->group(function () {
     Route::get('/', [MenuItemController::class, 'index_customer'])->name('home');
-    Route::get('/cart', [CartController::class, 'index_customer'])->name('cart.index');
-    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-    Route::put('/cart/{id}', [CartController::class, 'update_quantity'])->name('cart.update_quantity');
-    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::delete('/cart-all', [CartController::class, 'destroy_all'])->name('cart.destroy_all');
+
+    Route::prefix('cart')
+        ->name('cart.')
+        ->group(function () {
+            Route::get('/', [CartController::class, 'index_customer'])->name('index');
+            Route::post('/', [CartController::class, 'store'])->name('store');
+            Route::put('/{id}', [CartController::class, 'update_quantity'])->name('update_quantity');
+            Route::delete('/{id}', [CartController::class, 'destroy'])->name('destroy');
+            Route::delete('/all', [CartController::class, 'destroy_all'])->name('destroy_all');
+        });
 
     Route::get('/menu', [MenuItemController::class, 'menu_customer'])->name('menu.index');
 
-    Route::get('/wishlist', [WishlistController::class, 'index_customer'])->name('wishlist.index');
-    Route::post('/wishlist', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::prefix('wishlist')
+        ->name('wishlist.')
+        ->group(function () {
+            Route::get('/', [WishlistController::class, 'index_customer'])->name('index');
+            Route::post('/', [WishlistController::class, 'toggle'])->name('toggle');
+        });
+
+    Route::prefix('settings/profile')
+        ->name('customer.profile.')
+        ->group(function () {
+            Route::get('/', [CustomerProfileController::class, 'index_profile'])->name('index_profile');
+            Route::put('/', [CustomerProfileController::class, 'update_profile'])->name('update_profile');
+        });
 });
 
 // Route for admin
