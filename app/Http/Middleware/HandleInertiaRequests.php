@@ -41,15 +41,23 @@ class HandleInertiaRequests extends Middleware
             'permissions' => Permission::all(),
             'menuCategories' => MenuCategory::all(),
 
+            // Data Kasir
             'usersCashier' => User::whereHas('roles', function ($query) {
                 $query->where('name', 'cashier');
             })->get(),
             'existingCashiers' => Cashier::pluck('user_id')->toArray(),
 
+            // Data Chef
             'usersChef' => User::whereHas('roles', function ($query) {
                 $query->where('name', 'chef');
             })->get(),
             'existingChefs' => Chef::pluck('user_id')->toArray(),
+
+            // Data Courier
+            'usersCourier' => User::whereHas('roles', function ($query) {
+                $query->where('name', 'courier');
+            })->get(),
+            'existingCouriers' => Chef::pluck('user_id')->toArray(),
 
             'flash' => [
                 'status' => session('status'),

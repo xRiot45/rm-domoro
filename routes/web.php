@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ChefController;
+use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
@@ -133,6 +134,17 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::get('/edit/{id}', 'edit')->name('admin.chefs.edit');
                 Route::put('/edit/{id}', 'update')->name('admin.chefs.update');
                 Route::delete('/delete/{id}', 'destroy')->name('admin.chefs.destroy');
+            });
+
+        Route::prefix('/couriers')
+            ->controller(CourierController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('admin.couriers.index');
+                Route::get('/create', 'create')->name('admin.couriers.create');
+                Route::post('/create', 'store')->name('admin.couriers.store');
+                Route::get('/edit/{id}', 'edit')->name('admin.couriers.edit');
+                Route::put('/edit/{id}', 'update')->name('admin.couriers.update');
+                Route::delete('/delete/{id}', 'destroy')->name('admin.couriers.destroy');
             });
     });
 

@@ -54,6 +54,11 @@ const mainNavItems: NavGroup[] = [
                 href: '/admin/users-management/cashiers',
                 icon: 'hugeicons:cashier',
             },
+            {
+                title: 'Courier / Kurir',
+                href: '/admin/users-management/couriers',
+                icon: 'mdi:courier-fast',
+            },
         ],
     },
     {
