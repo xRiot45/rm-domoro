@@ -20,7 +20,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
-import { CashierStatusEnum } from '@/enums/cashier-status';
+import { EmployeeStatusEnum } from '@/enums/employee-status';
 import { Cashier } from '@/models/cashier';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
@@ -95,7 +95,7 @@ export function DataTableRowActions({ row }: { row: Row<Cashier> }) {
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
-                    {row.original.stopped_at && row.original.status === CashierStatusEnum.LEAVE ? (
+                    {row.original.stopped_at && row.original.status === EmployeeStatusEnum.LEAVE ? (
                         <>
                             <DropdownMenuSeparator />
                             <AlertDialog>
@@ -180,7 +180,7 @@ function CashierData({ data }: { data: Cashier }) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <h1 className="font-medium">Status Karyawan</h1>
-                        <h2 className={`font-semibold capitalize ${data?.status === CashierStatusEnum.WORK ? 'text-green-500' : 'text-red-500'}`}>
+                        <h2 className={`font-semibold capitalize ${data?.status === EmployeeStatusEnum.WORK ? 'text-green-500' : 'text-red-500'}`}>
                             : {data?.status}
                         </h2>
                     </div>

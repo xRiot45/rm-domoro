@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\CashierStatusEnum;
+use App\Enums\EmployeeStatusEnum;
 use App\Enums\GenderEnum;
 use App\Enums\JobTypeEnum;
 use App\Enums\ShiftEnum;
@@ -25,7 +25,7 @@ class CashierRequest extends FormRequest
             'salary' => 'required|numeric',
             'gender' => ['required', new Enum(GenderEnum::class)],
             'shift' => ['required', new Enum(ShiftEnum::class)],
-            'status' => ['required', new Enum(CashierStatusEnum::class)],
+            'status' => ['required', new Enum(EmployeeStatusEnum::class)],
             'job_type' => ['required', new Enum(JobTypeEnum::class)],
         ];
     }

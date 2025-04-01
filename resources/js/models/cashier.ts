@@ -1,4 +1,4 @@
-import { CashierStatusEnum } from '@/enums/cashier-status';
+import { EmployeeStatusEnum } from '@/enums/employee-status';
 import { GenderEnum } from '@/enums/gender';
 import { JobTypeEnum } from '@/enums/job-type';
 import { ShiftEnum } from '@/enums/shift';
@@ -14,7 +14,7 @@ interface Cashier {
     gender: GenderEnum.MALE | GenderEnum.FEMALE;
     shift: ShiftEnum.MORNING | ShiftEnum.EVENING | ShiftEnum.NIGHT;
     job_type: JobTypeEnum.FULL_TIME | JobTypeEnum.PART_TIME;
-    status: CashierStatusEnum.WORK | CashierStatusEnum.LEAVE;
+    status: EmployeeStatusEnum.WORK | EmployeeStatusEnum.LEAVE;
     created_at?: string;
     updated_at?: string;
 }
@@ -27,7 +27,7 @@ interface CashierForm {
     gender: GenderEnum.MALE | GenderEnum.FEMALE;
     shift: ShiftEnum.MORNING | ShiftEnum.EVENING | ShiftEnum.NIGHT;
     job_type: JobTypeEnum.FULL_TIME | JobTypeEnum.PART_TIME;
-    status: CashierStatusEnum.WORK | CashierStatusEnum.LEAVE;
+    status: EmployeeStatusEnum.WORK | EmployeeStatusEnum.LEAVE;
 }
 
 export type { Cashier, CashierForm };

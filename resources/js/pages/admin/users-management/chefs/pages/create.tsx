@@ -56,8 +56,8 @@ export default function CreatePage() {
 
         const formattedData = {
             ...data,
-            hired_at: formattedDateForInput(data.hired_at),
-            stopped_at: formattedDateForInput(data.stopped_at),
+            hired_at: formattedDateForInput(data.hired_at) ?? null,
+            stopped_at: formattedDateForInput(data.stopped_at) ?? null,
         };
 
         router.post(route('admin.chefs.store'), formattedData, {

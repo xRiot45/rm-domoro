@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CashierStatusEnum } from '@/enums/cashier-status';
+import { EmployeeStatusEnum } from '@/enums/employee-status';
 import { GenderEnum } from '@/enums/gender';
 import { JobTypeEnum } from '@/enums/job-type';
 import { ShiftEnum } from '@/enums/shift';
@@ -47,7 +47,7 @@ export default function CreatePage() {
         salary: 0,
         gender: GenderEnum.MALE,
         shift: ShiftEnum.MORNING,
-        status: CashierStatusEnum.WORK,
+        status: EmployeeStatusEnum.WORK,
         job_type: JobTypeEnum.FULL_TIME,
     });
 
@@ -56,8 +56,8 @@ export default function CreatePage() {
 
         const formattedData = {
             ...data,
-            hired_at: formattedDateForInput(data.hired_at),
-            stopped_at: formattedDateForInput(data.stopped_at),
+            hired_at: formattedDateForInput(data.hired_at) ?? null,
+            stopped_at: formattedDateForInput(data.stopped_at) ?? null,
         };
 
         router.post(route('admin.cashiers.store'), formattedData, {
@@ -230,12 +230,12 @@ export default function CreatePage() {
 
                     <div id="status">
                         <Label htmlFor="status">Status Kasir</Label>
-                        <Select onValueChange={(value) => setData('status', value as CashierStatusEnum)}>
+                        <Select onValueChange={(value) => setData('status', value as EmployeeStatusEnum)}>
                             <SelectTrigger className="mt-2 w-full">
                                 <SelectValue placeholder="Pilih Status" />
                             </SelectTrigger>
                             <SelectContent>
-                                {Object.values(CashierStatusEnum).map((value) => (
+                                {Object.values(EmployeeStatusEnum).map((value) => (
                                     <SelectItem key={value} value={value} className="capitalize">
                                         {value}
                                     </SelectItem>

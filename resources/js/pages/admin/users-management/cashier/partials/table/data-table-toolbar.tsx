@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CashierStatusEnum } from '@/enums/cashier-status';
+import { EmployeeStatusEnum } from '@/enums/employee-status';
 import { ShiftEnum } from '@/enums/shift';
 import { DataTableToolbarProps } from '@/types/tanstack';
 import { Icon } from '@iconify/react';
@@ -52,7 +52,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                         <DataTableFacetedFilter
                             column={table.getColumn('status')}
                             title="Cari berdasarkan status"
-                            options={Object.values(CashierStatusEnum).map((status) => ({
+                            options={Object.values(EmployeeStatusEnum).map((status) => ({
                                 label: status,
                                 value: status,
                             }))}

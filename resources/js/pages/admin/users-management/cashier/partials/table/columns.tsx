@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { CashierStatusEnum } from '@/enums/cashier-status';
+import { EmployeeStatusEnum } from '@/enums/employee-status';
 import { ShiftEnum } from '@/enums/shift';
 import { Cashier } from '@/models/cashier';
 import { ColumnDef, Row } from '@tanstack/react-table';
@@ -91,10 +91,10 @@ export const columns: ColumnDef<Cashier>[] = [
         cell: ({ row }) => {
             const status = row.original.status;
             const colorStatus =
-                status === CashierStatusEnum.WORK ? 'bg-green-500' : status === CashierStatusEnum.LEAVE ? 'bg-red-500' : 'bg-gray-500';
+                status === EmployeeStatusEnum.WORK ? 'bg-green-500' : status === EmployeeStatusEnum.LEAVE ? 'bg-red-500' : 'bg-gray-500';
             return (
                 <Badge className={`font-medium ${colorStatus} text-white`}>
-                    {status === CashierStatusEnum.WORK ? 'Bekerja' : status === CashierStatusEnum.LEAVE ? 'Berhenti' : '-'}
+                    {status === EmployeeStatusEnum.WORK ? 'Bekerja' : status === EmployeeStatusEnum.LEAVE ? 'Berhenti' : '-'}
                 </Badge>
             );
         },

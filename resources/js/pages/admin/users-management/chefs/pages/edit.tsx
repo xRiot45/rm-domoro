@@ -53,8 +53,8 @@ export default function EditPage({ chef }: { chef: Chef }) {
 
         const formattedData = {
             ...data,
-            hired_at: formattedDateForInput(data.hired_at),
-            stopped_at: formattedDateForInput(data.stopped_at),
+            hired_at: formattedDateForInput(data.hired_at) ?? null,
+            stopped_at: formattedDateForInput(data.stopped_at) ?? null,
         };
 
         router.put(route('admin.chefs.update', { id: chef?.id }), formattedData, {

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\CashierStatusEnum;
+use App\Enums\EmployeeStatusEnum;
 use App\Enums\GenderEnum;
 use App\Enums\JobTypeEnum;
 use App\Enums\ShiftEnum;
@@ -31,7 +31,7 @@ class Chef extends Model
             'stopped_at' => 'datetime',
             'shift' => ShiftEnum::class,
             'gender' => GenderEnum::class,
-            'status' => CashierStatusEnum::class,
+            'status' => EmployeeStatusEnum::class,
             'job_type' => JobTypeEnum::class
         ];
     }
