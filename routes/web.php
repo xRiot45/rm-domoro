@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
@@ -120,6 +121,18 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
                 Route::get('/', 'index_admin')->name('admin.customers.index');
                 Route::get('/edit/{id}', 'edit')->name('admin.customers.edit');
                 Route::put('/edit/{id}', 'update')->name('admin.customers.update');
+            });
+
+        // Chef
+        Route::prefix('/chefs')
+            ->controller(ChefController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('admin.chefs.index');
+                Route::get('/create', 'create')->name('admin.chefs.create');
+                Route::post('/create', 'store')->name('admin.chefs.store');
+                Route::get('/edit/{id}', 'edit')->name('admin.chefs.edit');
+                Route::put('/edit/{id}', 'update')->name('admin.chefs.update');
+                Route::delete('/delete/{id}', 'destroy')->name('admin.chefs.destroy');
             });
     });
 

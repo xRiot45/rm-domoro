@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->hasOne(Customer::class);
     }
 
+    public function chef(): HasOne
+    {
+        return $this->hasOne(Chef::class);
+    }
+
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);

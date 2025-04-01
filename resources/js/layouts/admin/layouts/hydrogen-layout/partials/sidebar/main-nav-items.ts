@@ -40,22 +40,17 @@ const mainNavItems: NavGroup[] = [
                 icon: 'la:users',
             },
             {
-                title: 'Pelanggan',
+                title: 'Customer / Pelanggan',
                 href: '/admin/users-management/customers',
                 icon: 'carbon:customer',
             },
             {
-                title: 'Admin',
-                href: '/admin/users-management/admin',
-                icon: 'ri:admin-line',
-            },
-            {
-                title: 'Chef',
-                href: '/admin/users-management/chef',
+                title: 'Chef / Koki',
+                href: '/admin/users-management/chefs',
                 icon: 'hugeicons:chef',
             },
             {
-                title: 'Kasir',
+                title: 'Cashier / Kasir',
                 href: '/admin/users-management/cashiers',
                 icon: 'hugeicons:cashier',
             },

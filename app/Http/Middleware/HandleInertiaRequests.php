@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Cashier;
+use App\Models\Chef;
 use App\Models\MenuCategory;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -39,10 +40,17 @@ class HandleInertiaRequests extends Middleware
             'roles' => Role::all(),
             'permissions' => Permission::all(),
             'menuCategories' => MenuCategory::all(),
+
             'usersCashier' => User::whereHas('roles', function ($query) {
                 $query->where('name', 'cashier');
             })->get(),
             'existingCashiers' => Cashier::pluck('user_id')->toArray(),
+
+            'usersChef' => User::whereHas('roles', function ($query) {
+                $query->where('name', 'chef');
+            })->get(),
+            'existingChefs' => Chef::pluck('user_id')->toArray(),
+
             'flash' => [
                 'status' => session('status'),
             ],
