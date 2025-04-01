@@ -13,7 +13,7 @@ class CustomerController extends Controller
     public function index_admin(): Response
     {
         $customers = Customer::with('user')->get();
-        return Inertia::render('admin/users-management/customer/index', [
+        return Inertia::render('admin/users-management/customers/index', [
             'data' => $customers,
         ]);
     }
@@ -21,7 +21,7 @@ class CustomerController extends Controller
     public function edit(int $id): Response
     {
         $customer = Customer::findOrFail($id);
-        return Inertia::render('admin/users-management/customer/pages/edit', [
+        return Inertia::render('admin/users-management/customers/pages/edit', [
             'customer' => $customer,
         ]);
     }

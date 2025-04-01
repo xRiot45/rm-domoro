@@ -24,7 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
     {
-        title: 'Pelanggan',
+        title: 'Customer / Pelanggan',
         href: '/admin/users-management/customers',
     },
     {

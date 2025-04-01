@@ -10,7 +10,7 @@ import { GenderEnum } from '@/enums/gender';
 import { JobTypeEnum } from '@/enums/job-type';
 import { ShiftEnum } from '@/enums/shift';
 import AdminLayout from '@/layouts/admin/layout';
-import { CashierForm } from '@/models/cashier';
+import { Cashier, CashierForm } from '@/models/cashier';
 import { User } from '@/models/user';
 import { BreadcrumbItem } from '@/types';
 import { formattedDateForInput } from '@/utils/format-date';
@@ -26,29 +26,26 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
     {
-        title: 'Kasir',
+        title: 'Cashier / Kasir',
         href: '/admin/users-management/cashiers',
     },
     {
-        title: 'Tambah Kasir',
-        href: '/admin/users-management/cashiers/create',
+        title: 'Edit Kasir',
+        href: '/admin/users-management/cashiers/edit',
     },
 ];
 
-export default function CreatePage() {
+export default function EditPage({ cashier }: { cashier: Cashier }) {
     const { usersCashier } = usePage<{ usersCashier: User[] }>().props;
-    const { existingCashiers } = usePage<{ existingCashiers: number[] }>().props;
-    const availableUsers = usersCashier.filter((user) => !existingCashiers.includes(user.id));
-
     const { data, setData, processing, errors, reset } = useForm<Required<CashierForm>>({
-        user_id: 0,
-        hired_at: null,
-        stopped_at: null,
-        salary: 0,
-        gender: GenderEnum.MALE,
-        shift: ShiftEnum.MORNING,
-        status: EmployeeStatusEnum.WORK,
-        job_type: JobTypeEnum.FULL_TIME,
+        user_id: cashier?.user_id,
+        hired_at: new Date(cashier?.hired_at ?? ''),
+        stopped_at: new Date(cashier?.stopped_at ?? ''),
+        salary: cashier?.salary,
+        gender: cashier?.gender,
+        shift: cashier?.shift,
+        status: cashier?.status,
+        job_type: cashier?.job_type,
     });
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
@@ -60,10 +57,10 @@ export default function CreatePage() {
             stopped_at: formattedDateForInput(data.stopped_at) ?? null,
         };
 
-        router.post(route('admin.cashiers.store'), formattedData, {
+        router.put(route('admin.cashiers.update', { id: cashier?.id }), formattedData, {
             onSuccess: () => {
                 toast.success('Success', {
-                    description: 'Kasir Berhasil Ditambahkan!',
+                    description: 'Kasir Berhasil Diedit!',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -73,7 +70,7 @@ export default function CreatePage() {
             },
             onError: (errors) => {
                 toast.error('Failed', {
-                    description: errors.user_id || 'Gagal Menambahkan Kasir',
+                    description: errors.message || 'Gagal Mengedit Kasir',
                     action: {
                         label: 'Tutup',
                         onClick: () => toast.dismiss(),
@@ -86,31 +83,28 @@ export default function CreatePage() {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
-                <Head title="Tambah Kasir" />
+                <Head title="Edit Kasir" />
                 <form onSubmit={handleSubmit} className="space-y-5 p-4">
                     <div id="user_id">
                         <Label htmlFor="user_id">Pengguna</Label>
-                        {availableUsers.length > 0 ? (
-                            <Select onValueChange={(value) => setData('user_id', parseInt(value))}>
-                                <SelectTrigger className="mt-2 w-full">
-                                    <SelectValue placeholder="Pilih Pengguna" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {availableUsers.map((item: User) => (
-                                        <SelectItem key={item.id} value={String(item.id)}>
-                                            {item.full_name} - {item.phone_number}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        ) : (
-                            <Select disabled>
-                                <SelectTrigger className="mt-2 w-full">
-                                    <SelectValue placeholder="Pilih Pengguna" />
-                                </SelectTrigger>
-                            </Select>
-                        )}
-
+                        <Select onValueChange={(value) => setData('user_id', parseInt(value))}>
+                            <SelectTrigger className="mt-2 w-full" disabled>
+                                <SelectValue
+                                    placeholder={
+                                        usersCashier.find((item: User) => item.id === data.user_id)
+                                            ? `${usersCashier.find((item: User) => item.id === data.user_id)?.full_name} - ${usersCashier.find((item: User) => item.id === data.user_id)?.phone_number}`
+                                            : 'Pilih Kasir'
+                                    }
+                                />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {usersCashier.map((item: User) => (
+                                    <SelectItem key={item.id} value={String(item.id)} disabled>
+                                        {item.full_name} - {item.phone_number}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         <InputError message={errors.user_id} className="mt-2" />
                     </div>
 
@@ -122,7 +116,7 @@ export default function CreatePage() {
                                     {data.hired_at ? (
                                         <span>{data.hired_at.toDateString()}</span>
                                     ) : (
-                                        <span className="text-sm text-gray-400">Pilih Tanggal Diterima</span>
+                                        <span className="text-sm text-gray-400">Pilih Tanggal</span>
                                     )}
                                     <CalendarIcon className="ml-auto h-5 w-5 text-gray-500" />
                                 </Button>
@@ -146,9 +140,9 @@ export default function CreatePage() {
                             <PopoverTrigger>
                                 <Button type="button" variant="outline" className="mt-2.5 w-full">
                                     {data.stopped_at ? (
-                                        <span>{data.stopped_at.toDateString()}</span>
+                                        <span>{data?.stopped_at.toDateString()}</span>
                                     ) : (
-                                        <span className="text-sm text-gray-400">Pilih Tanggal Berhenti</span>
+                                        <span className="text-sm text-gray-400">Pilih Tanggal</span>
                                     )}
                                     <CalendarIcon className="ml-auto h-5 w-5 text-gray-500" />
                                 </Button>
@@ -167,13 +161,7 @@ export default function CreatePage() {
 
                     <div id="salary">
                         <Label htmlFor="salary">Gaji</Label>
-                        <Input
-                            type="number"
-                            className="mt-2"
-                            value={data.salary ?? ''}
-                            onChange={(e) => setData('salary', e.target.value === '' ? '' : parseInt(e.target.value))}
-                        />
-
+                        <Input type="number" className="mt-2" value={data.salary} onChange={(e) => setData('salary', parseInt(e.target.value))} />
                         <InputError message={errors.salary} className="mt-2" />
                     </div>
 
@@ -181,7 +169,7 @@ export default function CreatePage() {
                         <Label htmlFor="status">Jenis Kelamin</Label>
                         <Select onValueChange={(value) => setData('gender', value as GenderEnum)}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Jenis Kelamin" />
+                                <SelectValue placeholder={data.gender} />
                             </SelectTrigger>
                             <SelectContent>
                                 {Object.values(GenderEnum).map((value) => (
@@ -191,14 +179,14 @@ export default function CreatePage() {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <InputError message={errors.status} className="mt-2" />
+                        <InputError message={errors.gender} className="mt-2" />
                     </div>
 
                     <div id="shift">
                         <Label htmlFor="status">Shift</Label>
                         <Select onValueChange={(value) => setData('shift', value as ShiftEnum)}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Shift" />
+                                <SelectValue placeholder={data.shift} />
                             </SelectTrigger>
                             <SelectContent>
                                 {Object.values(ShiftEnum).map((value) => (
@@ -215,7 +203,7 @@ export default function CreatePage() {
                         <Label htmlFor="job_type">Jenis Pekerjaan</Label>
                         <Select onValueChange={(value) => setData('job_type', value as JobTypeEnum)}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Jenis Pekerjaan" />
+                                <SelectValue placeholder={data.job_type} />
                             </SelectTrigger>
                             <SelectContent>
                                 {Object.values(JobTypeEnum).map((value) => (
@@ -232,7 +220,7 @@ export default function CreatePage() {
                         <Label htmlFor="status">Status Kasir</Label>
                         <Select onValueChange={(value) => setData('status', value as EmployeeStatusEnum)}>
                             <SelectTrigger className="mt-2 w-full">
-                                <SelectValue placeholder="Pilih Status" />
+                                <SelectValue placeholder={data.status} />
                             </SelectTrigger>
                             <SelectContent>
                                 {Object.values(EmployeeStatusEnum).map((value) => (
@@ -253,7 +241,7 @@ export default function CreatePage() {
                         </Link>
                         <Button type="submit" tabIndex={4} disabled={processing} className="cursor-pointer">
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Tambah Data <Icon icon="heroicons:plus" />
+                            Edit Data <Icon icon="iconoir:edit" />
                         </Button>
                     </div>
                 </form>

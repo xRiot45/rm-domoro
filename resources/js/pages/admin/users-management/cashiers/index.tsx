@@ -12,8 +12,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
     {
-        title: 'Semua Pengguna',
-        href: '/admin/users-management/all-users',
+        title: 'Cashier / Kasir',
+        href: '/admin/users-management/cashiers',
     },
 ];
 

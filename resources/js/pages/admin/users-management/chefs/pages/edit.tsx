@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
     {
-        title: 'Koki',
+        title: 'Chef / Koki',
         href: '/admin/users-management/chefs',
     },
     {
