@@ -46,4 +46,9 @@ class Cashier extends Model
     {
         return $this->hasMany(Cart::class, 'cashier_id');
     }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'cashier_id');
+    }
 }

@@ -5,7 +5,9 @@ import { Separator } from '@/components/ui/separator';
 import { Carts } from '@/models/cart';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
+import { router } from '@inertiajs/react';
 import { Minus, Plus, Trash } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCart } from '../../hooks/use-cart';
 import EmptyState from './empty-state';
 
@@ -17,6 +19,28 @@ export default function CartContent({ cartItems }: CartContentProps) {
     const { handleDeleteAllItemFromCart, handleDeleteItemFromCart, handleUpdateQuantity } = useCart();
     const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
     const total = subtotal;
+
+    const handleCheckout = () => {
+        router.post(
+            route('cashier.checkout.store'),
+            {},
+            {
+                onSuccess: (page) => {
+                    const transactionId = page.props.transaction_id;
+                    router.visit(route('cashier.checkout.index', { transaction: transactionId }));
+                },
+                onError: (errors) => {
+                    toast.error('Checkout gagal', {
+                        description: errors.message || 'Terjadi kesalahan.',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+                },
+            },
+        );
+    };
 
     return (
         <Card className="w-full max-w-lg border-0 shadow-none lg:border lg:p-6">
@@ -82,9 +106,9 @@ export default function CartContent({ cartItems }: CartContentProps) {
                 <span>Total:</span>
                 <span>{formatCurrency(total)}</span>
             </div>
-            <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black">
-                <Icon icon={'tdesign:undertake-transaction'} />
-                Lanjutkan Ke Pembayaran
+            <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
+                <Icon icon={'material-symbols:shopping-cart-checkout'} />
+                Checkout Pesanan
             </Button>
         </Card>
     );

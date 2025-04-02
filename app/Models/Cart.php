@@ -10,7 +10,7 @@ class Cart extends Model
 {
     protected $table = 'carts';
 
-    protected $fillable = ['customer_id', 'cashier_id', 'menu_item_id', 'quantity', 'unit_price', 'session_id'];
+    protected $fillable = ['customer_id', 'cashier_id', 'menu_item_id', 'quantity', 'unit_price'];
 
     public function cashier(): BelongsTo
     {

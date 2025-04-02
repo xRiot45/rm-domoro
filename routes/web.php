@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Settings\CustomerProfileController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -200,6 +202,11 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
             Route::delete('/cart/{id}', 'destroy')->name('cashier.cart.destroy');
             Route::delete('/cart-all', 'destroy_all')->name('cashier.cart.destroy_all');
         });
+    });
+
+    Route::controller(CheckoutController::class)->group(function () {
+        Route::post('/checkout', 'store')->name('cashier.checkout.store');
+        Route::get('/checkout/{transaction}', 'index_checkout_cashier')->name('cashier.checkout.index');
     });
 });
 

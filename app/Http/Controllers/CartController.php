@@ -7,11 +7,9 @@ use App\Models\Cart;
 use App\Models\Cashier;
 use App\Models\Customer;
 use App\Models\MenuItem;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,7 +46,7 @@ class CartController extends Controller
             return $data;
         }
 
-        return Inertia::render('cashier/menu/index', [
+        return Inertia::render('cashier/pages/menu/index', [
             'menuItems' => $data['menuItems'],
             'carts' => $data['carts'],
         ]);
@@ -81,10 +79,8 @@ class CartController extends Controller
         $customerId = $customer->id ?? null;
 
         $menuItem = MenuItem::findOrFail($request->menu_item_id);
-        $sessionId = session('session_id', Str::uuid()->toString());
-        session(['session_id' => $sessionId]);
 
-        $cart = Cart::where('menu_item_id', $request->menu_item_id)->where('session_id', $sessionId)->when($cashierId, fn($query) => $query->where('cashier_id', $cashierId))->when($customerId, fn($query) => $query->where('customer_id', $customerId))->first();
+        $cart = Cart::where('menu_item_id', $request->menu_item_id)->when($cashierId, fn($query) => $query->where('cashier_id', $cashierId))->when($customerId, fn($query) => $query->where('customer_id', $customerId))->first();
 
         if ($cart) {
             $cart->increment('quantity', $request->quantity);
@@ -95,7 +91,6 @@ class CartController extends Controller
                 'menu_item_id' => $request->menu_item_id,
                 'quantity' => $request->quantity,
                 'unit_price' => $menuItem->price,
-                'session_id' => $sessionId,
             ]);
         }
 
