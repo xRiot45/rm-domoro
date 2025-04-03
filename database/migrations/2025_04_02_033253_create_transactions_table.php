@@ -20,6 +20,9 @@ return new class extends Migration {
             $table->enum('payment_status', PaymentStatusEnum::value());
             $table->integer('cash_received')->default(0)->nullable();
             $table->string('table_number')->nullable();
+            $table->string('shipping_address')->nullable();
+            $table->string('recipient')->nullable();
+            $table->string('recipient_phone_number')->nullable();
             $table->string('note')->nullable();
             $table->foreignId('chef_id')->nullable()->constrained('chefs')->cascadeOnDelete();
             $table->foreignId('courier_id')->nullable()->constrained('couriers')->cascadeOnDelete();
