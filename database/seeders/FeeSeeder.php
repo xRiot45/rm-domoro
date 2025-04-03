@@ -12,6 +12,7 @@ class FeeSeeder extends Seeder
     {
         Fee::updateOrCreate(['type' => 'delivery'], ['amount' => 10000]);
         Fee::updateOrCreate(['type' => 'service'], ['amount' => 5000]);
+        Fee::updateOrCreate(['type' => 'discount'], ['amount' => 2000]);
         Fee::updateOrCreate(['type' => 'tax'], ['amount' => 1000]);
     }
 }

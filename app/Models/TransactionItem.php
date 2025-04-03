@@ -21,4 +21,9 @@ class TransactionItem extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+
+    public function menuItem(): BelongsTo
+    {
+        return $this->belongsTo(MenuItem::class);
+    }
 }

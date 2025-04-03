@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique();
             $table->foreignId('customer_id')->nullable()->constrained('customers')->cascadeOnDelete();
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers')->cascadeOnDelete();
             $table->enum('order_type', OrderTypeEnum::value())->nullable();

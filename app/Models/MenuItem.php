@@ -37,4 +37,9 @@ class MenuItem extends Model
     {
         return $this->hasMany(Wishlist::class);
     }
+
+    public function transactionItems(): HasMany
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 }

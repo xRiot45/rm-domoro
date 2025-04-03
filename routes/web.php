@@ -204,9 +204,11 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
         });
     });
 
-    Route::controller(CheckoutController::class)->group(function () {
-        Route::post('/checkout', 'store')->name('cashier.checkout.store');
-        Route::get('/checkout/{transaction}', 'index_checkout_cashier')->name('cashier.checkout.index');
+    Route::prefix('/cashier/checkout')->name('cashier.checkout.')->group(function () {
+        Route::controller(CheckoutController::class)->group(function () {
+            Route::post('/', 'store')->name('store');
+            Route::get('/{transaction}', 'index_checkout_cashier')->name('index');
+        });
     });
 });
 

@@ -15,9 +15,12 @@ use Inertia\Response;
 
 class CheckoutController extends Controller
 {
-    public function index_checkout_cashier(): Response
+    public function index_checkout_cashier(int $transactionId): Response
     {
-        return Inertia::render('cashier/pages/checkout/index');
+        $data = Transaction::with('transactionItems.menuItem.menuCategory')->findOrFail($transactionId);
+        return Inertia::render('cashier/pages/checkout/index', [
+            'data' => $data
+        ]);
     }
 
     public function store(): RedirectResponse
