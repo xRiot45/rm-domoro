@@ -76,6 +76,16 @@ const mainNavItems: NavGroup[] = [
             },
         ],
     },
+    {
+        group: 'PENGATURAN',
+        items: [
+            {
+                title: 'Biaya',
+                href: '/admin/menu-management/fee',
+                icon: 'tabler:cash',
+            },
+        ],
+    },
 ];
 
 export default mainNavItems;
