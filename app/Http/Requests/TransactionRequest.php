@@ -22,11 +22,19 @@ class TransactionRequest extends FormRequest
             'cash_received' => 'nullable|integer|min:0',
             'table_number' => 'nullable|string|max:10',
             'note' => 'nullable|string|max:255',
-            'items' => 'required|array|min:1',
-            'items.*.menu_item_id' => 'required|exists:menu_items,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|integer|min:1',
+            'shipping_address' => ['nullable', 'string', 'max:255'],
+            'recipient' => ['nullable', 'string', 'max:255'],
+            'recipient_phone_number' => ['nullable', 'string', 'max:15'],
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['items'] = 'required|array|min:1';
+            $rules['items.*.menu_item_id'] = 'required|exists:menu_items,id';
+            $rules['items.*.quantity'] = 'required|integer|min:1';
+            $rules['items.*.unit_price'] = 'required|integer|min:1';
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -68,6 +76,14 @@ class TransactionRequest extends FormRequest
             'items.*.unit_price.required' => 'Harga satuan wajib diisi.',
             'items.*.unit_price.integer' => 'Harga satuan harus berupa angka.',
             'items.*.unit_price.min' => 'Harga satuan minimal 1.',
+
+            // Validasi Shipping Address (Alamat Pengiriman), Phone Number (Nomor Telepon Penerima), Recipient (Penerima)
+            'shipping_address.string' => 'Alamat pengiriman harus berupa teks.',
+            'shipping_address.max' => 'Alamat pengiriman tidak boleh lebih dari 255 karakter.',
+            'recipient.string' => 'Penerima harus berupa teks.',
+            'recipient.max' => 'Penerima tidak boleh lebih dari 255 karakter.',
+            'recipient_phone_number.string' => 'Nomor telepon penerima harus berupa teks.',
+            'recipient_phone_number.max' => 'Nomor telepon penerima tidak boleh lebih dari 15 karakter.',
         ];
     }
 }

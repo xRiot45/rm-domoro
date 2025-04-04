@@ -2,38 +2,97 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentTypeEnum } from '@/enums/payment-type';
 import CashierLayout from '@/layouts/cashier/layout';
-import { Transaction } from '@/models/transaction';
+import { Fee } from '@/models/fee';
+import { Transaction, TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, router, useForm } from '@inertiajs/react';
+import { toast } from 'sonner';
 import OrderTypeSelection from './components/order-type-selection';
 import PaymentTypeSelection from './components/payment-type-selection';
 import SummaryRow from './components/summary-row';
 
 interface CheckoutPageProps {
     data: Transaction;
+    fees: Fee;
 }
 
-export default function CheckoutPage({ data }: CheckoutPageProps) {
-    const [selectedOrderType, setSelectedOrderType] = useState<OrderTypeEnum | null>(null);
-    const [selectedPaymentType, setSelectedPaymentType] = useState<PaymentTypeEnum | null>(null);
-    const [cashReceived, setCashReceived] = useState<number>(0);
-    const [tableNumber, setTableNumber] = useState<string | null>(null);
-    const [customerName, setCustomerName] = useState<string>('');
-    const [customerPhone, setCustomerPhone] = useState<string>('');
-    const [customerAddress, setCustomerAddress] = useState<string>('');
+export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
+    const { id: transactionId, transaction_items } = data;
+    const {
+        data: formData,
+        setData,
+        processing,
+    } = useForm<Required<TransactionForm>>({
+        transaction_id: transactionId,
+        order_type: OrderTypeEnum.DINEIN,
+        payment_method: PaymentTypeEnum.CASH,
+        cash_received: 0,
+        table_number: '',
+        recipient: '',
+        recipient_phone_number: '',
+        shipping_address: '',
+        note: '',
+    });
 
-    const transactionItems = data?.transaction_items || [];
-    const subtotal = transactionItems?.reduce((acc, item) => acc + item?.unit_price * item?.quantity, 0);
-    const deliveryFee = selectedOrderType === OrderTypeEnum.DELIVERY ? 100000 : 0;
-    const serviceCharge = 50000;
-    const discount = 10000;
-    const tax = 1000;
+    const subtotal = transaction_items?.reduce((acc, item) => acc + item?.unit_price * item?.quantity, 0);
+    const deliveryFee = formData?.order_type === OrderTypeEnum.DELIVERY ? fees?.delivery?.amount : 0;
+    const serviceCharge = fees?.service?.amount;
+    const discount = fees?.discount?.amount;
+    const tax = fees?.tax?.amount;
     const finalTotal = subtotal + deliveryFee + serviceCharge - discount + tax;
+
+    const handleOrderTypeChange = (orderType: OrderTypeEnum) => {
+        setData('order_type', orderType);
+
+        if (orderType !== OrderTypeEnum.DINEIN) {
+            setData('table_number', '');
+        }
+        if (orderType !== OrderTypeEnum.DELIVERY) {
+            setData('shipping_address', '');
+            setData('recipient', '');
+            setData('recipient_phone_number', '');
+        }
+    };
+
+    const handlePaymentTypeChange = (paymentType: PaymentTypeEnum) => {
+        setData('payment_method', paymentType);
+        if (paymentType !== PaymentTypeEnum.CASH) {
+            setData('cash_received', 0);
+        }
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        router.put(route('cashier.checkout.update', { transaction: transactionId }), formData, {
+            onSuccess: () => {
+                toast.success('Success', {
+                    description: 'Transaksi Berhasil',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+            },
+            onError: (errors) => {
+                Object.entries(errors).forEach(([_, message]) => {
+                    if (typeof message === 'string') {
+                        toast.error('Failed', {
+                            description: message,
+                            action: {
+                                label: 'Tutup',
+                                onClick: () => toast.dismiss(),
+                            },
+                        });
+                    }
+                });
+            },
+        });
+    };
 
     return (
         <CashierLayout>
@@ -49,7 +108,7 @@ export default function CheckoutPage({ data }: CheckoutPageProps) {
                         {/* Menu Yang Dipesan */}
                         <div className="mt-2 space-y-3">
                             <h1 className="mb-4 text-lg font-semibold">Menu Yang Dipesan</h1>
-                            {transactionItems?.map((item) => (
+                            {transaction_items?.map((item) => (
                                 <Card key={item.id} className="px-2 shadow-none">
                                     <CardContent className="flex items-center gap-4 p-4">
                                         <img
@@ -76,69 +135,70 @@ export default function CheckoutPage({ data }: CheckoutPageProps) {
                         </div>
 
                         {/* Metode Pemesanan */}
-                        <OrderTypeSelection selectedOrderType={selectedOrderType} setSelectedOrderType={setSelectedOrderType} />
+                        <OrderTypeSelection selectedOrderType={formData.order_type} setSelectedOrderType={handleOrderTypeChange} />
 
                         {/* Metode Pembayaran */}
-                        <PaymentTypeSelection selectedPaymentType={selectedPaymentType} setSelectedPaymentType={setSelectedPaymentType} />
+                        <PaymentTypeSelection selectedPaymentType={formData.payment_method} setSelectedPaymentType={handlePaymentTypeChange} />
                     </div>
 
                     {/* Total */}
                     <div className="col-span-1 mt-4 lg:mt-13">
                         <Card className="w-full border p-8 shadow-none">
-                            <div className="flex justify-between">
-                                <h2 className="mb-2 text-lg font-bold">Rincian Pembayaran</h2>
-                                <span>
-                                    {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                                </span>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h1 className="mb-1 text-lg font-bold">Rincian Pembayaran</h1>
+                                    <span>
+                                        {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                    </span>
+                                </div>
+                                <span className="text-sm font-semibold">{data?.order_number}</span>
                             </div>
 
                             <Separator />
                             <div className="space-y-7">
                                 <SummaryRow label="Subtotal" value={formatCurrency(subtotal)} />
-                                {deliveryFee > 0 && <SummaryRow label="Biaya Pengantaran" value={formatCurrency(deliveryFee)} />}
+                                {formData.order_type === OrderTypeEnum.DELIVERY && (
+                                    <SummaryRow label="Biaya Pengiriman" value={formatCurrency(deliveryFee)} />
+                                )}
                                 <SummaryRow label="Biaya Layanan" value={formatCurrency(serviceCharge)} />
                                 <SummaryRow label="Diskon" value={`- ${formatCurrency(discount)}`} className="text-red-500" />
                                 <SummaryRow label="Pajak" value={formatCurrency(tax)} />
                                 <SummaryRow label="Total Akhir" value={formatCurrency(finalTotal)} isBold />
 
                                 {/* Input Nomor Meja untuk Dine-In */}
-                                {selectedOrderType === OrderTypeEnum.DINEIN && (
+                                {formData.order_type === OrderTypeEnum.DINEIN && formData.payment_method === PaymentTypeEnum.CASH && (
                                     <div className="flex justify-between">
                                         <span>Nomor Meja</span>
                                         <Input
-                                            type="text"
-                                            className="w-44 border text-right shadow-none"
-                                            value={tableNumber || ''}
                                             placeholder="Nomor Meja"
-                                            onChange={(e) => setTableNumber(e.target.value)}
+                                            value={formData.table_number}
+                                            onChange={(e) => setData('table_number', e.target.value)}
+                                            className="w-44 border text-right shadow-none"
                                         />
                                     </div>
                                 )}
 
                                 {/* Input Informasi Pengiriman untuk Delivery */}
-                                {selectedOrderType === OrderTypeEnum.DELIVERY && (
+                                {formData.order_type === OrderTypeEnum.DELIVERY && (
                                     <div className="block">
                                         <span>Informasi Pengiriman</span>
                                         <div className="mt-3 flex flex-col gap-2">
                                             <Input
-                                                type="text"
                                                 placeholder="Nama Penerima"
-                                                value={customerName}
-                                                onChange={(e) => setCustomerName(e.target.value)}
+                                                value={formData.recipient}
+                                                onChange={(e) => setData('recipient', e.target.value)}
                                                 className="rounded-lg px-4 py-6 shadow-none"
                                             />
                                             <Input
-                                                type="text"
                                                 placeholder="Nomor HP"
-                                                value={customerPhone}
-                                                onChange={(e) => setCustomerPhone(e.target.value)}
+                                                value={formData.recipient_phone_number}
+                                                onChange={(e) => setData('recipient_phone_number', e.target.value)}
                                                 className="rounded-lg px-4 py-6 shadow-none"
                                             />
                                             <Input
-                                                type="text"
                                                 placeholder="Alamat Pengiriman"
-                                                value={customerAddress}
-                                                onChange={(e) => setCustomerAddress(e.target.value)}
+                                                value={formData.shipping_address}
+                                                onChange={(e) => setData('shipping_address', e.target.value)}
                                                 className="rounded-lg px-4 py-6 shadow-none"
                                             />
                                         </div>
@@ -146,41 +206,48 @@ export default function CheckoutPage({ data }: CheckoutPageProps) {
                                 )}
 
                                 {/* Jika pembayaran adalah Cash, tambahkan input jumlah uang */}
-                                {selectedPaymentType === PaymentTypeEnum.CASH && (
+                                {formData.payment_method === PaymentTypeEnum.CASH && (
                                     <div className="flex justify-between">
                                         <span>Jumlah Uang Diterima</span>
                                         <Input
                                             type="number"
                                             className="w-44 border text-right shadow-none"
-                                            value={cashReceived || ''}
+                                            value={formData.cash_received || ''}
                                             placeholder="0"
-                                            onChange={(e) => setCashReceived(Number(e.target.value) || 0)}
+                                            onChange={(e) => setData('cash_received', e.target.value ? Number(e.target.value) : 0)}
                                         />
                                     </div>
                                 )}
 
                                 {/* Kembalian */}
-                                {selectedPaymentType === PaymentTypeEnum.CASH && cashReceived !== null && (
+                                {formData.payment_method === PaymentTypeEnum.CASH && formData.cash_received !== null && (
                                     <SummaryRow
                                         label="Kembalian"
-                                        value={cashReceived >= finalTotal ? formatCurrency(cashReceived - finalTotal) : formatCurrency(0)}
+                                        value={
+                                            formData.cash_received >= finalTotal
+                                                ? formatCurrency(formData.cash_received - finalTotal)
+                                                : formatCurrency(0)
+                                        }
                                         isBold
                                     />
                                 )}
+
+                                {/* Note */}
+                                <Textarea
+                                    className="mt-4 h-28"
+                                    placeholder="Tambahkan catatan (Optional)"
+                                    onChange={(e) => setData('note', e.target.value)}
+                                    value={formData.note}
+                                />
                             </div>
 
                             {/* Tombol pembayaran */}
-                            {selectedPaymentType === PaymentTypeEnum.ONLINE_PAYMENT ? (
-                                <Button className="mt-4 py-6 text-sm">
-                                    <Icon icon="mdi:credit-card" />
-                                    Bayar dengan Midtrans
+                            <form onSubmit={handleSubmit}>
+                                <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing}>
+                                    <Icon icon={formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? 'mdi:credit-card' : 'mdi:cash'} />
+                                    {formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? 'Bayar dengan Midtrans' : 'Selesaikan Pesanan'}
                                 </Button>
-                            ) : (
-                                <Button className="mt-4 py-6 text-sm">
-                                    <Icon icon="mdi:cash" />
-                                    Selesaikan Pesanan
-                                </Button>
-                            )}
+                            </form>
                         </Card>
                     </div>
                 </div>

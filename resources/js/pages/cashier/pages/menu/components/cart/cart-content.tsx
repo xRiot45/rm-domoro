@@ -26,8 +26,8 @@ export default function CartContent({ cartItems }: CartContentProps) {
             {},
             {
                 onSuccess: (page) => {
-                    const transactionId = page.props.transaction_id;
-                    router.visit(route('cashier.checkout.index', { transaction: transactionId }));
+                    const transactionId = (page?.props?.data as { id: number })?.id;
+                    router.visit(route('cashier.checkout.index', { id: transactionId }));
                 },
                 onError: (errors) => {
                     toast.error('Checkout gagal', {
@@ -106,7 +106,7 @@ export default function CartContent({ cartItems }: CartContentProps) {
                 <span>Total:</span>
                 <span>{formatCurrency(total)}</span>
             </div>
-            <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
+            <Button type="submit" className="mt-8 w-full py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
                 <Icon icon={'material-symbols:shopping-cart-checkout'} />
                 Checkout Pesanan
             </Button>

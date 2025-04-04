@@ -1,6 +1,6 @@
 import { OrderTypeEnum } from '@/enums/order-type';
-import { PaymentMethodEnum } from '@/enums/payment-method';
 import { PaymentStatusEnum } from '@/enums/payment-status';
+import { PaymentTypeEnum } from '@/enums/payment-type';
 import { Cashier } from './cashier';
 import { Chef } from './chef';
 import { Courier } from './courier';
@@ -15,7 +15,7 @@ interface Transaction {
     cashier_id?: number | null;
     cashier: Cashier;
     order_type?: OrderTypeEnum | null;
-    payment_method?: PaymentMethodEnum | null;
+    payment_method?: PaymentTypeEnum | null;
     payment_status?: PaymentStatusEnum | null;
     cash_received?: number | null;
     table_number?: string | null;
@@ -35,4 +35,16 @@ interface Transaction {
     updated_at?: string;
 }
 
-export type { Transaction };
+interface TransactionForm {
+    transaction_id: number;
+    order_type: OrderTypeEnum;
+    payment_method: PaymentTypeEnum;
+    cash_received: number;
+    table_number: string;
+    recipient: string;
+    recipient_phone_number: string;
+    shipping_address: string;
+    note: string;
+}
+
+export type { Transaction, TransactionForm };

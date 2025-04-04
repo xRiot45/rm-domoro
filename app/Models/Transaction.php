@@ -13,7 +13,7 @@ class Transaction extends Model
 {
     protected $table = 'transactions';
 
-    protected $fillable = ['customer_id', 'cashier_id', 'order_type', 'payment_method', 'payment_status', 'cash_received', 'table_number', 'shipping_address', 'recipient', 'recipient_phone_number', 'note', 'chef_id', 'courier_id', 'total_price', 'delivery_fee', 'service_charge', 'discount', 'tax', 'final_total'];
+    protected $fillable = ['customer_id', 'cashier_id', 'order_type', 'payment_method', 'payment_status', 'cash_received', 'change', 'table_number', 'shipping_address', 'recipient', 'recipient_phone_number', 'note', 'chef_id', 'courier_id', 'total_price', 'delivery_fee', 'service_charge', 'discount', 'tax', 'final_total'];
 
     protected function casts(): array
     {

@@ -210,6 +210,8 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
             Route::get('/{transaction}', 'index_checkout_cashier')->name('index');
         });
     });
+
+    Route::put('/checkout/{transaction}', [TransactionController::class, 'update'])->name('cashier.checkout.update');
 });
 
 require __DIR__ . '/settings.php';

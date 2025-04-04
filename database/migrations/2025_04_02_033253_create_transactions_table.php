@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->enum('order_type', OrderTypeEnum::value())->nullable();
             $table->enum('payment_method', PaymentMethodEnum::value())->nullable();
             $table->enum('payment_status', PaymentStatusEnum::value());
-            $table->integer('cash_received')->default(0)->nullable();
+            $table->integer('cash_received')->default(0);
+            $table->integer('change')->default(0);
             $table->string('table_number')->nullable();
             $table->string('shipping_address')->nullable();
             $table->string('recipient')->nullable();

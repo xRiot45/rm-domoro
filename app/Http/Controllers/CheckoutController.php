@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\Cashier;
 use App\Models\Customer;
+use App\Models\Fee;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,8 +19,11 @@ class CheckoutController extends Controller
     public function index_checkout_cashier(int $transactionId): Response
     {
         $data = Transaction::with('transactionItems.menuItem.menuCategory')->findOrFail($transactionId);
+        $fees = Fee::whereIn('type', ['delivery', 'service', 'discount', 'tax'])->get()->keyBy('type');
+
         return Inertia::render('cashier/pages/checkout/index', [
-            'data' => $data
+            'data' => $data,
+            'fees' => $fees
         ]);
     }
 
