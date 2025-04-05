@@ -204,6 +204,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
         });
     });
 
+    // Checkout
     Route::prefix('/cashier/checkout')->name('cashier.checkout.')->group(function () {
         Route::controller(CheckoutController::class)->group(function () {
             Route::post('/', 'store')->name('store');
@@ -211,7 +212,10 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
         });
     });
 
+    // Transaction
     Route::put('/checkout/{transaction}', [TransactionController::class, 'update'])->name('cashier.checkout.update');
+    Route::post('/checkout/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('cashier.transaction.pay-midtrans');
+    Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('cashier.midtrans.callback');
 });
 
 require __DIR__ . '/settings.php';

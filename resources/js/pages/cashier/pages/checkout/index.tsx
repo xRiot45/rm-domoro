@@ -10,7 +10,8 @@ import { Fee } from '@/models/fee';
 import { Transaction, TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import OrderTypeSelection from './components/order-type-selection';
 import PaymentTypeSelection from './components/payment-type-selection';
@@ -22,6 +23,7 @@ interface CheckoutPageProps {
 }
 
 export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
+    const { flash } = usePage().props as unknown as { flash: { snap_token: string } };
     const { id: transactionId, transaction_items } = data;
     const {
         data: formData,
@@ -82,6 +84,41 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                 Object.entries(errors).forEach(([_, message]) => {
                     if (typeof message === 'string') {
                         toast.error('Failed', {
+                            description: message,
+                            action: {
+                                label: 'Tutup',
+                                onClick: () => toast.dismiss(),
+                            },
+                        });
+                    }
+                });
+            },
+        });
+    };
+
+    // Tampilkan metode pembayaran midtrans nya
+    useEffect(() => {
+        if (flash?.snap_token) {
+            window.snap.pay(flash.snap_token);
+        }
+    }, [flash?.snap_token]);
+
+    const handlePayWithMidtrans = () => {
+        router.post(route('cashier.transaction.pay-midtrans', { transaction: transactionId }), formData, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Success', {
+                    description: 'Silahkan melakukan pembayaran melalui midtrans',
+                    action: {
+                        label: 'Tutup',
+                        onClick: () => toast.dismiss(),
+                    },
+                });
+            },
+            onError: (errors) => {
+                Object.entries(errors).forEach(([_, message]) => {
+                    if (typeof message === 'string') {
+                        toast.error('Gagal', {
                             description: message,
                             action: {
                                 label: 'Tutup',
@@ -166,17 +203,19 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                                 <SummaryRow label="Total Akhir" value={formatCurrency(finalTotal)} isBold />
 
                                 {/* Input Nomor Meja untuk Dine-In */}
-                                {formData.order_type === OrderTypeEnum.DINEIN && formData.payment_method === PaymentTypeEnum.CASH && (
-                                    <div className="flex justify-between">
-                                        <span>Nomor Meja</span>
-                                        <Input
-                                            placeholder="Nomor Meja"
-                                            value={formData.table_number}
-                                            onChange={(e) => setData('table_number', e.target.value)}
-                                            className="w-44 border text-right shadow-none"
-                                        />
-                                    </div>
-                                )}
+                                {formData.order_type === OrderTypeEnum.DINEIN &&
+                                    (formData.payment_method === PaymentTypeEnum.CASH ||
+                                        formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT) && (
+                                        <div className="flex justify-between">
+                                            <span>Nomor Meja</span>
+                                            <Input
+                                                placeholder="Nomor Meja"
+                                                value={formData.table_number}
+                                                onChange={(e) => setData('table_number', e.target.value)}
+                                                className="w-44 border text-right shadow-none"
+                                            />
+                                        </div>
+                                    )}
 
                                 {/* Input Informasi Pengiriman untuk Delivery */}
                                 {formData.order_type === OrderTypeEnum.DELIVERY && (
@@ -242,12 +281,19 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                             </div>
 
                             {/* Tombol pembayaran */}
-                            <form onSubmit={handleSubmit}>
-                                <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing}>
-                                    <Icon icon={formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? 'mdi:credit-card' : 'mdi:cash'} />
-                                    {formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? 'Bayar dengan Midtrans' : 'Selesaikan Pesanan'}
+                            {formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? (
+                                <Button type="button" className="mt-4 w-full py-6 text-sm" onClick={handlePayWithMidtrans} disabled={processing}>
+                                    <Icon icon="mdi:credit-card" />
+                                    Bayar dengan Midtrans
                                 </Button>
-                            </form>
+                            ) : (
+                                <form onSubmit={handleSubmit}>
+                                    <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing}>
+                                        <Icon icon="mdi:cash" />
+                                        Selesaikan Pesanan
+                                    </Button>
+                                </form>
+                            )}
                         </Card>
                     </div>
                 </div>

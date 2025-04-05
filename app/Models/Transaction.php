@@ -8,6 +8,8 @@ use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+
 
 class Transaction extends Model
 {
@@ -24,15 +26,16 @@ class Transaction extends Model
         ];
     }
 
-    public static function boot()
+    public static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($transaction) {
-            $latestOrder = static::whereDate('created_at', now()->toDateString())->count() + 1;
-            $transaction->order_number = 'ORD-' . now()->format('Ymd') . '-' . str_pad($latestOrder, 4, '0', STR_PAD_LEFT);
+            $randomString = strtoupper(Str::random(6));
+            $transaction->order_number = 'ORD-' . now()->format('Ymd') . '-' . $randomString;
         });
     }
+
 
     public function customer(): BelongsTo
     {

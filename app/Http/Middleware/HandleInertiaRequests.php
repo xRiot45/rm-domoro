@@ -61,6 +61,7 @@ class HandleInertiaRequests extends Middleware
 
             'flash' => [
                 'status' => session('status'),
+                'snap_token' => fn() => $request->session()->get('snap_token'),
             ],
         ];
     }
