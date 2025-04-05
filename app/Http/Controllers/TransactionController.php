@@ -6,15 +6,13 @@ use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Requests\TransactionRequest;
-use App\Models\Cashier;
-use App\Models\Customer;
+use Midtrans\Notification;
 use App\Models\Fee;
 use App\Models\Transaction;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -185,24 +183,48 @@ class TransactionController extends Controller
             ]);
     }
 
-
     public function midtransCallback(Request $request): RedirectResponse
     {
-        $orderId = $request->order_id;
-        $status = $request->transaction_status;
-
+        $orderId = $request->input('order_id');
         $transaction = Transaction::where('order_number', $orderId)->first();
 
         if (!$transaction) {
             return redirect()->back()->withErrors('Transaksi tidak ditemukan.');
         }
 
+        $transactionStatus = $request->input('transaction_status');
+
+        switch ($transactionStatus) {
+            case 'settlement':
+            case 'capture':
+                $transaction->payment_status = PaymentStatusEnum::Paid;
+                break;
+            case 'pending':
+                $transaction->payment_status = PaymentStatusEnum::Pending;
+                break;
+            case 'expire':
+                $transaction->payment_status = PaymentStatusEnum::Expired;
+                break;
+            case 'cancel':
+                $transaction->payment_status = PaymentStatusEnum::Cancelled;
+                break;
+            case 'deny':
+            case 'failure':
+                $transaction->payment_status = PaymentStatusEnum::Failed;
+                break;
+            case 'refund':
+                $transaction->payment_status = PaymentStatusEnum::Refunded;
+                break;
+        }
+
+        $transaction->save();
+
         if ($transaction->cashier_id) {
-            return $status === 'settlement' ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
+            return $transactionStatus === 'settlement' ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
         }
 
         if ($transaction->customer_id) {
-            return $status === 'settlement' ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
+            return $transactionStatus === 'settlement' ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
         }
 
         return redirect()->back()->withErrors('Tidak dapat menentukan role pengguna.');
@@ -212,14 +234,14 @@ class TransactionController extends Controller
     public function transactionCustomerSuccess(): Response
     {
         return Inertia::render('transaction/success', [
-            'message' => 'Pembayaran berhasil! Terima kasih telah memesan.'
+            'message' => 'Pembayaran berhasil! Terima kasih telah memesan.',
         ]);
     }
 
     public function transactionCustomerFailed(): Response
     {
         return Inertia::render('transaction/failed', [
-            'message' => 'Pembayaran gagal. Silakan coba lagi atau hubungi kasir.'
+            'message' => 'Pembayaran gagal. Silakan coba lagi atau hubungi kasir.',
         ]);
     }
 
@@ -227,14 +249,14 @@ class TransactionController extends Controller
     public function transactionCashierSuccess(): Response
     {
         return Inertia::render('cashier/pages/transaction/success', [
-            'message' => 'Pembayaran berhasil diproses.'
+            'message' => 'Pembayaran berhasil diproses.',
         ]);
     }
 
     public function transactionCashierFailed(): Response
     {
         return Inertia::render('cashier/pages/transaction/failed', [
-            'message' => 'Pembayaran gagal. Silakan ulangi transaksi.'
+            'message' => 'Pembayaran gagal. Silakan ulangi transaksi.',
         ]);
     }
 }
