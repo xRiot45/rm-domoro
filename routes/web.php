@@ -47,6 +47,9 @@ Route::middleware([])->group(function () {
             Route::get('/', [CustomerProfileController::class, 'index_profile'])->name('index_profile');
             Route::post('/', [CustomerProfileController::class, 'update_profile'])->name('update_profile');
         });
+
+    Route::get('/transaction/success', [TransactionController::class, 'transactionCustomerSuccess'])->name('customer.transaction.success');
+    Route::get('/transaction/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('customer.transaction.failed');
 });
 
 // Route for admin
@@ -216,7 +219,12 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     Route::put('/checkout/{transaction}', [TransactionController::class, 'update'])->name('cashier.checkout.update');
     Route::post('/checkout/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('cashier.transaction.pay-midtrans');
     Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('cashier.midtrans.callback');
+    Route::get('/cashier/transaction/success', [TransactionController::class, 'transactionCashierSuccess'])->name('cashier.transaction.success');
+    Route::get('/cashier/transaction/failed', [TransactionController::class, 'transactionCashierFailed'])->name('cashier.transaction.failed');
 });
+
+Route::get('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

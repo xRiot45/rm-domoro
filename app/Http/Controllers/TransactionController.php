@@ -6,11 +6,17 @@ use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Requests\TransactionRequest;
+use App\Models\Cashier;
+use App\Models\Customer;
 use App\Models\Fee;
 use App\Models\Transaction;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TransactionController extends Controller
 {
@@ -158,6 +164,10 @@ class TransactionController extends Controller
                 ],
             ],
             'item_details' => $itemDetails,
+            'callbacks' => [
+                'finish' => route('midtrans.callback'),
+                'error' => route('midtrans.callback'),
+            ],
         ];
 
         // Panggil Midtrans API
@@ -175,30 +185,56 @@ class TransactionController extends Controller
             ]);
     }
 
+
     public function midtransCallback(Request $request): RedirectResponse
     {
-        $serverKey = config('services.midtrans.server_key');
-        $signatureKey = hash('sha512', $request->order_number . $request->status_code . $request->gross_amount . $serverKey);
+        $orderId = $request->order_id;
+        $status = $request->transaction_status;
 
-        if ($request->signature_key !== $signatureKey) {
-            abort(403);
-        }
+        $transaction = Transaction::where('order_number', $orderId)->first();
 
-        $transaction = Transaction::where('order_number', $request->order_number)->first();
         if (!$transaction) {
-            abort(404);
+            return redirect()->back()->withErrors('Transaksi tidak ditemukan.');
         }
 
-        if ($request->transaction_status === 'settlement' || $request->transaction_status === 'capture') {
-            $transaction->update([
-                'payment_status' => PaymentStatusEnum::Paid,
-            ]);
-        } elseif ($request->transaction_status === 'cancel' || $request->transaction_status === 'deny' || $request->transaction_status === 'expire') {
-            $transaction->update([
-                'payment_status' => PaymentStatusEnum::Failed,
-            ]);
+        if ($transaction->cashier_id) {
+            return $status === 'settlement' ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
         }
 
-        return redirect()->route('cashier.transaction.index')->with('success', 'Transaksi berhasil.');
+        if ($transaction->customer_id) {
+            return $status === 'settlement' ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
+        }
+
+        return redirect()->back()->withErrors('Tidak dapat menentukan role pengguna.');
+    }
+
+    // Untuk Customer
+    public function transactionCustomerSuccess(): Response
+    {
+        return Inertia::render('transaction/success', [
+            'message' => 'Pembayaran berhasil! Terima kasih telah memesan.'
+        ]);
+    }
+
+    public function transactionCustomerFailed(): Response
+    {
+        return Inertia::render('transaction/failed', [
+            'message' => 'Pembayaran gagal. Silakan coba lagi atau hubungi kasir.'
+        ]);
+    }
+
+    // Untuk Cashier
+    public function transactionCashierSuccess(): Response
+    {
+        return Inertia::render('cashier/pages/transaction/success', [
+            'message' => 'Pembayaran berhasil diproses.'
+        ]);
+    }
+
+    public function transactionCashierFailed(): Response
+    {
+        return Inertia::render('cashier/pages/transaction/failed', [
+            'message' => 'Pembayaran gagal. Silakan ulangi transaksi.'
+        ]);
     }
 }
