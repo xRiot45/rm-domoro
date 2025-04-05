@@ -78,22 +78,35 @@ class TransactionController extends Controller
     {
         $transaction->load('transactionItems.menuItem');
 
+        $transaction->note = $request->input('note');
+
+        $orderType = OrderTypeEnum::tryFrom($request->order_type) ?? OrderTypeEnum::DineIn;
+        $transaction->order_type = $orderType;
+
+        if ($orderType === OrderTypeEnum::DineIn && $request->has('table_number')) {
+            $transaction->order_type = OrderTypeEnum::DineIn;
+            $transaction->table_number = $request->input('table_number');
+        } elseif ($orderType === OrderTypeEnum::Delivery) {
+            $transaction->shipping_address = $request->input('shipping_address');
+            $transaction->recipient = $request->input('recipient');
+            $transaction->recipient_phone_number = $request->input('recipient_phone_number');
+        }
+
+        $transaction->save();
+
         // Ambil biaya berdasarkan jenisnya
         $fees = Fee::whereIn(DB::raw('LOWER(type)'), ['delivery', 'service', 'discount', 'tax'])
             ->get()
             ->keyBy('type');
-
-        // Hitung subtotal
-        $subtotal = $transaction->transactionItems->sum(fn($item) => $item->subtotal);
-
-        // Tentukan jenis pesanan dan metode pembayaran
-        $orderType = OrderTypeEnum::tryFrom($request->order_type) ?? OrderTypeEnum::DineIn;
 
         // Hitung biaya tambahan
         $deliveryFee = $orderType === OrderTypeEnum::Delivery ? $fees['delivery']->amount ?? 0 : 0;
         $serviceFee = $fees['service']->amount ?? 0;
         $discount = $fees['discount']->amount ?? 0;
         $tax = $fees['tax']->amount ?? 0;
+
+        // Hitung subtotal
+        $subtotal = $transaction->transactionItems->sum(fn($item) => $item->subtotal);
 
         // Hitung total akhir
         $finalTotal = $subtotal + $deliveryFee + $serviceFee - $discount + $tax;
@@ -176,6 +189,8 @@ class TransactionController extends Controller
 
         $snapToken = \Midtrans\Snap::getSnapToken($midtransParams);
 
+
+
         return redirect()
             ->back()
             ->with([
@@ -217,6 +232,7 @@ class TransactionController extends Controller
                 break;
         }
 
+        $transaction->payment_method = PaymentMethodEnum::OnlinePayment;
         $transaction->save();
 
         if ($transaction->cashier_id) {

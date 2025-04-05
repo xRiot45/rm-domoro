@@ -104,6 +104,17 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
     }, [flash?.snap_token]);
 
     const handlePayWithMidtrans = () => {
+        if (formData.order_type === OrderTypeEnum.DINEIN && !formData.table_number.trim()) {
+            toast.error('Gagal', {
+                description: 'Nomor meja harus diisi untuk pemesanan Dine In.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
         router.post(route('cashier.transaction.pay-midtrans', { transaction: transactionId }), formData, {
             preserveScroll: true,
             onSuccess: () => {
