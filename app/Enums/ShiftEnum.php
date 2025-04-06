@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum ShiftEnum: string
 {
-    case Morning = 'pagi';
+    case Morning = 'pagi'; // 06:00 - 13:59
 
-    case Evening = 'sore';
+    case Evening = 'sore'; // 14:00 - 21:59
 
-    case Night = 'malam';
+    case Night = 'malam';  // 22:00 - 05:59
 
     public  static function value(): array
     {
