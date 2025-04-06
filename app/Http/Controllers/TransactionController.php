@@ -6,19 +6,17 @@ use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Requests\TransactionRequest;
-use Midtrans\Notification;
 use App\Models\Fee;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TransactionController extends Controller
 {
-    public function update(TransactionRequest $request, Transaction $transaction): RedirectResponse
+    public function payWithCash(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         return DB::transaction(function () use ($request, $transaction) {
             // Ambil biaya berdasarkan jenisnya
@@ -86,13 +84,19 @@ class TransactionController extends Controller
         if ($orderType === OrderTypeEnum::DineIn && $request->has('table_number')) {
             $transaction->order_type = OrderTypeEnum::DineIn;
             $transaction->table_number = $request->input('table_number');
-        } elseif ($orderType === OrderTypeEnum::Delivery) {
+        } elseif ($orderType === OrderTypeEnum::Takeway && $request->has('recipient')) {
+            $transaction->order_type = OrderTypeEnum::Takeway;
+            $transaction->recipient = $request->input('recipient');
+        } elseif ($orderType === OrderTypeEnum::Delivery && $request->has('shipping_address') && $request->has('recipient') && $request->has('recipient_phone_number')) {
+            $transaction->order_type = OrderTypeEnum::Delivery;
             $transaction->shipping_address = $request->input('shipping_address');
             $transaction->recipient = $request->input('recipient');
             $transaction->recipient_phone_number = $request->input('recipient_phone_number');
+        } elseif ($orderType === OrderTypeEnum::Pickup && $request->has('recipient') && $request->has('recipient_phone_number')) {
+            $transaction->order_type = OrderTypeEnum::Pickup;
+            $transaction->recipient = $request->input('recipient');
+            $transaction->recipient_phone_number = $request->input('recipient_phone_number');
         }
-
-        $transaction->save();
 
         // Ambil biaya berdasarkan jenisnya
         $fees = Fee::whereIn(DB::raw('LOWER(type)'), ['delivery', 'service', 'discount', 'tax'])
@@ -110,6 +114,14 @@ class TransactionController extends Controller
 
         // Hitung total akhir
         $finalTotal = $subtotal + $deliveryFee + $serviceFee - $discount + $tax;
+
+        // Simpan ke database
+        $transaction->delivery_fee = $deliveryFee;
+        $transaction->service_charge = $serviceFee;
+        $transaction->discount = $discount;
+        $transaction->tax = $tax;
+        $transaction->final_total = $finalTotal;
+        $transaction->save();
 
         $itemDetails = $transaction->transactionItems
             ->map(function ($item) {
@@ -188,8 +200,6 @@ class TransactionController extends Controller
         \Midtrans\Config::$is3ds = config('services.midtrans.is_3ds');
 
         $snapToken = \Midtrans\Snap::getSnapToken($midtransParams);
-
-
 
         return redirect()
             ->back()

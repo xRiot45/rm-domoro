@@ -6,9 +6,11 @@ enum OrderTypeEnum: string
 {
     case DineIn = 'makan di tempat';
 
-    case Takeway = 'ambil di tempat';
+    case Takeway = 'pesan lalu dibawa pulang';
 
     case Delivery = 'antar ke rumah';
+
+    case Pickup = 'ambil di tempat';
 
     public  static function value(): array
     {

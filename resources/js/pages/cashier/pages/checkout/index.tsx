@@ -68,9 +68,59 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
         }
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        router.put(route('cashier.checkout.update', { transaction: transactionId }), formData, {
+    const handlePayWithCash = () => {
+        if (formData.order_type === OrderTypeEnum.DINEIN && (!formData.table_number.trim() || !formData.cash_received)) {
+            toast.error('Gagal', {
+                description: 'Nomor meja dan jumlah uang yang diterima harus diisi untuk pemesanan Dine In.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (formData.order_type === OrderTypeEnum.TAKEWAY && (!formData.recipient.trim() || !formData.cash_received)) {
+            toast.error('Gagal', {
+                description: 'Nama penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Takeway.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (
+            formData.order_type === OrderTypeEnum.DELIVERY &&
+            (!formData.shipping_address.trim() || !formData.recipient.trim() || !formData.recipient_phone_number.trim() || !formData.cash_received)
+        ) {
+            toast.error('Gagal', {
+                description:
+                    'Alamat pengiriman, nama penerima, nomor telepon penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Delivery.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (
+            formData.order_type === OrderTypeEnum.PICKUP &&
+            (!formData.recipient.trim() || !formData.recipient_phone_number.trim() || !formData.cash_received)
+        ) {
+            toast.error('Gagal', {
+                description: 'Nama penerima, nomor telepon penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Pickup.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        router.put(route('cashier.checkout.pay-cash', { transaction: transactionId }), formData, {
             onSuccess: () => {
                 toast.success('Success', {
                     description: 'Transaksi Berhasil',
@@ -107,6 +157,42 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
         if (formData.order_type === OrderTypeEnum.DINEIN && !formData.table_number.trim()) {
             toast.error('Gagal', {
                 description: 'Nomor meja harus diisi untuk pemesanan Dine In.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (formData.order_type === OrderTypeEnum.TAKEWAY && !formData.recipient.trim()) {
+            toast.error('Gagal', {
+                description: 'Nama penerima harus diisi untuk pemesanan Takeway.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (
+            formData.order_type === OrderTypeEnum.DELIVERY &&
+            (!formData.shipping_address.trim() || !formData.recipient.trim() || !formData.recipient_phone_number.trim())
+        ) {
+            toast.error('Gagal', {
+                description: 'Alamat pengiriman, nama penerima, dan nomor telepon penerima harus diisi untuk pemesanan Delivery.',
+                action: {
+                    label: 'Tutup',
+                    onClick: () => toast.dismiss(),
+                },
+            });
+            return;
+        }
+
+        if (formData.order_type === OrderTypeEnum.PICKUP && (!formData.recipient.trim() || !formData.recipient_phone_number.trim())) {
+            toast.error('Gagal', {
+                description: 'Nama penerima dan nomor telepon penerima harus diisi untuk pemesanan Pickup.',
                 action: {
                     label: 'Tutup',
                     onClick: () => toast.dismiss(),
@@ -229,9 +315,9 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                                     )}
 
                                 {/* Input Informasi Pengiriman untuk Delivery */}
-                                {formData.order_type === OrderTypeEnum.DELIVERY && (
+                                {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEWAY, OrderTypeEnum.PICKUP].includes(formData.order_type) && (
                                     <div className="block">
-                                        <span>Informasi Pengiriman</span>
+                                        <span>Informasi Penerima</span>
                                         <div className="mt-3 flex flex-col gap-2">
                                             <Input
                                                 placeholder="Nama Penerima"
@@ -239,18 +325,24 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                                                 onChange={(e) => setData('recipient', e.target.value)}
                                                 className="rounded-lg px-4 py-6 shadow-none"
                                             />
-                                            <Input
-                                                placeholder="Nomor HP"
-                                                value={formData.recipient_phone_number}
-                                                onChange={(e) => setData('recipient_phone_number', e.target.value)}
-                                                className="rounded-lg px-4 py-6 shadow-none"
-                                            />
-                                            <Input
-                                                placeholder="Alamat Pengiriman"
-                                                value={formData.shipping_address}
-                                                onChange={(e) => setData('shipping_address', e.target.value)}
-                                                className="rounded-lg px-4 py-6 shadow-none"
-                                            />
+
+                                            {(formData.order_type === OrderTypeEnum.DELIVERY || formData.order_type === OrderTypeEnum.PICKUP) && (
+                                                <Input
+                                                    placeholder="Nomor HP"
+                                                    value={formData.recipient_phone_number}
+                                                    onChange={(e) => setData('recipient_phone_number', e.target.value)}
+                                                    className="rounded-lg px-4 py-6 shadow-none"
+                                                />
+                                            )}
+
+                                            {formData.order_type === OrderTypeEnum.DELIVERY && (
+                                                <Input
+                                                    placeholder="Alamat Pengiriman"
+                                                    value={formData.shipping_address}
+                                                    onChange={(e) => setData('shipping_address', e.target.value)}
+                                                    className="rounded-lg px-4 py-6 shadow-none"
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -298,12 +390,10 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                                     Bayar dengan Midtrans
                                 </Button>
                             ) : (
-                                <form onSubmit={handleSubmit}>
-                                    <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing}>
-                                        <Icon icon="mdi:cash" />
-                                        Selesaikan Pesanan
-                                    </Button>
-                                </form>
+                                <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing} onClick={handlePayWithCash}>
+                                    <Icon icon="mdi:cash" />
+                                    Bayar dengan Cash / Tunai
+                                </Button>
                             )}
                         </Card>
                     </div>

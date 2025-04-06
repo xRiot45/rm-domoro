@@ -10,8 +10,9 @@ interface OrderTypeSelectionProps {
 
 const iconsOrderType = {
     DINEIN: <Icon icon="mdi:food" width={24} height={24} />,
-    TAKEAWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
+    TAKEWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
     DELIVERY: <Icon icon="mdi:truck-delivery" width={24} height={24} />,
+    PICKUP: <Icon icon="tdesign:undertake-delivery-filled" width={24} height={24} />,
 };
 
 export default function OrderTypeSelection({ selectedOrderType, setSelectedOrderType }: OrderTypeSelectionProps) {
@@ -21,7 +22,7 @@ export default function OrderTypeSelection({ selectedOrderType, setSelectedOrder
             <RadioGroup
                 value={selectedOrderType || ''}
                 onValueChange={(value) => setSelectedOrderType(value as OrderTypeEnum)}
-                className="w-full space-y-4 lg:flex"
+                className="grid w-full space-y-4 lg:grid-cols-2"
             >
                 {Object.entries(OrderTypeEnum).map(([key, value]) => (
                     <CardContent

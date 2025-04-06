@@ -216,7 +216,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
     });
 
     // Transaction
-    Route::put('/checkout/{transaction}', [TransactionController::class, 'update'])->name('cashier.checkout.update');
+    Route::put('/checkout/{transaction}', [TransactionController::class, 'payWithCash'])->name('cashier.checkout.pay-cash');
     Route::post('/checkout/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('cashier.transaction.pay-midtrans');
     Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('cashier.midtrans.callback');
     Route::get('/cashier/transaction/success', [TransactionController::class, 'transactionCashierSuccess'])->name('cashier.transaction.success');

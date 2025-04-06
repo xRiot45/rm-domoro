@@ -38,7 +38,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                                         {formatCurrency(Number(item?.price))}
                                     </span>
                                 </div>
-                                <span className="text-sm font-medium text-gray-600 italic dark:text-gray-200">{item?.menu_category?.name}</span>
+                                <span className="text-sm font-medium dark:text-gray-200">{item?.menu_category?.name}</span>
                             </div>
                             <div className="mt-4">
                                 <Button
