@@ -15,14 +15,14 @@ const iconsOrderType = {
     PICKUP: <Icon icon="tdesign:undertake-delivery-filled" width={24} height={24} />,
 };
 
-export default function OrderTypeSelection({ selectedOrderType, setSelectedOrderType }: OrderTypeSelectionProps) {
+const OrderTypeSelection: React.FC<OrderTypeSelectionProps> = ({ selectedOrderType, setSelectedOrderType }) => {
     return (
         <div className="mt-2 space-y-3">
             <h1 className="mb-4 text-lg font-semibold">Metode Pemesanan</h1>
             <RadioGroup
                 value={selectedOrderType || ''}
                 onValueChange={(value) => setSelectedOrderType(value as OrderTypeEnum)}
-                className="grid w-full space-y-4 lg:grid-cols-2"
+                className="grid w-full space-y-4 md:grid-cols-2"
             >
                 {Object.entries(OrderTypeEnum).map(([key, value]) => (
                     <CardContent
@@ -45,4 +45,6 @@ export default function OrderTypeSelection({ selectedOrderType, setSelectedOrder
             </RadioGroup>
         </div>
     );
-}
+};
+
+export default OrderTypeSelection;

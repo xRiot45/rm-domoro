@@ -5,11 +5,13 @@ interface SummaryRowProps {
     className?: string;
 }
 
-export default function SummaryRow({ label, value, isBold = false, className }: SummaryRowProps) {
+const SummaryRow: React.FC<SummaryRowProps> = ({ label, value, isBold = false, className }) => {
     return (
         <div className={`flex justify-between ${isBold ? 'border-t pt-4 font-bold' : ''}`}>
             <span>{label}</span>
             <span className={`${className}`}>{value}</span>
         </div>
     );
-}
+};
+
+export default SummaryRow;

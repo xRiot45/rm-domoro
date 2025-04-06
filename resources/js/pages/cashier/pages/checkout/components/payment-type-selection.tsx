@@ -13,14 +13,14 @@ const iconsPaymentType = {
     ONLINE_PAYMENT: <Icon icon="mdi:wallet" width={24} height={24} />,
 };
 
-export default function PaymentTypeSelection({ selectedPaymentType, setSelectedPaymentType }: PaymentTypeSelectionProps) {
+const PaymentTypeSelection: React.FC<PaymentTypeSelectionProps> = ({ selectedPaymentType, setSelectedPaymentType }) => {
     return (
         <div className="mt-2 space-y-3">
             <h1 className="mb-4 text-lg font-semibold">Metode Pembayaran</h1>
             <RadioGroup
                 value={selectedPaymentType || ''}
                 onValueChange={(value) => setSelectedPaymentType(value as PaymentTypeEnum)}
-                className="w-full space-y-4 lg:flex"
+                className="grid w-full space-y-4 md:grid-cols-2"
             >
                 {Object.entries(PaymentTypeEnum).map(([key, value]) => (
                     <Card
@@ -43,4 +43,6 @@ export default function PaymentTypeSelection({ selectedPaymentType, setSelectedP
             </RadioGroup>
         </div>
     );
-}
+};
+
+export default PaymentTypeSelection;
