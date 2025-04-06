@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuItemController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Settings\CustomerProfileController;
@@ -53,178 +54,173 @@ Route::middleware([])->group(function () {
 });
 
 // Route for admin
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'index_admin'])->name('admin.dashboard');
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    Route::prefix('/admin/manajemen-kontrol-akses')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index_admin'])->name('dashboard');
+
+    // Manajemen Kontrol Akses
+    Route::prefix('manajemen-kontrol-akses')->group(function () {
+
         // Roles
-        Route::prefix('/roles')
-            ->controller(RoleController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.roles.index');
-                Route::get('/create', 'create')->name('admin.roles.create');
-                Route::post('/create', 'store')->name('admin.roles.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.roles.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.roles.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.roles.destroy');
-                Route::delete('/delete-all', 'destroy_all')->name('admin.roles.destroy_all');
-            });
+        Route::prefix('roles')->name('roles.')->controller(RoleController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
+        });
 
         // Permissions
-        Route::prefix('/permissions')
-            ->controller(PermissionController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.permissions.index');
-                Route::get('/create', 'create')->name('admin.permissions.create');
-                Route::post('/create', 'store')->name('admin.permissions.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.permissions.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.permissions.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.permissions.destroy');
-                Route::delete('/delete-all', 'destroy_all')->name('admin.permissions.destroy_all');
-            });
+        Route::prefix('permissions')->name('permissions.')->controller(PermissionController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
+        });
 
         // Role Has Permissions
-        Route::prefix('/manage-role-permissions')
-            ->controller(ManageRolePermissionController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.manage-role-permission.index');
-                Route::get('/create', 'create')->name('admin.manage-role-permission.create');
-                Route::post('/create', 'store')->name('admin.manage-role-permission.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.manage-role-permission.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.manage-role-permission.update');
-            });
+        Route::prefix('manage-role-permissions')->name('manage-role-permission.')->controller(ManageRolePermissionController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+        });
     });
 
-    Route::prefix('/admin/users-management')->group(function () {
+    // Users Management
+    Route::prefix('users-management')->group(function () {
+
         // All Users
-        Route::prefix('/all-users')
-            ->controller(UserController::class)
-            ->group(function () {
-                Route::get('/', 'index_all_users')->name('admin.all-users.index');
-                Route::get('/create', 'create')->name('admin.all-users.create');
-                Route::post('/create', 'store')->name('admin.all-users.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.all-users.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.all-users.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.all-users.destroy');
-            });
+        Route::prefix('all-users')->name('all-users.')->controller(UserController::class)->group(function () {
+            Route::get('/', 'index_all_users')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
 
         // Cashiers
-        Route::prefix('/cashiers')
-            ->controller(CashierController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.cashiers.index');
-                Route::get('/create', 'create')->name('admin.cashiers.create');
-                Route::post('/create', 'store')->name('admin.cashiers.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.cashiers.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.cashiers.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.cashiers.destroy');
-            });
+        Route::prefix('cashiers')->name('cashiers.')->controller(CashierController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
 
-        // Customer
-        Route::prefix('/customers')
-            ->controller(CustomerController::class)
-            ->group(function () {
-                Route::get('/', 'index_admin')->name('admin.customers.index');
-                Route::get('/edit/{id}', 'edit')->name('admin.customers.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.customers.update');
-            });
+        // Customers
+        Route::prefix('customers')->name('customers.')->controller(CustomerController::class)->group(function () {
+            Route::get('/', 'index_admin')->name('index');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+        });
 
-        // Chef
-        Route::prefix('/chefs')
-            ->controller(ChefController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.chefs.index');
-                Route::get('/create', 'create')->name('admin.chefs.create');
-                Route::post('/create', 'store')->name('admin.chefs.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.chefs.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.chefs.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.chefs.destroy');
-            });
+        // Chefs
+        Route::prefix('chefs')->name('chefs.')->controller(ChefController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
 
-        Route::prefix('/couriers')
-            ->controller(CourierController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.couriers.index');
-                Route::get('/create', 'create')->name('admin.couriers.create');
-                Route::post('/create', 'store')->name('admin.couriers.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.couriers.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.couriers.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.couriers.destroy');
-            });
+        // Couriers
+        Route::prefix('couriers')->name('couriers.')->controller(CourierController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
     });
 
-    Route::prefix('/admin/menu-management')->group(function () {
+    // Menu Management
+    Route::prefix('menu-management')->group(function () {
+
         // Menu Categories
-        Route::prefix('/menu-categories')
-            ->controller(MenuCategoryController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('admin.menu-categories.index');
-                Route::get('/create', 'create')->name('admin.menu-categories.create');
-                Route::post('/create', 'store')->name('admin.menu-categories.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.menu-categories.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.menu-categories.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.menu-categories.destroy');
-                Route::delete('/delete-all', 'destroy_all')->name('admin.menu-categories.destroy_all');
-            });
+        Route::prefix('menu-categories')->name('menu-categories.')->controller(MenuCategoryController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
+        });
 
         // Menu Items
-        Route::prefix('/menu-items')
-            ->controller(MenuItemController::class)
-            ->group(function () {
-                Route::get('/', 'index_admin')->name('admin.menu-items.index');
-                Route::get('/create', 'create')->name('admin.menu-items.create');
-                Route::post('/create', 'store')->name('admin.menu-items.store');
-                Route::get('/edit/{id}', 'edit')->name('admin.menu-items.edit');
-                Route::put('/edit/{id}', 'update')->name('admin.menu-items.update');
-                Route::delete('/delete/{id}', 'destroy')->name('admin.menu-items.destroy');
-                Route::delete('/delete-all', 'destroy_all')->name('admin.menu-items.destroy_all');
-            });
+        Route::prefix('menu-items')->name('menu-items.')->controller(MenuItemController::class)->group(function () {
+            Route::get('/', 'index_admin')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/edit/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
+        });
     });
 });
 
+
 // Route for chef
-Route::middleware(['auth', 'verified', 'role:chef'])->group(function () {
-    Route::get('/chef/dashboard', [DashboardController::class, 'index_chef'])->name('chef.dashboard');
+Route::middleware(['auth', 'verified', 'role:chef'])->prefix('chef')->name('chef.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index_chef'])->name('dashboard');
 });
 
 // Route for courier
-Route::middleware(['auth', 'verified', 'role:courier'])->group(function () {
-    Route::get('/courier/dashboard', [DashboardController::class, 'index_courier'])->name('courier.dashboard');
+Route::middleware(['auth', 'verified', 'role:courier'])->prefix('courier')->name('courier.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index_courier'])->name('dashboard');
 });
 
 // Route for cashier
-Route::middleware(['auth', 'verified', 'role:cashier'])->group(function () {
-    Route::get('/cashier/dashboard', [DashboardController::class, 'index_cashier'])->name('cashier.dashboard');
+Route::middleware(['auth', 'verified', 'role:cashier'])->prefix('cashier')->name('cashier.')->group(function () {
 
-    // Menu Items
-    Route::prefix('/cashier/menu')->group(function () {
-        Route::controller(CartController::class)->group(function () {
-            Route::get('/', 'index_cashier')->name('cashier.cart.index');
-            Route::post('/cart', 'store')->name('cashier.cart.store');
-            Route::put('/cart/{id}', 'update_quantity')->name('cashier.cart.update_quantity');
-            Route::delete('/cart/{id}', 'destroy')->name('cashier.cart.destroy');
-            Route::delete('/cart-all', 'destroy_all')->name('cashier.cart.destroy_all');
-        });
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index_cashier'])->name('dashboard');
+
+    // Menu Items / Cart
+    Route::prefix('menu')->name('cart.')->controller(CartController::class)->group(function () {
+        Route::get('/', 'index_cashier')->name('index');
+        Route::post('/cart', 'store')->name('store');
+        Route::put('/cart/{id}', 'update_quantity')->name('update_quantity');
+        Route::delete('/cart/{id}', 'destroy')->name('destroy');
+        Route::delete('/cart-all', 'destroy_all')->name('destroy_all');
     });
 
     // Checkout
-    Route::prefix('/cashier/checkout')->name('cashier.checkout.')->group(function () {
-        Route::controller(CheckoutController::class)->group(function () {
-            Route::post('/', 'store')->name('store');
-            Route::get('/{transaction}', 'index_checkout_cashier')->name('index');
-        });
+    Route::prefix('checkout')->name('checkout.')->controller(CheckoutController::class)->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::get('/{transaction}', 'index_checkout_cashier')->name('index');
     });
 
     // Transaction
-    Route::put('/checkout/{transaction}', [TransactionController::class, 'payWithCash'])->name('cashier.checkout.pay-cash');
-    Route::post('/checkout/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('cashier.transaction.pay-midtrans');
-    Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('cashier.midtrans.callback');
-    Route::get('/cashier/transaction/success', [TransactionController::class, 'transactionCashierSuccess'])->name('cashier.transaction.success');
-    Route::get('/cashier/transaction/failed', [TransactionController::class, 'transactionCashierFailed'])->name('cashier.transaction.failed');
+    Route::prefix('transaction')->name('transaction.')->group(function () {
+        Route::put('/{transaction}/pay-cash', [TransactionController::class, 'payWithCash'])->name('pay-cash');
+        Route::post('/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('pay-midtrans');
+        Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
+        Route::get('/success', [TransactionController::class, 'transactionCashierSuccess'])->name('success');
+        Route::get('/failed', [TransactionController::class, 'transactionCashierFailed'])->name('failed');
+    });
+
+    // Orders
+    Route::prefix('order')->name('order.')->controller(OrderController::class)->group(function () {
+        Route::get('/', 'index_cashier')->name('index_cashier');
+    });
 });
 
-Route::get('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
 
+Route::get('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

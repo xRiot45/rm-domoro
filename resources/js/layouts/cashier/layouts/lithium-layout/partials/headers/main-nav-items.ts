@@ -11,6 +11,11 @@ const mainNavItems: NavItem[] = [
         href: '/cashier/menu',
         icon: 'material-symbols:menu',
     },
+    {
+        title: 'Daftar Pesanan',
+        href: '/cashier/order',
+        icon: 'lets-icons:order-fill',
+    },
 ];
 
 export default mainNavItems;
