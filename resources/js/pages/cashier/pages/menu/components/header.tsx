@@ -11,7 +11,7 @@ interface HeaderProps {
     menuCategories: MenuCategory[];
 }
 
-export default function Header({ searchTerm, setSearchTerm, setFilteredMenuItems, menuItems, menuCategories }: HeaderProps) {
+const Header: React.FC<HeaderProps> = ({ searchTerm, setSearchTerm, setFilteredMenuItems, menuItems, menuCategories }) => {
     return (
         <div className="block items-center justify-between space-y-4 lg:flex">
             <div>
@@ -43,4 +43,6 @@ export default function Header({ searchTerm, setSearchTerm, setFilteredMenuItems
             </div>
         </div>
     );
-}
+};
+
+export default Header;

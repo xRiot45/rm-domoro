@@ -15,7 +15,7 @@ interface CartContentProps {
     cartItems: Carts[];
 }
 
-export default function CartContent({ cartItems }: CartContentProps) {
+const CartContent: React.FC<CartContentProps> = ({ cartItems }) => {
     const { handleDeleteAllItemFromCart, handleDeleteItemFromCart, handleUpdateQuantity } = useCart();
     const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
     const total = subtotal;
@@ -112,4 +112,6 @@ export default function CartContent({ cartItems }: CartContentProps) {
             </Button>
         </Card>
     );
-}
+};
+
+export default CartContent;

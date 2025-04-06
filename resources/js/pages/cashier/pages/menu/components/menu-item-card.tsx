@@ -9,7 +9,7 @@ interface MenuItemCardProps {
     menuItems: MenuItems[];
 }
 
-export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
+const MenuItemCard: React.FC<MenuItemCardProps> = ({ menuItems }) => {
     const { addMenuToCart } = useCart();
 
     return (
@@ -65,4 +65,6 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
             </div>
         </>
     );
-}
+};
+
+export default MenuItemCard;

@@ -8,7 +8,7 @@ interface CartSidebarProps {
     cartItems: Carts[];
 }
 
-export default function CartSidebar({ cartItems }: CartSidebarProps) {
+const CartSidebar: React.FC<CartSidebarProps> = ({ cartItems }) => {
     return (
         <>
             {/* Tombol untuk Mobile & Tablet */}
@@ -32,4 +32,6 @@ export default function CartSidebar({ cartItems }: CartSidebarProps) {
             </div>
         </>
     );
-}
+};
+
+export default CartSidebar;
