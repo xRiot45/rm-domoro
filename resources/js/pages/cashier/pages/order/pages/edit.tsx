@@ -2,12 +2,15 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { OrderTypeEnum } from '@/enums/order-type';
+import { PaymentTypeEnum } from '@/enums/payment-type';
 import CashierLayout from '@/layouts/cashier/layout';
 import { Chef } from '@/models/chef';
 import { Courier } from '@/models/courier';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
+import { formatOrderType } from '@/utils/format-order-type';
 import { Icon } from '@iconify/react';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
@@ -42,7 +45,6 @@ export default function EditPage({ data }: { data: Transaction }) {
                 reset();
             },
             onError: (errors) => {
-                console.log(errors);
                 toast.error('Failed', {
                     description: 'Pesanan Gagal Diedit!',
                     action: {
@@ -86,18 +88,25 @@ export default function EditPage({ data }: { data: Transaction }) {
                         <p className="capitalize">
                             <strong>Order Number :</strong> {data.order_number}
                         </p>
+
                         <p className="capitalize">
-                            <strong>Jenis Pesanan :</strong> {data.order_type}
+                            <strong>Metode Pemesanan :</strong> {formatOrderType(data.order_type ?? '')}
                         </p>
+
                         <p className="capitalize">
                             <strong>Metode Pembayaran :</strong> {data.payment_method}
                         </p>
+
+                        {data.order_type === OrderTypeEnum.DINEIN && (
+                            <p className="capitalize">
+                                <strong>Nomor Meja :</strong> {data.table_number ?? '-'}
+                            </p>
+                        )}
+
                         <p className="capitalize">
                             <strong>Status Pembayaran :</strong> {data.payment_status}
                         </p>
-                        <p className="capitalize">
-                            <strong>Nomor Meja :</strong> {data.table_number ?? '-'}
-                        </p>
+
                         <p className="capitalize">
                             <strong>Total Harga :</strong> {formatCurrency(data.total_price)}
                         </p>
@@ -105,18 +114,26 @@ export default function EditPage({ data }: { data: Transaction }) {
                         <p className="capitalize">
                             <strong>Total Akhir :</strong> {formatCurrency(data.final_total)}
                         </p>
+
+                        {data.payment_method === PaymentTypeEnum.CASH && (
+                            <>
+                                <p className="capitalize">
+                                    <strong>Uang Diterima :</strong> {formatCurrency(data.cash_received ?? 0)}
+                                </p>
+                                <p className="capitalize">
+                                    <strong>Kembalian :</strong> {formatCurrency(data.change ?? 0)}
+                                </p>
+                            </>
+                        )}
+
                         <p className="capitalize">
-                            <strong>Uang Diterima :</strong> {formatCurrency(data.cash_received ?? 0)}
+                            <strong>Waktu Order Dibuat :</strong> {formatDate(data.created_at ?? '-')}
                         </p>
-                        <p className="capitalize">
-                            <strong>Kembalian :</strong> {formatCurrency(data.change ?? 0)}
-                        </p>
-                        <p className="capitalize">
-                            <strong>Waktu Dibuat :</strong> {formatDate(data.created_at ?? '-')}
-                        </p>
+
                         <p className="capitalize">
                             <strong>Catatan :</strong> {data.note ?? '-'}
                         </p>
+
                         <p className="capitalize">
                             <strong>Status Pesanan :</strong>{' '}
                             {data.order_status?.length > 0 ? data.order_status[data.order_status.length - 1].status : '-'}
@@ -127,43 +144,56 @@ export default function EditPage({ data }: { data: Transaction }) {
                     <section className="mt-6 space-y-4 rounded-xl border p-8">
                         <h1 className="mb-6 text-xl font-bold">Info Biaya Lainnya</h1>
 
-                        <p className="capitalize">
-                            <strong>Biaya Pengiriman :</strong> {formatCurrency(data.delivery_fee ?? 0)}
-                        </p>
+                        {data.order_type === OrderTypeEnum.DELIVERY && (
+                            <p className="capitalize">
+                                <strong>Biaya Pengiriman :</strong> {formatCurrency(data.delivery_fee ?? 0)}
+                            </p>
+                        )}
+
                         <p className="capitalize">
                             <strong>Biaya Layanan :</strong> {formatCurrency(data.service_charge ?? 0)}
                         </p>
-                        <p className="capitalize">
-                            <strong>Diskon :</strong> {formatCurrency(data.discount ?? 0)}
-                        </p>
+
+                        {data.discount > 0 && (
+                            <p className="capitalize">
+                                <strong>Diskon :</strong> -{formatCurrency(data.discount)}
+                            </p>
+                        )}
+
                         <p className="capitalize">
                             <strong>Pajak :</strong> {formatCurrency(data.tax ?? 0)}
                         </p>
                     </section>
 
-                    {/* Info Lainnya */}
-                    <section className="mt-6 space-y-4 rounded-xl border p-8">
-                        <h1 className="mb-6 text-xl font-bold">Info Lainnya</h1>
+                    {/* Info Penerima */}
+                    {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEWAY, OrderTypeEnum.PICKUP].includes(data.order_type ?? OrderTypeEnum.DINEIN) && (
+                        <section className="mt-6 space-y-4 rounded-xl border p-8">
+                            <h1 className="mb-6 text-xl font-bold">Info Penerima</h1>
 
-                        <p className="capitalize">
-                            <strong>Nama Penerima :</strong> {data.recipient ?? '-'}
-                        </p>
+                            <p className="capitalize">
+                                <strong>Nama Penerima :</strong> {data.recipient ?? '-'}
+                            </p>
 
-                        <p className="capitalize">
-                            <strong>No HP Penerima :</strong> {data.recipient_phone_number ?? '-'}
-                        </p>
+                            {[OrderTypeEnum.DELIVERY, OrderTypeEnum.PICKUP].includes(data.order_type ?? OrderTypeEnum.DINEIN) && (
+                                <p className="capitalize">
+                                    <strong>No HP Penerima :</strong> {data.recipient_phone_number ?? '-'}
+                                </p>
+                            )}
 
-                        <p className="capitalize">
-                            <strong>Alamat Pengiriman :</strong> {data.shipping_address ?? '-'}
-                        </p>
-                    </section>
+                            {data.order_type === OrderTypeEnum.DELIVERY && (
+                                <p className="capitalize">
+                                    <strong>Alamat Pengiriman :</strong> {data.shipping_address ?? '-'}
+                                </p>
+                            )}
+                        </section>
+                    )}
                 </div>
 
                 <Separator className="my-4" />
 
                 {/* Daftar Item */}
                 <section>
-                    <h1 className="mb-2 text-xl font-bold">Menu Yang Dipesan</h1>
+                    <h1 className="mb-2 text-lg font-bold">Menu Yang Dipesan</h1>
                     <div className="mt-2 space-y-4">
                         {data.transaction_items.map((item) => (
                             <div key={item.id} className="flex items-start gap-6 rounded-xl border p-4">
@@ -180,8 +210,8 @@ export default function EditPage({ data }: { data: Transaction }) {
                     </div>
                 </section>
 
-                <form onSubmit={handleSubmit}>
-                    <section className="grid grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="mt-8">
+                    <section className="space-y-4">
                         <div id="chef_id">
                             <Label htmlFor="chef_id">Chef / Koki</Label>
                             <Select onValueChange={(value) => setData('chef_id', parseInt(value))}>
@@ -198,21 +228,23 @@ export default function EditPage({ data }: { data: Transaction }) {
                             </Select>
                         </div>
 
-                        <div id="courier_id">
-                            <Label htmlFor="courier_id">Courier / Kurir</Label>
-                            <Select onValueChange={(value) => setData('courier_id', parseInt(value))}>
-                                <SelectTrigger className="mt-2 w-full">
-                                    <SelectValue placeholder="Pilih Courier / Kurir" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {couriers.map((item) => (
-                                        <SelectItem key={item.id} value={String(item.id)}>
-                                            {item.user.full_name} - {item.user.phone_number}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        {data?.order_type === OrderTypeEnum.DELIVERY && (
+                            <div id="courier_id">
+                                <Label htmlFor="courier_id">Courier / Kurir</Label>
+                                <Select onValueChange={(value) => setData('courier_id', parseInt(value))}>
+                                    <SelectTrigger className="mt-2 w-full">
+                                        <SelectValue placeholder="Pilih Courier / Kurir" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {couriers.map((item) => (
+                                            <SelectItem key={item.id} value={String(item.id)}>
+                                                {item.user.full_name} - {item.user.phone_number}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
                     </section>
 
                     <div className="mt-4 flex justify-end space-x-3">

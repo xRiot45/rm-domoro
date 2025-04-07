@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
+import { formatOrderType } from '@/utils/format-order-type';
 import { Icon } from '@iconify/react';
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
@@ -90,8 +91,8 @@ export const columns: ColumnDef<Transaction>[] = [
     {
         id: 'order_type',
         accessorKey: 'order_type',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Jenis Pesanan" />,
-        cell: ({ row }) => <span className="text-sm capitalize">{row.getValue('order_type')}</span>,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pemesanan" />,
+        cell: ({ row }) => <span className="text-sm capitalize">{formatOrderType(row.getValue('order_type'))}</span>,
         enableHiding: false,
         enableSorting: false,
     },
