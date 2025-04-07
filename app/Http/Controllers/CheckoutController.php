@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
@@ -10,6 +12,7 @@ use App\Models\TransactionItem;
 use App\Models\Cashier;
 use App\Models\Customer;
 use App\Models\Fee;
+use App\Models\OrderStatus;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -53,7 +56,7 @@ class CheckoutController extends Controller
             'cashier_id' => $cashierId,
             'order_type' => null,
             'payment_method' => null,
-            'payment_status' => 'pending',
+            'payment_status' => PaymentStatusEnum::Pending,
             'cash_received' => 0,
             'table_number' => null,
             'note' => null,
@@ -75,6 +78,12 @@ class CheckoutController extends Controller
 
         // Hapus semua item di keranjang setelah dipindahkan
         Cart::where('cashier_id', $cashierId)->orWhere('customer_id', $customerId)->delete();
+
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::AwaitingPayment,
+            'updated_by' => $user->id,
+        ]);
         return redirect()->route('cashier.checkout.index', ['transaction' => $transaction->id]);
     }
 }

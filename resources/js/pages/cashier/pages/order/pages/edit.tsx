@@ -117,6 +117,10 @@ export default function EditPage({ data }: { data: Transaction }) {
                         <p className="capitalize">
                             <strong>Catatan :</strong> {data.note ?? '-'}
                         </p>
+                        <p className="capitalize">
+                            <strong>Status Pesanan :</strong>{' '}
+                            {data.order_status?.length > 0 ? data.order_status[data.order_status.length - 1].status : '-'}
+                        </p>
                     </section>
 
                     {/* Info Biaya Lainnya */}

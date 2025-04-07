@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\Cashier;
 use App\Models\Chef;
 use App\Models\Courier;
+use App\Models\OrderStatus;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,13 +27,13 @@ class OrderController extends Controller
 
         $cashierId = $cashier->id ?? null;
 
-        $unassignedOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory'])
+        $unassignedOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->whereNull('cashier_id')
             ->whereNotNull('customer_id')
             ->latest()
             ->get();
 
-        $myOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory'])
+        $myOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('cashier_id', $cashierId)
             ->latest()
             ->get();
@@ -44,7 +46,7 @@ class OrderController extends Controller
 
     public function edit(int $transactionId): Response
     {
-        $transaction = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
         return Inertia::render('cashier/pages/order/pages/edit', [
             'data' => $transaction,
         ]);
@@ -74,6 +76,12 @@ class OrderController extends Controller
         $transaction->update([
             'chef_id' => $chef->id,
             'courier_id' => $courierId,
+        ]);
+
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::Processing,
+            'updated_by' => Auth::user()->id,
         ]);
 
         return redirect()

@@ -61,4 +61,9 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionItem::class);
     }
+
+    public function orderStatus(): HasMany
+    {
+        return $this->hasMany(OrderStatus::class);
+    }
 }

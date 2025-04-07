@@ -5,6 +5,7 @@ import { Cashier } from './cashier';
 import { Chef } from './chef';
 import { Courier } from './courier';
 import { Customer } from './customer';
+import { OrderStatus } from './order-status';
 import { TransactionItem } from './transaction-item';
 
 interface Transaction {
@@ -35,6 +36,7 @@ interface Transaction {
     recipient?: string | null;
     recipient_phone_number?: string | null;
     shipping_address?: string | null;
+    order_status: OrderStatus[];
     created_at?: string;
     updated_at?: string;
 }

@@ -1,4 +1,6 @@
 import { Badge } from '@/components/ui/badge';
+import { OrderStatusEnum } from '@/enums/order-status';
+import { PaymentStatusEnum } from '@/enums/payment-status';
 import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
@@ -120,30 +122,31 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'payment_status',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pembayaran" />,
         cell: ({ row }) => {
-            const value = row.getValue('payment_status') as string;
-            const statusMap: Record<string, { label: string; className: string }> = {
-                pending: {
+            const value = row.getValue('payment_status') as PaymentStatusEnum;
+
+            const statusMap: Record<PaymentStatusEnum, { label: string; className: string }> = {
+                [PaymentStatusEnum.PENDING]: {
                     label: 'Pending',
                     className: 'bg-yellow-500 text-white',
                 },
-                paid: {
-                    label: 'Paid',
+                [PaymentStatusEnum.PAID]: {
+                    label: 'Dibayar',
                     className: 'bg-green-500 text-white',
                 },
-                failed: {
-                    label: 'Failed',
+                [PaymentStatusEnum.FAILED]: {
+                    label: 'Gagal',
                     className: 'bg-red-500 text-white',
                 },
-                cancelled: {
-                    label: 'Cancelled',
+                [PaymentStatusEnum.CANCELLED]: {
+                    label: 'Dibatalkan',
                     className: 'bg-red-500 text-white',
                 },
-                refunded: {
-                    label: 'Refunded',
+                [PaymentStatusEnum.REFUNDED]: {
+                    label: 'Dikembalikan',
                     className: 'bg-blue-500 text-white',
                 },
-                expired: {
-                    label: 'Expired',
+                [PaymentStatusEnum.EXPIRED]: {
+                    label: 'Kadaluarsa',
                     className: 'bg-gray-500 text-white',
                 },
             };
@@ -166,6 +169,72 @@ export const columns: ColumnDef<Transaction>[] = [
         enableHiding: true,
         enableSorting: false,
     },
+    {
+        id: 'latest_order_status',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pesanan" />,
+        cell: ({ row }) => {
+            const statuses = row.original.order_status;
+            const latestStatus = statuses?.[statuses.length - 1];
+
+            const statusMap: Record<OrderStatusEnum, { label: string; className: string }> = {
+                [OrderStatusEnum.PENDING]: {
+                    label: 'Menunggu',
+                    className: 'bg-yellow-500 text-white',
+                },
+                [OrderStatusEnum.AWAITINGPAYMENT]: {
+                    label: 'Menunggu Pembayaran',
+                    className: 'bg-yellow-500 text-white',
+                },
+                [OrderStatusEnum.PAID]: {
+                    label: 'Dibayar',
+                    className: 'bg-green-500 text-white',
+                },
+                [OrderStatusEnum.PROCESSING]: {
+                    label: 'Diproses',
+                    className: 'bg-blue-500 text-white',
+                },
+                [OrderStatusEnum.COOKING]: {
+                    label: 'Dimasak',
+                    className: 'bg-orange-500 text-white',
+                },
+                [OrderStatusEnum.COOKED]: {
+                    label: 'Selesai Dimasak',
+                    className: 'bg-teal-500 text-white',
+                },
+                [OrderStatusEnum.READY]: {
+                    label: 'Siap',
+                    className: 'bg-green-600 text-white',
+                },
+                [OrderStatusEnum.DELIVERING]: {
+                    label: 'Dikirim',
+                    className: 'bg-indigo-500 text-white',
+                },
+                [OrderStatusEnum.COMPLETED]: {
+                    label: 'Selesai',
+                    className: 'bg-gray-700 text-white',
+                },
+                [OrderStatusEnum.CANCELLED]: {
+                    label: 'Dibatalkan',
+                    className: 'bg-red-500 text-white',
+                },
+            };
+
+            const status = latestStatus
+                ? (statusMap[latestStatus.status as OrderStatusEnum] ?? {
+                      label: latestStatus.status,
+                      className: 'bg-muted text-muted-foreground',
+                  })
+                : {
+                      label: 'Tidak Diketahui',
+                      className: 'bg-muted text-muted-foreground',
+                  };
+
+            return <Badge className={status.className}>{status.label}</Badge>;
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+
     {
         id: 'created_at',
         accessorKey: 'created_at',

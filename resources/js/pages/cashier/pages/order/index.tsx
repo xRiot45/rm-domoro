@@ -11,6 +11,7 @@ interface OrderPageProps {
 }
 
 export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps) {
+    console.log(myOrders);
     return (
         <>
             <CashierLayout>

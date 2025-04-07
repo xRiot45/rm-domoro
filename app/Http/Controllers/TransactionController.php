@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Fee;
+use App\Models\OrderStatus;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,6 +22,7 @@ class TransactionController extends Controller
     public function payWithCash(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         return DB::transaction(function () use ($request, $transaction) {
+            $user = Auth::user();
             $fees = Fee::whereIn(DB::raw('LOWER(type)'), ['delivery', 'service', 'discount', 'tax'])
                 ->get()
                 ->keyBy('type');
@@ -64,12 +68,19 @@ class TransactionController extends Controller
                 'tax' => $tax,
             ]);
 
+            OrderStatus::create([
+                'transaction_id' => $transaction->id,
+                'status' => OrderStatusEnum::Paid,
+                'updated_by' => $user->id,
+            ]);
+
             return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
         });
     }
 
     public function payWithMidtrans(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
+        $user = Auth::user();
         $transaction->load('transactionItems.menuItem');
         $transaction->note = $request->input('note');
 
@@ -193,6 +204,12 @@ class TransactionController extends Controller
         // Ambil Snap Token
         $snapToken = \Midtrans\Snap::getSnapToken($midtransParams);
 
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::Paid,
+            'updated_by' => $user->id,
+        ]);
+
         return redirect()
             ->back()
             ->with(['snap_token' => $snapToken]);
@@ -209,13 +226,13 @@ class TransactionController extends Controller
 
         $paymnetStatusMap = [
             'settlement' => PaymentStatusEnum::Paid,
-            'capture'    => PaymentStatusEnum::Paid,
-            'pending'    => PaymentStatusEnum::Pending,
-            'expire'     => PaymentStatusEnum::Expired,
-            'cancel'     => PaymentStatusEnum::Cancelled,
-            'deny'       => PaymentStatusEnum::Failed,
-            'failure'    => PaymentStatusEnum::Failed,
-            'refund'     => PaymentStatusEnum::Refunded,
+            'capture' => PaymentStatusEnum::Paid,
+            'pending' => PaymentStatusEnum::Pending,
+            'expire' => PaymentStatusEnum::Expired,
+            'cancel' => PaymentStatusEnum::Cancelled,
+            'deny' => PaymentStatusEnum::Failed,
+            'failure' => PaymentStatusEnum::Failed,
+            'refund' => PaymentStatusEnum::Refunded,
         ];
 
         $transactionStatus = $request->input('transaction_status'); // Ambil transaction_status dari Midtrans
@@ -226,20 +243,15 @@ class TransactionController extends Controller
         $isSuccess = $transactionStatus === 'settlement';
 
         if ($transaction->cashier_id) {
-            return $isSuccess
-                ? redirect()->route('cashier.transaction.success')
-                : redirect()->route('cashier.transaction.failed');
+            return $isSuccess ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
         }
 
         if ($transaction->customer_id) {
-            return $isSuccess
-                ? redirect()->route('transaction.success')
-                : redirect()->route('transaction.failed');
+            return $isSuccess ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
         }
 
         return redirect()->back()->withErrors('Tidak dapat menentukan role pengguna.');
     }
-
 
     // Untuk Customer
     public function transactionCustomerSuccess(): Response
