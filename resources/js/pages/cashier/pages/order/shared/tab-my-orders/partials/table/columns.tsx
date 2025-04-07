@@ -1,0 +1,184 @@
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { Transaction } from '@/models/transaction';
+import { formatCurrency } from '@/utils/format-currency';
+import { formatDate } from '@/utils/format-date';
+import { Icon } from '@iconify/react';
+import { ColumnDef, Row } from '@tanstack/react-table';
+import { DataTableColumnHeader } from './data-table-column-header';
+import { DataTableRowActions } from './data-table-row-actions';
+
+export const columns: ColumnDef<Transaction>[] = [
+    {
+        id: 'order_number',
+        accessorKey: 'order_number',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor Pesanan" />,
+        cell: ({ row }) => <span className="text-sm">{row.getValue('order_number')}</span>,
+        enableSorting: true,
+        enableHiding: false,
+    },
+    {
+        id: 'name',
+        accessorKey: 'name',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
+        cell: ({ row }) => {
+            const items = row.original.transaction_items;
+
+            return (
+                <div className="flex flex-col gap-3">
+                    {items.map((item) => (
+                        <div key={item.id} className="flex items-center space-x-4">
+                            {item.menu_item?.image_url && (
+                                <img src={`${item.menu_item.image_url}`} alt={item.menu_item.name} className="h-16 w-16 rounded-md object-cover" />
+                            )}
+                            <div>
+                                <span className="block font-medium">{item.menu_item?.name ?? '-'}</span>
+                                <span className="text-muted-foreground block text-sm">{item.menu_item?.menu_category?.name ?? '-'}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        },
+        meta: {
+            className: cn('pe-22 lg:pe-0'),
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'quantity',
+        accessorKey: 'quantity',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
+        cell: ({ row }) => {
+            const items = row.original.transaction_items;
+
+            return (
+                <div className="flex flex-col gap-1 space-y-13">
+                    {items.map((item) => (
+                        <span key={item.id} className="text-sm">
+                            {item.quantity}x {item.menu_item?.name ?? '-'}
+                        </span>
+                    ))}
+                </div>
+            );
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'unit_price',
+        accessorKey: 'unit_price',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Harga Satuan" />,
+        cell: ({ row }) => {
+            const unitPrice = row.original.transaction_items;
+            return (
+                <div className="flex flex-col gap-1 space-y-13">
+                    {unitPrice.map((item) => (
+                        <span key={item.id} className="text-sm">
+                            {formatCurrency(item.unit_price)}
+                        </span>
+                    ))}
+                </div>
+            );
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'order_type',
+        accessorKey: 'order_type',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Jenis Pesanan" />,
+        cell: ({ row }) => <span className="text-sm capitalize">{row.getValue('order_type')}</span>,
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'payment_method',
+        accessorKey: 'payment_method',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pembayaran" />,
+        cell: ({ row }) => {
+            const value = row.getValue('payment_method') as string;
+
+            const isOnline = value === 'online';
+            const colorClass = isOnline ? 'bg-blue-500 text-white' : 'bg-green-500 text-white';
+            const icon = isOnline ? 'mdi:credit-card' : 'mdi:cash';
+            const label = isOnline ? 'Online' : 'Tunai';
+
+            return (
+                <Badge className={`flex items-center gap-1 ${colorClass}`}>
+                    <Icon icon={icon} className="h-4 w-4" />
+                    {label}
+                </Badge>
+            );
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'payment_status',
+        accessorKey: 'payment_status',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pembayaran" />,
+        cell: ({ row }) => {
+            const value = row.getValue('payment_status') as string;
+            const statusMap: Record<string, { label: string; className: string }> = {
+                pending: {
+                    label: 'Pending',
+                    className: 'bg-yellow-500 text-white',
+                },
+                paid: {
+                    label: 'Paid',
+                    className: 'bg-green-500 text-white',
+                },
+                failed: {
+                    label: 'Failed',
+                    className: 'bg-red-500 text-white',
+                },
+                cancelled: {
+                    label: 'Cancelled',
+                    className: 'bg-red-500 text-white',
+                },
+                refunded: {
+                    label: 'Refunded',
+                    className: 'bg-blue-500 text-white',
+                },
+                expired: {
+                    label: 'Expired',
+                    className: 'bg-gray-500 text-white',
+                },
+            };
+
+            const status = statusMap[value] ?? {
+                label: value,
+                className: 'bg-muted text-muted-foreground',
+            };
+
+            return <Badge className={status.className}>{status.label}</Badge>;
+        },
+        enableHiding: true,
+        enableSorting: false,
+    },
+    {
+        id: 'final_total',
+        accessorKey: 'final_total',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
+        cell: ({ row }) => <span className="text-sm">{formatCurrency(row.getValue('final_total'))}</span>,
+        enableHiding: true,
+        enableSorting: false,
+    },
+    {
+        id: 'created_at',
+        accessorKey: 'created_at',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Waktu Order" />,
+        cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
+        enableHiding: true,
+        enableSorting: true,
+    },
+    {
+        id: 'actions',
+        accessorKey: 'actions',
+        header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">Aksi</span>,
+        cell: ({ row }) => <DataTableRowActions row={row as Row<Transaction>} />,
+        enableHiding: false,
+    },
+];

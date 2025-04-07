@@ -216,6 +216,8 @@ Route::middleware(['auth', 'verified', 'role:cashier'])->prefix('cashier')->name
     // Orders
     Route::prefix('order')->name('order.')->controller(OrderController::class)->group(function () {
         Route::get('/', 'index_cashier')->name('index_cashier');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::put('/edit/{id}', 'update')->name(name: 'update');
     });
 });
 

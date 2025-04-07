@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Cashier;
 use App\Models\Chef;
+use App\Models\Courier;
 use App\Models\MenuCategory;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -52,12 +53,14 @@ class HandleInertiaRequests extends Middleware
                 $query->where('name', 'chef');
             })->get(),
             'existingChefs' => Chef::pluck('user_id')->toArray(),
+            'chefs' => Chef::with(['user'])->get(),
 
             // Data Courier
             'usersCourier' => User::whereHas('roles', function ($query) {
                 $query->where('name', 'courier');
             })->get(),
-            'existingCouriers' => Chef::pluck('user_id')->toArray(),
+            'existingCouriers' => Courier::pluck('user_id')->toArray(),
+            'couriers' => Courier::with(['user'])->get(),
 
             'flash' => [
                 'status' => session('status'),

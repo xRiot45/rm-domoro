@@ -18,6 +18,7 @@ interface Transaction {
     payment_method?: PaymentTypeEnum | null;
     payment_status?: PaymentStatusEnum | null;
     cash_received?: number | null;
+    change?: number | null;
     table_number?: string | null;
     note?: string | null;
     chef_id: number;
@@ -31,6 +32,9 @@ interface Transaction {
     tax: number;
     final_total: number;
     transaction_items: TransactionItem[];
+    recipient?: string | null;
+    recipient_phone_number?: string | null;
+    shipping_address?: string | null;
     created_at?: string;
     updated_at?: string;
 }

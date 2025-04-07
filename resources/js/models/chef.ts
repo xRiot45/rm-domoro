@@ -5,6 +5,7 @@ import { ShiftEnum } from '@/enums/shift';
 import { User } from './user';
 
 interface Chef {
+    full_name: ReactNode;
     id: number;
     user_id: number;
     user: User;

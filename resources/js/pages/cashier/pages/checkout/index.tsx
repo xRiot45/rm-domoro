@@ -65,7 +65,7 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
     const handlePayWithCash = () => {
         if (!validateFormCash({ formData })) return;
 
-        router.put(route('cashier.checkout.pay-cash', { transaction: transactionId }), formData, {
+        router.put(route('cashier.transaction.pay-cash', { transaction: transactionId }), formData, {
             onSuccess: () =>
                 toast.success('Success', {
                     description: 'Transaksi Berhasil',
