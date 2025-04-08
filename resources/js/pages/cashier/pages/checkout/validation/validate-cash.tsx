@@ -1,6 +1,6 @@
+import showErrorToast from '@/components/error-toast';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { TransactionForm } from '@/models/transaction';
-import showErrorToast from '@/components/error-toast';
 
 const validateFormCash = ({ formData }: { formData: TransactionForm }) => {
     const { order_type, table_number, recipient, recipient_phone_number, shipping_address, cash_received } = formData;
