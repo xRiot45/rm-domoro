@@ -50,7 +50,9 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
         gender: customer?.gender,
     });
 
-    const [inputValue, setInputValue] = useState(data.birthdate ? data.birthdate.toISOString().split('T')[0] : '');
+    const [inputValue, setInputValue] = useState(() => {
+        return data?.birthdate instanceof Date && !isNaN(data?.birthdate.getTime()) ? data.birthdate.toISOString().split('T')[0] : '';
+    });
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     const handleInputBirthdate = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,10 +217,10 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                             <Popover>
                                 <PopoverTrigger>
                                     <Button type="button" variant="outline" className="mt-2.5 w-full">
-                                        {data.birthdate ? (
+                                        {data.birthdate instanceof Date && !isNaN(data.birthdate.getTime()) ? (
                                             <span>{data.birthdate.toDateString()}</span>
                                         ) : (
-                                            <span className="text-sm text-gray-400">Pilih Tanggal</span>
+                                            <span className="text-sm text-gray-400">Masukkan Tanggal Lahir</span>
                                         )}
                                         <CalendarIcon className="ml-auto h-5 w-5 text-gray-500" />
                                     </Button>

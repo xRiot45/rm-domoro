@@ -47,8 +47,8 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                 <ScrollArea className="h-[400px] w-full">
                     {cartItems.length > 0 ? (
                         cartItems.map((item) => (
-                            <div>
-                                <div key={item?.id} className="mb-8 flex items-center gap-4">
+                            <div key={item?.id}>
+                                <div className="mb-8 flex items-center gap-4">
                                     <Button
                                         className="cursor-pointer text-red-500 transition-all hover:bg-gray-200 dark:hover:bg-gray-800"
                                         variant="ghost"
@@ -84,8 +84,8 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                                             <Plus size={16} />
                                         </Button>
                                     </div>
+                                    <Separator className="my-4" />
                                 </div>
-                                <Separator className="my-4" />
                             </div>
                         ))
                     ) : (
