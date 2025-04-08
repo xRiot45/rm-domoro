@@ -29,8 +29,8 @@ Route::middleware([])->group(function () {
             Route::get('/', [CartController::class, 'index_customer'])->name('index');
             Route::post('/', [CartController::class, 'store'])->name('store');
             Route::put('/{id}', [CartController::class, 'update_quantity'])->name('update_quantity');
-            Route::delete('/{id}', [CartController::class, 'destroy'])->name('destroy');
             Route::delete('/all', [CartController::class, 'destroy_all'])->name('destroy_all');
+            Route::delete('/{id}', [CartController::class, 'destroy'])->name('destroy');
         });
 
     Route::get('/menu', [MenuItemController::class, 'menu_customer'])->name('menu.index');

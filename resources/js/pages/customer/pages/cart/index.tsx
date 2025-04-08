@@ -33,6 +33,8 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
     const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
     const total = subtotal;
 
+    console.log(route('cart.destroy_all'));
+
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {/* Cart */}
@@ -84,8 +86,8 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                                             <Plus size={16} />
                                         </Button>
                                     </div>
-                                    <Separator className="my-4" />
                                 </div>
+                                <Separator className="my-4" />
                             </div>
                         ))
                     ) : (
