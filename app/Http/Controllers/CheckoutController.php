@@ -19,16 +19,32 @@ use Inertia\Response;
 
 class CheckoutController extends Controller
 {
-    public function index_checkout_cashier(int $transactionId): Response
+    private function getTransactionData(int $transactionId): array
     {
         $data = Transaction::with('transactionItems.menuItem.menuCategory')->findOrFail($transactionId);
         $fees = Fee::whereIn('type', ['delivery', 'service', 'discount', 'tax'])->get()->keyBy('type');
 
-        return Inertia::render('cashier/pages/checkout/index', [
+        return [
             'data' => $data,
             'fees' => $fees
-        ]);
+        ];
     }
+
+
+    public function index_checkout_cashier(int $transactionId): Response
+    {
+        $transactionData = $this->getTransactionData($transactionId);
+
+        return Inertia::render('cashier/pages/checkout/index', $transactionData);
+    }
+
+    public function index_checkout_customer(int $transactionId): Response
+    {
+        $transactionData = $this->getTransactionData($transactionId);
+
+        return Inertia::render('customer/pages/checkout/index', $transactionData);
+    }
+
 
     public function store(): RedirectResponse
     {
@@ -56,7 +72,7 @@ class CheckoutController extends Controller
             'cashier_id' => $cashierId,
             'order_type' => null,
             'payment_method' => null,
-            'payment_status' => PaymentStatusEnum::Pending,
+            'payment_status' => PaymentStatusEnum::PENDING,
             'cash_received' => 0,
             'table_number' => null,
             'note' => null,
@@ -81,9 +97,16 @@ class CheckoutController extends Controller
 
         OrderStatus::create([
             'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::AwaitingPayment,
-            'updated_by' => $user->id,
+            'status' => OrderStatusEnum::PROCESSING,
+            // 'updated_by' => $user->id,
         ]);
-        return redirect()->route('cashier.checkout.index', ['transaction' => $transaction->id]);
+
+        if ($cashier) {
+            return redirect()->route('cashier.checkout.index', ['transaction' => $transaction->id]);
+        } elseif ($customer) {
+            return redirect()->route('checkout.index', ['transaction' => $transaction->id]);
+        }
+
+        return redirect()->back()->withErrors('Anda bukan kasir atau customer.');
     }
 }

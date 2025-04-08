@@ -60,8 +60,8 @@ class User extends Authenticatable
         return $this->hasMany(Wishlist::class);
     }
 
-    public function orderStatuses(): HasMany
-    {
-        return $this->hasMany(OrderStatus::class);
-    }
+    // public function orderStatuses(): HasMany
+    // {
+    //     return $this->hasMany(OrderStatus::class);
+    // }
 }

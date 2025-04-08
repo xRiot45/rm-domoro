@@ -1,3 +1,4 @@
+import SummaryRow from '@/components/summary-row';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,6 @@ import { PaymentTypeEnum } from '@/enums/payment-type';
 import { TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
-import SummaryRow from './summary-row';
 
 interface CheckoutSummaryProps {
     formData: Required<TransactionForm>;

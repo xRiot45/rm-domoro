@@ -1,9 +1,11 @@
 import PaymentSuccessImg from '@/assets/images/payment/payment-success.png';
 import { Button } from '@/components/ui/button';
+import { Head, router } from '@inertiajs/react';
 
 export default function TransactionSuccessPage() {
     return (
         <>
+            <Head title="Pembayaran Berhasil" />
             <div className="flex min-h-screen flex-col bg-white dark:bg-[#171717]">
                 <div className="flex grow items-center px-6 xl:px-10">
                     <div className="mx-auto text-center">
@@ -16,8 +18,8 @@ export default function TransactionSuccessPage() {
                         </p>
 
                         <div className="mt-6">
-                            <Button className="cursor-pointer" onClick={() => window.history.back()}>
-                                Kembali ke halaman sebelumnya
+                            <Button className="cursor-pointer" onClick={() => router.visit(route('home'))}>
+                                Kembali ke halaman beranda
                             </Button>
                         </div>
                     </div>

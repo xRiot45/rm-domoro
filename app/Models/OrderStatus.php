@@ -12,7 +12,7 @@ class OrderStatus extends Model
     protected $fillable = [
         'transaction_id',
         'status',
-        'updated_by',
+        // 'updated_by',
     ];
 
     public function transaction(): BelongsTo
@@ -20,8 +20,8 @@ class OrderStatus extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 }

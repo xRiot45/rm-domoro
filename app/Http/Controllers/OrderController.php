@@ -80,7 +80,7 @@ class OrderController extends Controller
 
         OrderStatus::create([
             'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::Processing,
+            'status' => OrderStatusEnum::PROCESSING,
             'updated_by' => Auth::user()->id,
         ]);
 

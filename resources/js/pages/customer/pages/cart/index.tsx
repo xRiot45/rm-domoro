@@ -29,11 +29,9 @@ export default function CartPage({ carts }: { carts: Carts[] }) {
 }
 
 function CartContent({ cartItems }: { cartItems: Carts[] }) {
-    const { handleDeleteAllItemFromCart, handleDeleteItemFromCart, handleUpdateQuantity } = useCart();
+    const { handleDeleteAllItemFromCart, handleDeleteItemFromCart, handleUpdateQuantity, handleCheckout } = useCart();
     const subtotal = cartItems.reduce((acc, item) => acc + item.unit_price * item.quantity, 0);
     const total = subtotal;
-
-    console.log(route('cart.destroy_all'));
 
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -111,9 +109,9 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                     <span>Total:</span>
                     <span>{formatCurrency(total)}</span>
                 </div>
-                <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black">
-                    <Icon icon={'tdesign:undertake-transaction'} />
-                    Lanjutkan Ke Pembayaran
+                <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
+                    <Icon icon={'material-symbols:shopping-cart-checkout'} />
+                    Checkout Pesanan
                 </Button>
                 <Link href="/">
                     <Button variant="outline" className="mt-2 w-full cursor-pointer py-5 text-black dark:bg-white dark:text-black">

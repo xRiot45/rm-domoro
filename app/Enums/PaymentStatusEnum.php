@@ -4,17 +4,17 @@ namespace App\Enums;
 
 enum PaymentStatusEnum: string
 {
-    case Pending = 'menunggu';
+    case PENDING = 'menunggu';
 
-    case Paid = 'dibayar';
+    case PAID = 'dibayar';
 
-    case Failed = 'gagal';
+    case FAILED = 'gagal';
 
-    case Cancelled = 'dibatalkan';
+    case CANCELLED = 'dibatalkan';
 
-    case Refunded = 'dikembalikan';
+    case REFUNDED = 'dikembalikan';
 
-    case Expired = 'kadaluarsa';
+    case EXPIRED = 'kadaluarsa';
 
     public  static function value(): array
     {

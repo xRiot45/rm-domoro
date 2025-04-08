@@ -227,7 +227,13 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                                 </PopoverTrigger>
 
                                 <PopoverContent className="w-auto p-2">
-                                    <Input type="text" value={inputValue} onChange={handleInputBirthdate} className="mb-2 py-6 text-center" />
+                                    <Input
+                                        type="text"
+                                        value={inputValue}
+                                        onChange={handleInputBirthdate}
+                                        className="mb-2 py-6 text-center"
+                                        placeholder="Masukkan Tanggal Lahir"
+                                    />
                                     <Calendar
                                         mode="single"
                                         selected={data.birthdate ?? new Date()}

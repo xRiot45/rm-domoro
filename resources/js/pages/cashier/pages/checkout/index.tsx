@@ -1,3 +1,4 @@
+import showErrorToast from '@/components/error-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentTypeEnum } from '@/enums/payment-type';
@@ -9,7 +10,6 @@ import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import CheckoutSummary from './components/checkout-summary';
-import showErrorToast from './components/error-toast';
 import OrderTypeSelection from './components/order-type-selection';
 import PaymentTypeSelection from './components/payment-type-selection';
 import validateFormCash from './validation/validate-cash';

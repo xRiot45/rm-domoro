@@ -7,6 +7,8 @@ use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Requests\TransactionRequest;
+use App\Models\Cashier;
+use App\Models\Customer;
 use App\Models\Fee;
 use App\Models\OrderStatus;
 use App\Models\Transaction;
@@ -23,6 +25,9 @@ class TransactionController extends Controller
     {
         return DB::transaction(function () use ($request, $transaction) {
             $user = Auth::user();
+            $cashier = Cashier::where('user_id', $user->id)->first();
+            $customer = Customer::where('user_id', $user->id)->first();
+
             $fees = Fee::whereIn(DB::raw('LOWER(type)'), ['delivery', 'service', 'discount', 'tax'])
                 ->get()
                 ->keyBy('type');
@@ -40,19 +45,29 @@ class TransactionController extends Controller
 
             $finalTotal = $subtotal + $deliveryFee + $serviceCharge - $discount + $tax;
 
-            if ($paymentMethod === PaymentMethodEnum::Cash && $request->cash_received < $finalTotal) {
+
+            if (
+                $paymentMethod === PaymentMethodEnum::Cash &&
+                $transaction->cashier_id !== null &&
+                $request->cash_received < $finalTotal
+            ) {
                 return redirect()
                     ->back()
                     ->withErrors(['cash_received' => 'Uang Anda kurang.']);
             }
 
-            $change = $request->cash_received - $finalTotal;
+
+            $cashReceived = $transaction->cashier_id !== null ? $request->cash_received : 0;
+            $change = $cashReceived !== 0 ? ($cashReceived - $finalTotal) : 0;
+
 
             $transaction->update([
                 'order_type' => $orderType,
                 'payment_method' => $paymentMethod,
-                'payment_status' => $paymentMethod === PaymentMethodEnum::Cash ? PaymentStatusEnum::Paid : PaymentStatusEnum::Pending,
-                'cash_received' => $request->cash_received,
+                'payment_status' => $paymentMethod === PaymentMethodEnum::Cash
+                    ? ($transaction->cashier_id !== null ? PaymentStatusEnum::PAID : PaymentStatusEnum::PENDING)
+                    : PaymentStatusEnum::PENDING,
+                'cash_received' => $cashReceived,
                 'change' => $change,
                 'table_number' => $request->table_number,
                 'shipping_address' => $request->shipping_address,
@@ -68,19 +83,24 @@ class TransactionController extends Controller
                 'tax' => $tax,
             ]);
 
-            OrderStatus::create([
-                'transaction_id' => $transaction->id,
-                'status' => OrderStatusEnum::Paid,
-                'updated_by' => $user->id,
-            ]);
 
-            return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
+            if ($transaction->cashier_id !== null && $paymentMethod === PaymentMethodEnum::Cash) {
+                OrderStatus::create([
+                    'transaction_id' => $transaction->id,
+                    'status' => OrderStatusEnum::PROCESSING,
+                ]);
+            }
+
+            if ($cashier) {
+                return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
+            } elseif ($customer) {
+                return redirect()->route('cart.index')->with('success', 'Transaksi berhasil.');
+            }
         });
     }
 
     public function payWithMidtrans(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
-        $user = Auth::user();
         $transaction->load('transactionItems.menuItem');
         $transaction->note = $request->input('note');
 
@@ -206,8 +226,7 @@ class TransactionController extends Controller
 
         OrderStatus::create([
             'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::Paid,
-            'updated_by' => $user->id,
+            'status' => OrderStatusEnum::PROCESSING,
         ]);
 
         return redirect()
@@ -225,14 +244,14 @@ class TransactionController extends Controller
         }
 
         $paymnetStatusMap = [
-            'settlement' => PaymentStatusEnum::Paid,
-            'capture' => PaymentStatusEnum::Paid,
-            'pending' => PaymentStatusEnum::Pending,
-            'expire' => PaymentStatusEnum::Expired,
-            'cancel' => PaymentStatusEnum::Cancelled,
-            'deny' => PaymentStatusEnum::Failed,
-            'failure' => PaymentStatusEnum::Failed,
-            'refund' => PaymentStatusEnum::Refunded,
+            'settlement' => PaymentStatusEnum::PAID,
+            'capture' => PaymentStatusEnum::PAID,
+            'pending' => PaymentStatusEnum::PENDING,
+            'expire' => PaymentStatusEnum::EXPIRED,
+            'cancel' => PaymentStatusEnum::CANCELLED,
+            'deny' => PaymentStatusEnum::FAILED,
+            'failure' => PaymentStatusEnum::FAILED,
+            'refund' => PaymentStatusEnum::REFUNDED,
         ];
 
         $transactionStatus = $request->input('transaction_status'); // Ambil transaction_status dari Midtrans
@@ -256,14 +275,14 @@ class TransactionController extends Controller
     // Untuk Customer
     public function transactionCustomerSuccess(): Response
     {
-        return Inertia::render('transaction/success', [
+        return Inertia::render('customer/pages/transaction/success', [
             'message' => 'Pembayaran berhasil! Terima kasih telah memesan.',
         ]);
     }
 
     public function transactionCustomerFailed(): Response
     {
-        return Inertia::render('transaction/failed', [
+        return Inertia::render('customer/pages/transaction/failed', [
             'message' => 'Pembayaran gagal. Silakan coba lagi atau hubungi kasir.',
         ]);
     }

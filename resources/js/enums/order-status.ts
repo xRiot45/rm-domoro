@@ -1,7 +1,4 @@
 export enum OrderStatusEnum {
-    PENDING = 'menunggu',
-    AWAITINGPAYMENT = 'menunggu pembayaran',
-    PAID = 'dibayar',
     PROCESSING = 'diproses',
     COOKING = 'dimasak',
     COOKED = 'selesai dimasak',

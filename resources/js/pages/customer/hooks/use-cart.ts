@@ -82,5 +82,27 @@ export function useCart() {
         });
     };
 
-    return { addMenuToCart, handleUpdateQuantity, handleDeleteItemFromCart, handleDeleteAllItemFromCart };
+    const handleCheckout = () => {
+        router.post(
+            route('checkout.store'),
+            {},
+            {
+                onSuccess: (page) => {
+                    const transactionId = (page?.props?.data as { id: number })?.id;
+                    router.visit(route('checkout.index', { id: transactionId }));
+                },
+                onError: (errors) => {
+                    toast.error('Checkout gagal', {
+                        description: errors.message || 'Terjadi kesalahan.',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+                },
+            },
+        );
+    };
+
+    return { addMenuToCart, handleUpdateQuantity, handleDeleteItemFromCart, handleDeleteAllItemFromCart, handleCheckout };
 }

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([])->group(function () {
     Route::get('/', [MenuItemController::class, 'index_customer'])->name('home');
 
+    // Cart
     Route::prefix('cart')
         ->name('cart.')
         ->group(function () {
@@ -35,6 +36,7 @@ Route::middleware([])->group(function () {
 
     Route::get('/menu', [MenuItemController::class, 'menu_customer'])->name('menu.index');
 
+    // Wishlist
     Route::prefix('wishlist')
         ->name('wishlist.')
         ->group(function () {
@@ -42,6 +44,22 @@ Route::middleware([])->group(function () {
             Route::post('/', [WishlistController::class, 'toggle'])->name('toggle');
         });
 
+    // Checkout
+    Route::prefix('checkout')->name('checkout.')->controller(CheckoutController::class)->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::get('/{transaction}', 'index_checkout_customer')->name('index');
+    });
+
+    // Transaction
+    Route::prefix('transaction')->name('transaction.')->group(function () {
+        Route::put('/{transaction}/pay-cash', [TransactionController::class, 'payWithCash'])->name('pay-cash');
+        Route::post('/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('pay-midtrans');
+        Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
+        Route::get('/success', [TransactionController::class, 'transactionCustomerSuccess'])->name('success');
+        Route::get('/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('failed');
+    });
+
+    // Settings
     Route::prefix('settings/profile')
         ->name('customer.profile.')
         ->group(function () {
@@ -49,8 +67,8 @@ Route::middleware([])->group(function () {
             Route::post('/', [CustomerProfileController::class, 'update_profile'])->name('update_profile');
         });
 
-    Route::get('/transaction/success', [TransactionController::class, 'transactionCustomerSuccess'])->name('customer.transaction.success');
-    Route::get('/transaction/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('customer.transaction.failed');
+    // Route::get('/transaction/success', [TransactionController::class, 'transactionCustomerSuccess'])->name('customer.transaction.success');
+    // Route::get('/transaction/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('customer.transaction.failed');
 });
 
 // Route for admin
