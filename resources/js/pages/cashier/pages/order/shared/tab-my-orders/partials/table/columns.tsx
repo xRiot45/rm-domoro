@@ -178,18 +178,18 @@ export const columns: ColumnDef<Transaction>[] = [
             const latestStatus = statuses?.[statuses.length - 1];
 
             const statusMap: Record<OrderStatusEnum, { label: string; className: string }> = {
-                [OrderStatusEnum.PENDING]: {
-                    label: 'Menunggu',
-                    className: 'bg-yellow-500 text-white',
-                },
-                [OrderStatusEnum.AWAITINGPAYMENT]: {
-                    label: 'Menunggu Pembayaran',
-                    className: 'bg-yellow-500 text-white',
-                },
-                [OrderStatusEnum.PAID]: {
-                    label: 'Dibayar',
-                    className: 'bg-green-500 text-white',
-                },
+                // [OrderStatusEnum.PENDING]: {
+                //     label: 'Menunggu',
+                //     className: 'bg-yellow-500 text-white',
+                // },
+                // [OrderStatusEnum.AWAITINGPAYMENT]: {
+                //     label: 'Menunggu Pembayaran',
+                //     className: 'bg-yellow-500 text-white',
+                // },
+                // [OrderStatusEnum.PAID]: {
+                //     label: 'Dibayar',
+                //     className: 'bg-green-500 text-white',
+                // },
                 [OrderStatusEnum.PROCESSING]: {
                     label: 'Diproses',
                     className: 'bg-blue-500 text-white',

@@ -28,7 +28,7 @@ export function CustomerMenuContent({ user }: CustomerMenuContentProps) {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link className="block w-full" href={route('customer.profile.index_profile')} as="button" prefetch onClick={cleanup}>
+                    <Link className="block w-full" href={route('order.index')} as="button" prefetch onClick={cleanup}>
                         <ListOrdered className="mr-2" />
                         Pesanan Saya
                     </Link>

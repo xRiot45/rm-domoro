@@ -63,6 +63,14 @@ Route::middleware([])->group(function () {
             Route::get('/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('failed');
         });
 
+    // Order
+    Route::prefix('order')
+        ->name('order.')
+        ->group(function () {
+            Route::get('/', [OrderController::class, 'index_customer'])->name('index');
+            Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        });
+
     // Settings
     Route::prefix('settings/profile')
         ->name('customer.profile.')
