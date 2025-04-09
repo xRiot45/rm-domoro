@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentTypeEnum } from '@/enums/payment-type';
+import { Customer } from '@/models/customer';
 import { TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
@@ -22,6 +23,7 @@ interface CheckoutSummaryProps {
     handlePayWithCash: () => void;
     handlePayWithMidtrans: () => void;
     processing: boolean;
+    customer: Customer;
 }
 
 const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
@@ -37,6 +39,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
     handlePayWithCash,
     handlePayWithMidtrans,
     processing,
+    customer,
 }) => {
     return (
         <Card className="mt-4 w-full border p-8 shadow-none lg:mt-13">
@@ -81,7 +84,9 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                 <Button
                     type={formData.payment_method === PaymentTypeEnum.CASH ? 'submit' : 'button'}
                     className="mt-4 w-full py-6 text-sm"
-                    disabled={processing}
+                    disabled={
+                        processing || (formData.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer.address.trim() === ''))
+                    }
                     onClick={formData.payment_method === PaymentTypeEnum.CASH ? handlePayWithCash : handlePayWithMidtrans}
                 >
                     <Icon icon={formData.payment_method === PaymentTypeEnum.CASH ? 'mdi:cash' : 'mdi:credit-card'} />

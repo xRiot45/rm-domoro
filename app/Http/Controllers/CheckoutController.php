@@ -41,8 +41,13 @@ class CheckoutController extends Controller
     public function index_checkout_customer(int $transactionId): Response
     {
         $transactionData = $this->getTransactionData($transactionId);
+        $user = Auth::user();
+        $customer = Customer::where('user_id', $user->id)->first();
 
-        return Inertia::render('customer/pages/checkout/index', $transactionData);
+        return Inertia::render('customer/pages/checkout/index', [
+            ...$transactionData,
+            'customer' => $customer
+        ]);
     }
 
 

@@ -1,12 +1,16 @@
 import showErrorToast from '@/components/error-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentTypeEnum } from '@/enums/payment-type';
 import AppLayout from '@/layouts/app/layout';
+import { Customer } from '@/models/customer';
 import { Fee } from '@/models/fee';
 import { Transaction, TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
-import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { AlertCircle } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import CheckoutSummary from './components/checkout-summary';
@@ -16,9 +20,10 @@ import PaymentTypeSelection from './components/payment-type-selection';
 interface CheckoutPageProps {
     data: Transaction;
     fees: Fee;
+    customer: Customer;
 }
 
-export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
+export default function CheckoutPage({ data, fees, customer }: CheckoutPageProps) {
     const { flash } = usePage().props as unknown as { flash: { snap_token: string } };
     const { id: transactionId, transaction_items } = data;
 
@@ -61,8 +66,6 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
     };
 
     const handlePayWithCash = () => {
-        // if (!validateFormCash({ formData })) return;
-
         router.put(route('transaction.pay-cash', { transaction: transactionId }), formData, {
             onSuccess: () =>
                 toast.success('Success', {
@@ -78,8 +81,6 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
     };
 
     const handlePayWithMidtrans = () => {
-        // if (!validateFormMidtrans({ formData })) return;
-
         router.post(route('transaction.pay-midtrans', { transaction: transactionId }), formData, {
             preserveScroll: true,
             onSuccess: () =>
@@ -110,6 +111,21 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                         <h1 className="text-2xl font-black tracking-tight text-gray-800 dark:text-gray-200">Selesaikan Pesanan</h1>
                         <p className="text-muted-foreground mt-1.5 text-[16px]">Tinjau pesanan Anda dan pilih metode pembayaran</p>
                     </div>
+
+                    {formData?.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer?.address.trim() === '') && (
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Alamat Belum Diisi</AlertTitle>
+                            <AlertDescription>
+                                Silakan isi alamat pengiriman terlebih dahulu di halaman profil Anda.
+                                <Link href={route('customer.profile.index_profile')}>
+                                    <Button variant="destructive" className="mt-2 cursor-pointer">
+                                        Isi Alamat Sekarang
+                                    </Button>
+                                </Link>
+                            </AlertDescription>
+                        </Alert>
+                    )}
 
                     {/* Menu Yang Dipesan */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4">
@@ -162,6 +178,7 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                             handlePayWithCash={handlePayWithCash}
                             handlePayWithMidtrans={handlePayWithMidtrans}
                             processing={processing}
+                            customer={customer}
                         />
                     </div>
                 </div>

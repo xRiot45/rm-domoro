@@ -51,28 +51,19 @@ class TransactionController extends Controller
 
             $finalTotal = $subtotal + $deliveryFee + $serviceCharge - $discount + $tax;
 
-
-            if (
-                $paymentMethod === PaymentMethodEnum::Cash &&
-                $transaction->cashier_id !== null &&
-                $request->cash_received < $finalTotal
-            ) {
+            if ($paymentMethod === PaymentMethodEnum::Cash && $transaction->cashier_id !== null && $request->cash_received < $finalTotal) {
                 return redirect()
                     ->back()
                     ->withErrors(['cash_received' => 'Uang Anda kurang.']);
             }
 
-
             $cashReceived = $transaction->cashier_id !== null ? $request->cash_received : 0;
-            $change = $cashReceived !== 0 ? ($cashReceived - $finalTotal) : 0;
-
+            $change = $cashReceived !== 0 ? $cashReceived - $finalTotal : 0;
 
             $transaction->update([
                 'order_type' => $orderType,
                 'payment_method' => $paymentMethod,
-                'payment_status' => $paymentMethod === PaymentMethodEnum::Cash
-                    ? ($transaction->cashier_id !== null ? PaymentStatusEnum::PAID : PaymentStatusEnum::PENDING)
-                    : PaymentStatusEnum::PENDING,
+                'payment_status' => $paymentMethod === PaymentMethodEnum::Cash ? ($transaction->cashier_id !== null ? PaymentStatusEnum::PAID : PaymentStatusEnum::PENDING) : PaymentStatusEnum::PENDING,
                 'cash_received' => $cashReceived,
                 'change' => $change,
                 'table_number' => $request->table_number,
@@ -88,7 +79,6 @@ class TransactionController extends Controller
                 'discount' => $discount,
                 'tax' => $tax,
             ]);
-
 
             if ($transaction->cashier_id !== null && $paymentMethod === PaymentMethodEnum::Cash) {
                 OrderStatus::create([
@@ -111,6 +101,7 @@ class TransactionController extends Controller
         $transaction->note = $request->input('note');
 
         $user = Auth::user();
+        $cashier = Cashier::where('user_id', $user->id)->first();
         $customer = Customer::where('user_id', $user->id)->first();
 
         if ($customer && empty($customer->address)) {
@@ -123,7 +114,7 @@ class TransactionController extends Controller
         $orderType = OrderTypeEnum::tryFrom($request->order_type) ?? OrderTypeEnum::DineIn;
         $transaction->order_type = $orderType;
 
-        // Isi informasi tambahan berdasarkan jenis pesanan
+        // Isi informasi tambahan berdasarkan jenis pesanan (Untuk role Cashier)
         if ($orderType === OrderTypeEnum::DineIn && $request->has('table_number')) {
             $transaction->table_number = $request->input('table_number');
         } elseif ($orderType === OrderTypeEnum::Takeway && $request->has('recipient')) {
@@ -215,26 +206,50 @@ class TransactionController extends Controller
         \Midtrans\Config::$is3ds = config('services.midtrans.is_3ds');
 
         // Parameter ke Midtrans
-        $midtransParams = [
-            'transaction_details' => [
-                'order_id' => $transaction->order_number,
-                'gross_amount' => $finalTotal,
-            ],
-            'customer_details' => [
-                'first_name' => $request->recipient,
-                'phone' => $request->recipient_phone_number,
-                'shipping_address' => [
+        if ($cashier) {
+            $midtransParams = [
+                'transaction_details' => [
+                    'order_id' => $transaction->order_number,
+                    'gross_amount' => $finalTotal,
+                ],
+                'customer_details' => [
                     'first_name' => $request->recipient,
                     'phone' => $request->recipient_phone_number,
-                    'address' => $request->shipping_address,
+                    'shipping_address' => [
+                        'first_name' => $request->recipient,
+                        'phone' => $request->recipient_phone_number,
+                        'address' => $request->shipping_address,
+                    ],
                 ],
-            ],
-            'item_details' => $itemDetails,
-            'callbacks' => [
-                'finish' => route('midtrans.callback'),
-                'error' => route('midtrans.callback'),
-            ],
-        ];
+                'item_details' => $itemDetails,
+                'callbacks' => [
+                    'finish' => route('midtrans.callback'),
+                    'error' => route('midtrans.callback'),
+                ],
+            ];
+        } elseif ($customer) {
+            $midtransParams = [
+                'transaction_details' => [
+                    'order_id' => $transaction->order_number,
+                    'gross_amount' => $finalTotal,
+                ],
+                'customer_details' => [
+                    'first_name' => $user->full_name,
+                    'phone' => $user->phone_number,
+                    'email' => $user->email,
+                    'shipping_address' => [
+                        'first_name' => $user->full_name,
+                        'phone' => $user->phone_number,
+                        'address' => $customer->address,
+                    ],
+                ],
+                'item_details' => $itemDetails,
+                'callbacks' => [
+                    'finish' => route('midtrans.callback'),
+                    'error' => route('midtrans.callback'),
+                ],
+            ];
+        }
 
         // Ambil Snap Token
         $snapToken = \Midtrans\Snap::getSnapToken($midtransParams);
