@@ -28,6 +28,12 @@ class TransactionController extends Controller
             $cashier = Cashier::where('user_id', $user->id)->first();
             $customer = Customer::where('user_id', $user->id)->first();
 
+            if ($customer && empty($customer->address)) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['address' => 'Alamat harus diisi terlebih dahulu di menu setting.']);
+            }
+
             $fees = Fee::whereIn(DB::raw('LOWER(type)'), ['delivery', 'service', 'discount', 'tax'])
                 ->get()
                 ->keyBy('type');
@@ -103,6 +109,15 @@ class TransactionController extends Controller
     {
         $transaction->load('transactionItems.menuItem');
         $transaction->note = $request->input('note');
+
+        $user = Auth::user();
+        $customer = Customer::where('user_id', $user->id)->first();
+
+        if ($customer && empty($customer->address)) {
+            return redirect()
+                ->back()
+                ->withErrors(['address' => 'Alamat harus diisi terlebih dahulu di menu setting.']);
+        }
 
         // Tentukan jenis pesanan
         $orderType = OrderTypeEnum::tryFrom($request->order_type) ?? OrderTypeEnum::DineIn;

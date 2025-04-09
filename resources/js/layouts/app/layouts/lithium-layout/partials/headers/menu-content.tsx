@@ -3,7 +3,7 @@ import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { type User } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { ListOrdered, LogOut, Settings } from 'lucide-react';
 
 interface CustomerMenuContentProps {
     user: User;
@@ -25,6 +25,12 @@ export function CustomerMenuContent({ user }: CustomerMenuContentProps) {
                     <Link className="block w-full" href={route('customer.profile.index_profile')} as="button" prefetch onClick={cleanup}>
                         <Settings className="mr-2" />
                         Settings
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link className="block w-full" href={route('customer.profile.index_profile')} as="button" prefetch onClick={cleanup}>
+                        <ListOrdered className="mr-2" />
+                        Pesanan Saya
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
