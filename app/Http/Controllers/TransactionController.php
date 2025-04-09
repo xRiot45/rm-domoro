@@ -39,7 +39,6 @@ class TransactionController extends Controller
         $transaction->save();
     }
 
-
     public function payWithCash(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         return DB::transaction(function () use ($request, $transaction) {
@@ -99,12 +98,18 @@ class TransactionController extends Controller
                 'tax' => $tax,
             ]);
 
-            if ($transaction->cashier_id !== null && $paymentMethod === PaymentMethodEnum::Cash) {
+            if ($cashier && $paymentMethod === PaymentMethodEnum::Cash) {
                 OrderStatus::create([
                     'transaction_id' => $transaction->id,
                     'status' => OrderStatusEnum::PROCESSING,
                 ]);
+            } elseif ($customer && $paymentMethod === PaymentMethodEnum::Cash) {
+                OrderStatus::create([
+                    'transaction_id' => $transaction->id,
+                    'status' => OrderStatusEnum::PENDING,
+                ]);
             }
+
 
             if ($cashier) {
                 return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
@@ -274,10 +279,17 @@ class TransactionController extends Controller
         // Ambil Snap Token
         $snapToken = \Midtrans\Snap::getSnapToken($midtransParams);
 
-        OrderStatus::create([
-            'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::PROCESSING,
-        ]);
+        if ($transaction->cashier_id !== null) {
+            OrderStatus::create([
+                'transaction_id' => $transaction->id,
+                'status' => OrderStatusEnum::PROCESSING,
+            ]);
+        } elseif ($transaction->customer_id !== null) {
+            OrderStatus::create([
+                'transaction_id' => $transaction->id,
+                'status' => OrderStatusEnum::PENDING,
+            ]);
+        }
 
         return redirect()
             ->back()

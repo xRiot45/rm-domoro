@@ -1,9 +1,11 @@
 export enum OrderStatusEnum {
+    PENDING = 'menunggu',
+    CONFIRMED = 'dikonfirmasi',
     PROCESSING = 'diproses',
     COOKING = 'dimasak',
     COOKED = 'selesai dimasak',
     READY = 'siap',
-    DELIVERING = 'dikirim',
+    DELIVERING = 'diantar',
     COMPLETED = 'selesai',
     CANCELLED = 'dibatalkan',
 }

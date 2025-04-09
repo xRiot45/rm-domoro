@@ -77,6 +77,17 @@
     }
 }
 
+@media print {
+    .print {
+        border: 0 !important;
+    }
+
+    .scroll-print {
+        height: auto !important;
+        overflow: visible !important;
+    }
+}
+
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);

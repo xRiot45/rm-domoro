@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +11,6 @@ use App\Models\TransactionItem;
 use App\Models\Cashier;
 use App\Models\Customer;
 use App\Models\Fee;
-use App\Models\OrderStatus;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,14 +20,15 @@ class CheckoutController extends Controller
     private function getTransactionData(int $transactionId): array
     {
         $data = Transaction::with('transactionItems.menuItem.menuCategory')->findOrFail($transactionId);
-        $fees = Fee::whereIn('type', ['delivery', 'service', 'discount', 'tax'])->get()->keyBy('type');
+        $fees = Fee::whereIn('type', ['delivery', 'service', 'discount', 'tax'])
+            ->get()
+            ->keyBy('type');
 
         return [
             'data' => $data,
-            'fees' => $fees
+            'fees' => $fees,
         ];
     }
-
 
     public function index_checkout_cashier(int $transactionId): Response
     {
@@ -44,12 +43,8 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $customer = Customer::where('user_id', $user->id)->first();
 
-        return Inertia::render('customer/pages/checkout/index', [
-            ...$transactionData,
-            'customer' => $customer
-        ]);
+        return Inertia::render('customer/pages/checkout/index', [...$transactionData, 'customer' => $customer]);
     }
-
 
     public function store(): RedirectResponse
     {
@@ -99,12 +94,6 @@ class CheckoutController extends Controller
 
         // Hapus semua item di keranjang setelah dipindahkan
         Cart::where('cashier_id', $cashierId)->orWhere('customer_id', $customerId)->delete();
-
-        OrderStatus::create([
-            'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::PROCESSING,
-            // 'updated_by' => $user->id,
-        ]);
 
         if ($cashier) {
             return redirect()->route('cashier.checkout.index', ['transaction' => $transaction->id]);

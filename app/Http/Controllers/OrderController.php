@@ -65,7 +65,7 @@ class OrderController extends Controller
 
     public function show(int $transactionId): Response
     {
-        $transaction = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
         return Inertia::render('customer/pages/order/pages/show', [
             'data' => $transaction,
         ]);
