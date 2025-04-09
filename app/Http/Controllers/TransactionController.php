@@ -21,6 +21,25 @@ use Inertia\Response;
 
 class TransactionController extends Controller
 {
+    private function handleMidtransStatusUpdate(Transaction $transaction, string $transactionStatus): void
+    {
+        $paymentStatusMap = [
+            'capture' => PaymentStatusEnum::PAID,
+            'settlement' => PaymentStatusEnum::PAID,
+            'pending' => PaymentStatusEnum::PENDING,
+            'deny' => PaymentStatusEnum::FAILED,
+            'cancel' => PaymentStatusEnum::CANCELLED,
+            'expire' => PaymentStatusEnum::EXPIRED,
+            'failure' => PaymentStatusEnum::FAILED,
+            'refund' => PaymentStatusEnum::REFUNDED,
+        ];
+
+        $transaction->payment_status = $paymentStatusMap[$transactionStatus] ?? $transaction->payment_status;
+        $transaction->payment_method = PaymentMethodEnum::OnlinePayment;
+        $transaction->save();
+    }
+
+
     public function payWithCash(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         return DB::transaction(function () use ($request, $transaction) {
@@ -246,8 +265,9 @@ class TransactionController extends Controller
                 'item_details' => $itemDetails,
                 'callbacks' => [
                     'finish' => route('midtrans.callback'),
-                    'error' => route('midtrans.callback'),
+                    'unfinish' => route('midtrans.callback'),
                 ],
+                'notification_url' => route('midtrans.notification'),
             ];
         }
 
@@ -264,30 +284,18 @@ class TransactionController extends Controller
             ->with(['snap_token' => $snapToken]);
     }
 
+    // Digunakan untuk redirect dari sisi UI nya
     public function midtransCallback(Request $request): RedirectResponse
     {
-        $orderId = $request->input('order_id'); // Ambil order_id dari Midtrans
+        $orderId = $request['order_id'];
         $transaction = Transaction::where('order_number', $orderId)->first();
 
         if (!$transaction) {
             return redirect()->back()->withErrors('Transaksi tidak ditemukan.');
         }
 
-        $paymnetStatusMap = [
-            'settlement' => PaymentStatusEnum::PAID,
-            'capture' => PaymentStatusEnum::PAID,
-            'pending' => PaymentStatusEnum::PENDING,
-            'expire' => PaymentStatusEnum::EXPIRED,
-            'cancel' => PaymentStatusEnum::CANCELLED,
-            'deny' => PaymentStatusEnum::FAILED,
-            'failure' => PaymentStatusEnum::FAILED,
-            'refund' => PaymentStatusEnum::REFUNDED,
-        ];
-
-        $transactionStatus = $request->input('transaction_status'); // Ambil transaction_status dari Midtrans
-        $transaction->payment_status = $paymnetStatusMap[$transactionStatus] ?? $transaction->payment_status;
-        $transaction->payment_method = PaymentMethodEnum::OnlinePayment;
-        $transaction->save();
+        $transactionStatus = $request['transaction_status'];
+        $this->handleMidtransStatusUpdate($transaction, $transactionStatus);
 
         $isSuccess = $transactionStatus === 'settlement';
 
@@ -300,6 +308,31 @@ class TransactionController extends Controller
         }
 
         return redirect()->back()->withErrors('Tidak dapat menentukan role pengguna.');
+    }
+
+    // Digunakan untuk webhook dari midtrans
+    public function midtransNotification(Request $request)
+    {
+        $orderId = $request['order_id'];
+        $statusCode = $request['status_code'];
+        $grossAmount = $request['gross_amount'];
+        $reqSignature = $request['signature_key'];
+        $signature = hash('sha512', $orderId . $statusCode . $grossAmount . config('services.midtrans.server_key'));
+
+        if ($signature !== $reqSignature) {
+            return response()->json(['message' => 'Invalid signature'], 401);
+        }
+
+        $transactionStatus = $request['transaction_status'];
+        $order = Transaction::where('order_number', $orderId)->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        $this->handleMidtransStatusUpdate($order, $transactionStatus);
+
+        return response()->json(['message' => 'Notifikasi berhasil diterima'], 200);
     }
 
     // Untuk Customer
