@@ -27,13 +27,14 @@ class OrderController extends Controller
         }
 
 
-        $unassignedOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+        $unassignedOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->whereNull('cashier_id')
             ->whereNotNull('customer_id')
+            ->whereNotNull('checked_out_at')
             ->latest()
             ->get();
 
-        $myOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+        $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('cashier_id', $cashier->id)
             ->latest()
             ->get();

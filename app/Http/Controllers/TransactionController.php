@@ -96,6 +96,7 @@ class TransactionController extends Controller
                 'service_charge' => $serviceCharge,
                 'discount' => $discount,
                 'tax' => $tax,
+                'checked_out_at' => now(),
             ]);
 
             if ($cashier && $paymentMethod === PaymentMethodEnum::Cash) {
@@ -109,7 +110,6 @@ class TransactionController extends Controller
                     'status' => OrderStatusEnum::PENDING,
                 ]);
             }
-
 
             if ($cashier) {
                 return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
@@ -311,6 +311,13 @@ class TransactionController extends Controller
 
         $isSuccess = $transactionStatus === 'settlement';
 
+        if ($isSuccess) {
+            $transaction->update([
+                'payment_status' => PaymentStatusEnum::PAID,
+                'checked_out_at' => now(),
+            ]);
+        }
+
         if ($transaction->cashier_id) {
             return $isSuccess ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
         }
@@ -325,6 +332,8 @@ class TransactionController extends Controller
     // Digunakan untuk webhook dari midtrans
     public function midtransNotification(Request $request)
     {
+        $transaction = Transaction::where('order_number', $request['order_id'])->first();
+
         $orderId = $request['order_id'];
         $statusCode = $request['status_code'];
         $grossAmount = $request['gross_amount'];
@@ -337,6 +346,13 @@ class TransactionController extends Controller
 
         $transactionStatus = $request['transaction_status'];
         $order = Transaction::where('order_number', $orderId)->first();
+
+        if ($transactionStatus === 'settlement') {
+            $transaction->update([
+                'payment_status' => PaymentStatusEnum::PAID,
+                'checked_out_at' => now(),
+            ]);
+        }
 
         if (!$order) {
             return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);

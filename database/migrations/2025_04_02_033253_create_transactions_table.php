@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->integer('discount')->default(0); // Diskon jika ada
             $table->integer('tax')->default(0); // Pajak
             $table->integer('final_total')->default(0); // Total akhir
+            $table->timestamp('checked_out_at')->nullable();
             $table->timestamps();
         });
     }
