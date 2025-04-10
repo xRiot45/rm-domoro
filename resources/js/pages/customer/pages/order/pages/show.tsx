@@ -1,13 +1,17 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { OrderStatusEnum } from '@/enums/order-status';
+import { OrderTypeEnum } from '@/enums/order-type';
+import { PaymentStatusEnum } from '@/enums/payment-status';
 import AppLayout from '@/layouts/app/layout';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
+import { paymentStatusMap } from '@/utils/payment-status-map';
 import { Icon } from '@iconify/react';
 import { Head } from '@inertiajs/react';
 import { useRef } from 'react';
@@ -21,33 +25,46 @@ interface DetailOrderProps {
 export default function DetailOrderPage({ data }: DetailOrderProps) {
     const contentRef = useRef<HTMLDivElement>(null);
     const handlePrint = useReactToPrint({ contentRef, documentTitle: `Invoice - ${data.order_number}` });
+    const orderIsCompleted = data?.order_status?.map((status) => status.status).includes(OrderStatusEnum.COMPLETED);
 
     return (
         <>
             <AppLayout>
                 <Head title="Detail Order" />
                 <div className="mt-2 flex flex-1 flex-col gap-4 rounded-xl py-4">
-                    <div className="mb-4 flex items-center justify-between">
-                        <Button className="w-fit cursor-pointer" variant="default" onClick={() => window.history.back()}>
+                    <div className="mb-4 flex flex-col items-center justify-between gap-2 md:flex-row">
+                        <Button className="w-full cursor-pointer md:w-fit" variant="default" onClick={() => window.history.back()}>
                             <Icon icon="mdi:arrow-left" className="mr-2 h-4 w-4" />
                             Kembali ke halaman sebelumnya
                         </Button>
+
                         <Button
-                            className="w-fit cursor-pointer bg-green-600 hover:bg-green-700"
+                            className="w-full cursor-pointer bg-green-600 hover:bg-green-700 md:w-fit"
                             variant="default"
                             onClick={() => handlePrint()}
-                            disabled={data?.order_status?.map((status) => status.status).includes(OrderStatusEnum.COMPLETED) ? false : true}
+                            disabled={!orderIsCompleted}
                         >
                             <Icon icon="mdi:printer" className="mr-2 h-4 w-4" />
                             Print Invoice
                         </Button>
                     </div>
+
+                    {!orderIsCompleted && (
+                        <Alert className="border-blue-500 text-blue-500">
+                            <Icon icon="material-symbols:info-outline" className="h-4 w-4" />
+                            <AlertTitle className="font-bold">Invoice Belum Bisa Dicetak</AlertTitle>
+                            <AlertDescription className="text-blue-500">
+                                Anda hanya dapat mencetak invoice jika pesanan sudah selesai.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
                     <OrderProgress orderId={data.order_number} orderStatus={data.order_status} />
 
                     {/* Detail Pesanan */}
                     <div ref={contentRef}>
                         <Card className="print rounded-2xl shadow-none">
-                            <CardContent className="space-y-4 p-6">
+                            <CardContent className="space-y-4 p-6 lg:p-8">
                                 <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                                     <h1 className="text-xl font-black tracking-tight text-gray-800 dark:text-gray-200">Detail Transaksi</h1>
                                     <div>
@@ -60,7 +77,9 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                                 <div className="flex items-center gap-2 text-sm">
                                     <Icon icon="mdi:credit-card-check-outline" className="text-primary h-4 w-4" />
                                     <span className="text-muted-foreground">Status Pembayaran :</span>
-                                    <Badge variant="default">{data.payment_status}</Badge>
+                                    <Badge variant="default" className={paymentStatusMap[data.payment_status as PaymentStatusEnum]?.className}>
+                                        {paymentStatusMap[data.payment_status as PaymentStatusEnum]?.label ?? data.payment_status}
+                                    </Badge>
                                 </div>
 
                                 <Separator />
@@ -86,10 +105,12 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                                         <p className="font-bold">Metode Pembayaran</p>
                                         <p className="text-muted-foreground capitalize">{data.payment_method}</p>
                                     </div>
-                                    <div>
-                                        <p className="font-bold">Alamat Pengiriman</p>
-                                        <p className="text-muted-foreground">{data.customer.address}</p>
-                                    </div>
+                                    {data.order_type === OrderTypeEnum.DELIVERY && (
+                                        <div>
+                                            <p className="font-bold">Alamat Pengiriman</p>
+                                            <p className="text-muted-foreground">{data.customer.address}</p>
+                                        </div>
+                                    )}
                                     <div>
                                         <p className="font-bold">Label Alamat</p>
                                         <p className="text-muted-foreground capitalize">{data.customer.address_label}</p>
@@ -133,10 +154,13 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                                         <span>Total Harga</span>
                                         <span>{formatCurrency(data.total_price)}</span>
                                     </div>
-                                    <div className="flex justify-between">
-                                        <span>Biaya Pengiriman</span>
-                                        <span>{formatCurrency(data.delivery_fee)}</span>
-                                    </div>
+                                    {data.order_type === OrderTypeEnum.DELIVERY && (
+                                        <div className="flex justify-between">
+                                            <span>Biaya Pengiriman</span>
+                                            <span>{formatCurrency(data.delivery_fee)}</span>
+                                        </div>
+                                    )}
+
                                     <div className="flex justify-between">
                                         <span>Biaya Layanan</span>
                                         <span>{formatCurrency(data.service_charge)}</span>

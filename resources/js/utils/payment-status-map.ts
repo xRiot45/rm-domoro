@@ -2,8 +2,8 @@ import { PaymentStatusEnum } from '@/enums/payment-status';
 
 export const paymentStatusMap: Record<PaymentStatusEnum, { label: string; className: string }> = {
     [PaymentStatusEnum.PENDING]: {
-        label: 'Pending',
-        className: 'bg-yellow-500 text-white',
+        label: 'Menunggu',
+        className: 'bg-gray-500 text-white',
     },
     [PaymentStatusEnum.PAID]: {
         label: 'Dibayar',
@@ -23,6 +23,6 @@ export const paymentStatusMap: Record<PaymentStatusEnum, { label: string; classN
     },
     [PaymentStatusEnum.EXPIRED]: {
         label: 'Kadaluarsa',
-        className: 'bg-gray-500 text-white',
+        className: 'bg-amber-500 text-white',
     },
 };
