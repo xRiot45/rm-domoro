@@ -1,12 +1,19 @@
 import { TabsContent } from '@/components/ui/tabs';
+import { Transaction } from '@/models/transaction';
+import UnassignedOrdersTable from './partials/table';
+import { columns } from './partials/table/columns';
 
-const TabContentUnassignedOrders = () => {
+interface TabUnassignedOrdersProps {
+    data: Transaction[];
+}
+
+const TabContentUnassignedOrders: React.FC<TabUnassignedOrdersProps> = ({ data }) => {
+    console.log(data);
     return (
         <TabsContent value="unassignedOrders">
             {/* Konten untuk tab "Pesanan Masuk" */}
-            <div className="mt-4">
-                <p className="text-muted-foreground text-sm">Menampilkan pesanan self-order yang belum ditangani.</p>
-                {/* Ganti dengan komponen daftar transaksi yang belum memiliki cashier_id */}
+            <div className="mt-8">
+                <UnassignedOrdersTable data={data} columns={columns} />
             </div>
         </TabsContent>
     );

@@ -21,7 +21,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
                         <p className="text-muted-foreground mt-1.5 text-[16px]"> Tangani pesanan dari pelanggan dan yang anda buat</p>
                     </div>
 
-                    <Tabs defaultValue="myOrders" className="mt-4 w-full">
+                    <Tabs defaultValue="unassignedOrders" className="mt-4 w-full">
                         <TabsList className="w-fit">
                             <TabsTrigger value="unassignedOrders" className="cursor-pointer">
                                 Pesanan Yang Belum Ditangani
@@ -32,7 +32,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
                         </TabsList>
 
                         {/* Kontent untuk tab "Pesanan Yang Belum Ditangani" */}
-                        <TabContentUnassignedOrders />
+                        <TabContentUnassignedOrders data={unassignedOrders} />
 
                         {/* Konten untuk tab "Pesanan Yang Saya Tangani" */}
                         <TabMyOrders data={myOrders} />

@@ -56,6 +56,7 @@ class OrderController extends Controller
 
         $myOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('customer_id', $customer->id)
+            ->whereNotNull('checked_out_at')
             ->latest()
             ->get();
 
@@ -109,11 +110,31 @@ class OrderController extends Controller
         OrderStatus::create([
             'transaction_id' => $transaction->id,
             'status' => OrderStatusEnum::PROCESSING,
-            'updated_by' => Auth::user()->id,
         ]);
 
         return redirect()
             ->route('cashier.order.index_cashier')
             ->with(['success' => 'Pesanan berhasil diupdate']);
+    }
+
+    public function takeOrder(int $transactionId): RedirectResponse
+    {
+        $user = Auth::user();
+        $cashier = Cashier::where('user_id', $user->id)->first();
+        if (!$cashier) {
+            return redirect()->back()->withErrors('Anda bukan kasir.');
+        }
+
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->update([
+            'cashier_id' => $cashier->id,
+        ]);
+
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::PROCESSING,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Pesanan berhasil diambil']);
     }
 }

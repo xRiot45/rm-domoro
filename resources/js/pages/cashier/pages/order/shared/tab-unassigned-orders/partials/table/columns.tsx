@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { OrderStatusEnum } from '@/enums/order-status';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { cn } from '@/lib/utils';
@@ -9,9 +10,10 @@ import { formatOrderType } from '@/utils/format-order-type';
 import { orderStatusMap } from '@/utils/order-status-map';
 import { paymentStatusMap } from '@/utils/payment-status-map';
 import { Icon } from '@iconify/react';
-import { ColumnDef, Row } from '@tanstack/react-table';
+import { router } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { toast } from 'sonner';
 import { DataTableColumnHeader } from './data-table-column-header';
-import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<Transaction>[] = [
     {
@@ -104,6 +106,7 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pembayaran" />,
         cell: ({ row }) => {
             const value = row.getValue('payment_method') as string;
+
             const isOnline = value === 'online';
             const colorClass = isOnline ? 'bg-blue-500 text-white' : 'bg-green-500 text-white';
             const icon = isOnline ? 'mdi:credit-card' : 'mdi:cash';
@@ -164,6 +167,7 @@ export const columns: ColumnDef<Transaction>[] = [
         enableHiding: false,
         enableSorting: false,
     },
+
     {
         id: 'created_at',
         accessorKey: 'created_at',
@@ -176,7 +180,44 @@ export const columns: ColumnDef<Transaction>[] = [
         id: 'actions',
         accessorKey: 'actions',
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">Aksi</span>,
-        cell: ({ row }) => <DataTableRowActions row={row as Row<Transaction>} />,
+        cell: ({ row }) => {
+            const transactionId = row.original.id;
+            const handleTakeOrder = () => {
+                router.post(
+                    route('cashier.order.takeOrder', transactionId),
+                    {},
+                    {
+                        onSuccess: () => {
+                            toast.success('Success', {
+                                description: 'Pesanan Berhasil Diambil!',
+                                action: {
+                                    label: 'Tutup',
+                                    onClick: () => toast.dismiss(),
+                                },
+                            });
+                        },
+                        onError: (errors) => {
+                            toast.error('Failed', {
+                                description: errors.message || 'Pesanan Gagal Diambil!',
+                                action: {
+                                    label: 'Tutup',
+                                    onClick: () => toast.dismiss(),
+                                },
+                            });
+                        },
+                        preserveScroll: true,
+                    },
+                );
+            };
+
+            return (
+                <>
+                    <Button className="cursor-pointer" size="sm" onClick={handleTakeOrder}>
+                        Ambil Pesanan
+                    </Button>
+                </>
+            );
+        },
         enableHiding: false,
     },
 ];

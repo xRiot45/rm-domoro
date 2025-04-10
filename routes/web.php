@@ -290,6 +290,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_cashier')->name('index_cashier');
+                Route::post('/{transactionId}', 'takeOrder')->name('takeOrder');
                 Route::get('/edit/{id}', 'edit')->name('edit');
                 Route::put('/edit/{id}', 'update')->name(name: 'update');
             });
