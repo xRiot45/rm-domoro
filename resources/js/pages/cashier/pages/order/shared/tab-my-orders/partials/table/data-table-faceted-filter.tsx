@@ -5,16 +5,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { DataTableFacetedFilterProps } from '@/types/tanstack';
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { Icon } from '@iconify/react';
+import { CheckIcon } from '@radix-ui/react-icons';
 
 export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
     const facets = column?.getFacetedUniqueValues();
     const selectedValues = new Set(column?.getFilterValue() as string[]);
     return (
         <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger>
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
-                    <PlusCircledIcon className="h-4 w-4" />
+                    <Icon icon={'mage:filter'} className="h-4 w-4" />
                     {title}
                     {selectedValues?.size > 0 && (
                         <>
@@ -71,7 +72,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                                             <CheckIcon className={cn('h-4 w-4')} />
                                         </div>
                                         {option.icon && <option.icon className="text-muted-foreground h-4 w-4" />}
-                                        <span>{option.label}</span>
+                                        <span className="capitalize">{option.label}</span>
                                         {facets?.get(option.value) && (
                                             <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                                                 {facets.get(option.value)}

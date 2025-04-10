@@ -93,14 +93,19 @@ export const columns: ColumnDef<Transaction>[] = [
     {
         id: 'order_type',
         accessorKey: 'order_type',
+        accessorFn: (row) => row.order_type ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pemesanan" />,
         cell: ({ row }) => <span className="text-sm capitalize">{formatOrderType(row.getValue('order_type'))}</span>,
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
         enableHiding: false,
         enableSorting: false,
     },
     {
         id: 'payment_method',
         accessorKey: 'payment_method',
+        accessorFn: (row) => row.payment_method ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pembayaran" />,
         cell: ({ row }) => {
             const value = row.getValue('payment_method') as string;
@@ -116,12 +121,16 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Badge>
             );
         },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
         enableHiding: false,
         enableSorting: false,
     },
     {
         id: 'payment_status',
         accessorKey: 'payment_status',
+        accessorFn: (row) => row.payment_status ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pembayaran" />,
         cell: ({ row }) => {
             const value = row.getValue('payment_status') as PaymentStatusEnum;
@@ -131,6 +140,9 @@ export const columns: ColumnDef<Transaction>[] = [
             };
 
             return <Badge className={paymentStatus.className}>{paymentStatus.label}</Badge>;
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
         },
         enableHiding: true,
         enableSorting: false,
@@ -145,6 +157,7 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     {
         id: 'latest_order_status',
+        accessorFn: (row) => row.order_status?.[row.order_status.length - 1]?.status ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pesanan" />,
         cell: ({ row }) => {
             const statuses = row.original.order_status;
@@ -160,6 +173,9 @@ export const columns: ColumnDef<Transaction>[] = [
                   };
 
             return <Badge className={orderStatus.className}>{orderStatus.label}</Badge>;
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
         },
         enableHiding: false,
         enableSorting: false,
