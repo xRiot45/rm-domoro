@@ -54,7 +54,7 @@ class OrderController extends Controller
             return redirect()->back()->withErrors('Anda bukan pelanggan.');
         }
 
-        $myOrders = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+        $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('customer_id', $customer->id)
             ->whereNotNull('checked_out_at')
             ->latest()
@@ -65,10 +65,18 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(int $transactionId): Response
+    public function showOrderCustomer(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
         return Inertia::render('customer/pages/order/pages/show', [
+            'data' => $transaction,
+        ]);
+    }
+
+    public function showInvoiceCashier(int $transactionId): Response
+    {
+        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
+        return Inertia::render('cashier/pages/order/pages/invoice', [
             'data' => $transaction,
         ]);
     }

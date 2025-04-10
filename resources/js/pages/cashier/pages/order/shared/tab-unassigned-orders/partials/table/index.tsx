@@ -16,7 +16,6 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import { DataTablePagination } from './data-table-pagination';
-import { DataTableToolbar } from './data-table-toolbar';
 
 export default function UnassignedOrdersTable({ columns, data }: DataTableProps<Transaction>) {
     const [rowSelection, setRowSelection] = useState({});
@@ -49,7 +48,6 @@ export default function UnassignedOrdersTable({ columns, data }: DataTableProps<
     return (
         <>
             <div className="space-y-4">
-                <DataTableToolbar table={table} />
                 <div className="grid grid-cols-1 rounded-md border">
                     <Table>
                         <TableHeader>

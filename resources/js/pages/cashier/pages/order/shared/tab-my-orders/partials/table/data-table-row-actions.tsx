@@ -33,12 +33,14 @@ export function DataTableRowActions({ row }: { row: Row<Transaction> }) {
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer">
-                        Print Invoice
-                        <DropdownMenuShortcut>
-                            <Icon icon={'iconamoon:invoice'} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    <Link href={route('cashier.order.show', { id: row.original.id })}>
+                        <DropdownMenuItem className="cursor-pointer">
+                            Lihat Invoice
+                            <DropdownMenuShortcut>
+                                <Icon icon={'iconamoon:invoice'} />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </Link>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

@@ -68,10 +68,6 @@ export default function EditPage({ data }: { data: Transaction }) {
                                 Kembali ke halaman sebelumnya
                             </Button>
                         </Link>
-                        <Button variant="default" className="mb-8 cursor-pointer bg-green-600 text-sm font-medium transition-all">
-                            <Icon icon="iconamoon:invoice" />
-                            Print Invoice
-                        </Button>
                     </div>
                     <h1 className="text-2xl font-black tracking-tight text-gray-800 dark:text-gray-200">Detail Pesanan</h1>
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">

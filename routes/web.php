@@ -68,7 +68,7 @@ Route::middleware([])->group(function () {
         ->name('order.')
         ->group(function () {
             Route::get('/', [OrderController::class, 'index_customer'])->name('index');
-            Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+            Route::get('/{id}', [OrderController::class, 'showOrderCustomer'])->name('show');
         });
 
     // Settings
@@ -290,9 +290,10 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_cashier')->name('index_cashier');
-                Route::post('/{transactionId}', 'takeOrder')->name('takeOrder');
+                Route::put('/{transactionId}', 'takeOrder')->name('takeOrder');
                 Route::get('/edit/{id}', 'edit')->name('edit');
                 Route::put('/edit/{id}', 'update')->name(name: 'update');
+                Route::get('/invoice/{id}', 'showInvoiceCashier')->name('show');
             });
     });
 

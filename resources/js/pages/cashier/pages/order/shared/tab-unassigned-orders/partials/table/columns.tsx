@@ -183,7 +183,7 @@ export const columns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => {
             const transactionId = row.original.id;
             const handleTakeOrder = () => {
-                router.post(
+                router.put(
                     route('cashier.order.takeOrder', transactionId),
                     {},
                     {
