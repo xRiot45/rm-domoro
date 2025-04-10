@@ -23,7 +23,7 @@ const statusIcons: Record<OrderStatusEnum, JSX.Element> = {
 
 const OrderProgress: React.FC<OrderProgressProps> = ({ orderId, orderStatus }) => {
     return (
-        <div className="rounded-2xl border p-4 shadow-none">
+        <div className="rounded-2xl border p-6 shadow-none">
             <div className="mb-16">
                 <h3 className="mb-2 text-center text-xl font-semibold">Lacak Pesanan</h3>
                 <div className="text-muted-foreground text-center text-sm">

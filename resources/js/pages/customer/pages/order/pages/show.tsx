@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { OrderStatusEnum } from '@/enums/order-status';
 import AppLayout from '@/layouts/app/layout';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
+import { formatDate } from '@/utils/format-date';
 import { Icon } from '@iconify/react';
 import { Head } from '@inertiajs/react';
 import { useRef } from 'react';
@@ -30,7 +32,12 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                             <Icon icon="mdi:arrow-left" className="mr-2 h-4 w-4" />
                             Kembali ke halaman sebelumnya
                         </Button>
-                        <Button className="w-fit cursor-pointer bg-green-600 hover:bg-green-700" variant="default" onClick={() => handlePrint()}>
+                        <Button
+                            className="w-fit cursor-pointer bg-green-600 hover:bg-green-700"
+                            variant="default"
+                            onClick={() => handlePrint()}
+                            disabled={data?.order_status?.map((status) => status.status).includes(OrderStatusEnum.COMPLETED) ? false : true}
+                        >
                             <Icon icon="mdi:printer" className="mr-2 h-4 w-4" />
                             Print Invoice
                         </Button>
@@ -40,11 +47,13 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                     {/* Detail Pesanan */}
                     <div ref={contentRef}>
                         <Card className="print rounded-2xl shadow-none">
-                            <CardContent className="space-y-4 p-8">
+                            <CardContent className="space-y-4 p-6">
                                 <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                                    <h1 className="text-xl font-black tracking-tight text-gray-800 dark:text-gray-200">Detail Pesanan Saya</h1>
-                                    <div className="text-muted-foreground text-sm">
-                                        Nomor Pesanan : <span className="font-medium text-black">{data.order_number}</span>
+                                    <h1 className="text-xl font-black tracking-tight text-gray-800 dark:text-gray-200">Detail Transaksi</h1>
+                                    <div>
+                                        <div className="text-muted-foreground text-sm">
+                                            Nomor Pesanan : <span className="font-medium text-black">{data.order_number}</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -56,7 +65,7 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
 
                                 <Separator />
 
-                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div className="grid grid-cols-2 gap-5 text-sm">
                                     <div>
                                         <h1 className="font-bold">Nama Lengkap Penerima</h1>
                                         <p className="text-muted-foreground capitalize">{data.customer.user.full_name}</p>
@@ -84,6 +93,10 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                                     <div>
                                         <p className="font-bold">Label Alamat</p>
                                         <p className="text-muted-foreground capitalize">{data.customer.address_label}</p>
+                                    </div>
+                                    <div>
+                                        <p className="font-bold">Tanggal Pemesanan</p>
+                                        <p className="text-muted-foreground capitalize">{formatDate(data.created_at ?? '')}</p>
                                     </div>
                                 </div>
 
