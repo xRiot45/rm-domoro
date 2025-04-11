@@ -291,7 +291,7 @@ class TransactionController extends Controller
                 'transaction_id' => $transaction->id,
                 'status' => OrderStatusEnum::PENDING,
             ]);
-            // OrderPlacedEvent::dispatch($transaction);
+            broadcast(new OrderPlacedEvent($transaction))->toOthers();
         }
 
         return redirect()
@@ -326,7 +326,7 @@ class TransactionController extends Controller
         }
 
         if ($transaction->customer_id) {
-            // OrderPlacedEvent::dispatch($transaction);
+            broadcast(new OrderPlacedEvent($transaction))->toOthers();
             return $isSuccess ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
         }
 
@@ -356,7 +356,7 @@ class TransactionController extends Controller
                 'payment_status' => PaymentStatusEnum::PAID,
                 'checked_out_at' => now(),
             ]);
-            // OrderPlacedEvent::dispatch($transaction);
+            broadcast(new OrderPlacedEvent($transaction))->toOthers();
         }
 
         if (!$order) {

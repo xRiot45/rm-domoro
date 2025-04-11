@@ -80,20 +80,6 @@ export default function CheckoutPage({ data, fees, customer }: CheckoutPageProps
         });
     };
 
-    // useEffect(() => {
-    //     const echoChannel = window.Echo?.private(`orders.${transactionId}`)?.listen('.order-created', (e) => {
-    //         console.log('✅ Order Created Event Diterima:', e);
-    //         toast.success('Order baru telah masuk!', {
-    //             description: `ID Transaksi: ${e.id}`,
-    //             action: { label: 'Lihat', onClick: () => toast.dismiss() },
-    //         });
-    //     });
-
-    //     return () => {
-    //         echoChannel?.stopListening('.order-created');
-    //     };
-    // }, [transactionId]);
-
     const handlePayWithMidtrans = () => {
         router.post(route('transaction.pay-midtrans', { transaction: transactionId }), formData, {
             preserveScroll: true,

@@ -1,7 +1,7 @@
 import SummaryRow from '@/components/summary-row';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { OrderTypeEnum } from '@/enums/order-type';
@@ -85,26 +85,23 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                 )}
 
                 <Dialog open={showCashDialog} onOpenChange={setShowCashDialog}>
-                    <DialogTrigger className="w-full">
-                        <Button
-                            type={formData.payment_method === PaymentTypeEnum.CASH ? 'submit' : 'button'}
-                            className="mt-4 w-full py-6 text-sm"
-                            disabled={
-                                processing ||
-                                (formData.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer.address.trim() === ''))
+                    <Button
+                        type={formData.payment_method === PaymentTypeEnum.CASH ? 'submit' : 'button'}
+                        className="mt-4 w-full py-6 text-sm"
+                        disabled={
+                            processing || (formData.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer.address.trim() === ''))
+                        }
+                        onClick={() => {
+                            if (formData.payment_method === PaymentTypeEnum.CASH) {
+                                setShowCashDialog(true);
+                            } else {
+                                handlePayWithMidtrans();
                             }
-                            onClick={() => {
-                                if (formData.payment_method === PaymentTypeEnum.CASH) {
-                                    setShowCashDialog(true);
-                                } else {
-                                    handlePayWithMidtrans();
-                                }
-                            }}
-                        >
-                            <Icon icon={formData.payment_method === PaymentTypeEnum.CASH ? 'mdi:cash' : 'mdi:credit-card'} />
-                            {formData.payment_method === PaymentTypeEnum.CASH ? 'Bayar dengan Cash / Tunai' : 'Bayar dengan Midtrans'}
-                        </Button>
-                    </DialogTrigger>
+                        }}
+                    >
+                        <Icon icon={formData.payment_method === PaymentTypeEnum.CASH ? 'mdi:cash' : 'mdi:credit-card'} />
+                        {formData.payment_method === PaymentTypeEnum.CASH ? 'Bayar dengan Cash / Tunai' : 'Bayar dengan Midtrans'}
+                    </Button>
 
                     <DialogContent>
                         <DialogHeader>
