@@ -29,7 +29,7 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
         cell: ({ row }) => {
-            const items = row.original.transaction_items;
+            const items = row.original.transaction_items ?? [];
 
             return (
                 <div className="flex flex-col gap-3">
@@ -58,7 +58,7 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
         cell: ({ row }) => {
-            const items = row.original.transaction_items;
+            const items = row.original.transaction_items ?? [];
 
             return (
                 <div className="flex flex-col gap-1 space-y-13">
@@ -78,7 +78,7 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'unit_price',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Harga Satuan" />,
         cell: ({ row }) => {
-            const unitPrice = row.original.transaction_items;
+            const unitPrice = row.original.transaction_items ?? [];
             return (
                 <div className="flex flex-col gap-1 space-y-13">
                     {unitPrice.map((item) => (
@@ -172,7 +172,11 @@ export const columns: ColumnDef<Transaction>[] = [
         id: 'created_at',
         accessorKey: 'created_at',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Waktu Order" />,
-        cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
+        cell: ({ row }) => {
+            const createdAt = row.getValue('created_at') as string | undefined;
+            return <span className="max-w-36">{createdAt ? formatDate(createdAt) : '-'}</span>;
+        },
+
         enableHiding: true,
         enableSorting: true,
     },

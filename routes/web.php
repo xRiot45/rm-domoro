@@ -17,6 +17,7 @@ use App\Http\Controllers\Settings\CustomerProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 // Route for customer

@@ -1,4 +1,3 @@
-import { TabsContent } from '@/components/ui/tabs';
 import { Transaction } from '@/models/transaction';
 import MyOrdersTable from './partials/table';
 import { columns } from './partials/table/columns';
@@ -9,11 +8,9 @@ interface TabMyOrdersProps {
 
 const TabMyOrders: React.FC<TabMyOrdersProps> = ({ data }) => {
     return (
-        <TabsContent value="myOrders">
-            <div className="mt-8">
-                <MyOrdersTable data={data} columns={columns} />
-            </div>
-        </TabsContent>
+        <div className="mt-8">
+            <MyOrdersTable data={data} columns={columns} />
+        </div>
     );
 };
 
