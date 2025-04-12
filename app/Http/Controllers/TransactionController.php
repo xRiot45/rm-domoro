@@ -312,6 +312,7 @@ class TransactionController extends Controller
         $transactionStatus = $request['transaction_status'];
         $this->handleMidtransStatusUpdate($transaction, $transactionStatus);
 
+        $isPending = $transactionStatus === 'pending';
         $isSuccess = $transactionStatus === 'settlement';
 
         if ($isSuccess) {
@@ -322,11 +323,23 @@ class TransactionController extends Controller
         }
 
         if ($transaction->cashier_id) {
-            return $isSuccess ? redirect()->route('cashier.transaction.success') : redirect()->route('cashier.transaction.failed');
+            if ($isSuccess) {
+                return redirect()->route('cashier.transaction.success');
+            } elseif ($isPending) {
+                return redirect()->route('cashier.transaction.pending');
+            } else {
+                return redirect()->route('cashier.transaction.failed');
+            }
         }
 
         if ($transaction->customer_id) {
-            return $isSuccess ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
+            if ($isSuccess) {
+                return redirect()->route('transaction.success');
+            } elseif ($isPending) {
+                return redirect()->route('transaction.pending');
+            } else {
+                return redirect()->route('transaction.failed');
+            }
         }
 
         return redirect()->back()->withErrors('Tidak dapat menentukan role pengguna.');
@@ -376,6 +389,13 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function transactionCustomerPending(): Response
+    {
+        return Inertia::render('customer/pages/transaction/pending', [
+            'message' => 'Pembayaran pending.',
+        ]);
+    }
+
     public function transactionCustomerFailed(): Response
     {
         return Inertia::render('customer/pages/transaction/failed', [
@@ -388,6 +408,13 @@ class TransactionController extends Controller
     {
         return Inertia::render('cashier/pages/transaction/success', [
             'message' => 'Pembayaran berhasil diproses.',
+        ]);
+    }
+
+    public function transactionCashierPending(): Response
+    {
+        return Inertia::render('cashier/pages/transaction/pending', [
+            'message' => 'Pembayaran pending.',
         ]);
     }
 

@@ -13,7 +13,7 @@ export default function TransactionSuccessPage() {
                             Pembayaran Berhasil
                         </h1>
                         <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose dark:text-gray-400">
-                            Terima kasih telah melakukan pembayaran.
+                            Terima kasih telah melakukan pembayaran. Silahkan kembali ke halaman menu
                         </p>
 
                         <div className="mt-6">

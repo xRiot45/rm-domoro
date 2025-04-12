@@ -14,7 +14,7 @@ export default function TransactionFailedPage() {
                             Pembayaran Gagal
                         </h1>
                         <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose dark:text-gray-400">
-                            Maaf pembayaran Anda gagal. Silakan coba lagi.
+                            Maaf pembayaran Anda gagal. Silakan coba lagi dalam beberapa saat.
                         </p>
 
                         <div className="mt-6">

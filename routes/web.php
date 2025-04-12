@@ -61,6 +61,7 @@ Route::middleware([])->group(function () {
             Route::put('/{transaction}/pay-cash', [TransactionController::class, 'payWithCash'])->name('pay-cash');
             Route::post('/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('pay-midtrans');
             Route::get('/success', [TransactionController::class, 'transactionCustomerSuccess'])->name('success');
+            Route::get('/pending', [TransactionController::class, 'transactionCustomerPending'])->name('pending');
             Route::get('/failed', [TransactionController::class, 'transactionCustomerFailed'])->name('failed');
         });
 
@@ -282,6 +283,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
                 Route::post('/{transaction}/pay-midtrans', [TransactionController::class, 'payWithMidtrans'])->name('pay-midtrans');
                 Route::post('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
                 Route::get('/success', [TransactionController::class, 'transactionCashierSuccess'])->name('success');
+                Route::get('/pending', [TransactionController::class, 'transactionCashierPending'])->name('pending');
                 Route::get('/failed', [TransactionController::class, 'transactionCashierFailed'])->name('failed');
             });
 
