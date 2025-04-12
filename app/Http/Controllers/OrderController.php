@@ -75,11 +75,18 @@ class OrderController extends Controller
 
     public function showInvoiceCashier(int $transactionId): Response
     {
-        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+            ->findOrFail($transactionId);
+
+        if (!$transaction->customer || !$transaction->customer->user) {
+            $transaction->setRelation('customer', null);
+        }
+
         return Inertia::render('cashier/pages/order/pages/invoice', [
             'data' => $transaction,
         ]);
     }
+
 
     public function edit(int $transactionId): Response
     {

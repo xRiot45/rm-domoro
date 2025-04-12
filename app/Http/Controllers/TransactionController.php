@@ -139,6 +139,7 @@ class TransactionController extends Controller
         // Tentukan jenis pesanan
         $orderType = OrderTypeEnum::tryFrom($request->order_type) ?? OrderTypeEnum::DineIn;
         $transaction->order_type = $orderType;
+        $transaction->payment_method = PaymentMethodEnum::OnlinePayment;
 
         // Isi informasi tambahan berdasarkan jenis pesanan (Untuk role Cashier)
         if ($orderType === OrderTypeEnum::DineIn && $request->has('table_number')) {
@@ -291,7 +292,6 @@ class TransactionController extends Controller
                 'transaction_id' => $transaction->id,
                 'status' => OrderStatusEnum::PENDING,
             ]);
-            broadcast(new OrderPlacedEvent($transaction))->toOthers();
         }
 
         return redirect()
@@ -326,7 +326,6 @@ class TransactionController extends Controller
         }
 
         if ($transaction->customer_id) {
-            broadcast(new OrderPlacedEvent($transaction))->toOthers();
             return $isSuccess ? redirect()->route('transaction.success') : redirect()->route('transaction.failed');
         }
 
@@ -351,13 +350,14 @@ class TransactionController extends Controller
         $transactionStatus = $request['transaction_status'];
         $order = Transaction::where('order_number', $orderId)->first();
 
-        if ($transactionStatus === 'settlement') {
+        if (in_array($transactionStatus, ['settlement', 'capture']) && $transaction->payment_status !== PaymentStatusEnum::PAID) {
             $transaction->update([
                 'payment_status' => PaymentStatusEnum::PAID,
                 'checked_out_at' => now(),
             ]);
             broadcast(new OrderPlacedEvent($transaction))->toOthers();
         }
+
 
         if (!$order) {
             return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);

@@ -12,10 +12,18 @@ interface OrderPageProps {
 }
 
 export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps) {
+    const [activeTab, setActiveTab] = useState('unassignedOrders');
     const [liveUnassignedOrders, setLiveUnassignedOrders] = useState(unassignedOrders);
+    const [liveMyOrders, setLiveMyOrders] = useState(myOrders);
 
     const handleNewOrder = (newOrder: Transaction) => {
         setLiveUnassignedOrders((prevOrders) => [newOrder, ...prevOrders]);
+    };
+
+    const handleOrderTaken = (takenOrder: Transaction) => {
+        setLiveUnassignedOrders((prev) => prev.filter((order) => order.id !== takenOrder.id));
+        setLiveMyOrders((prev) => [takenOrder, ...prev]);
+        setActiveTab('myOrders');
     };
 
     return (
@@ -28,7 +36,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
                         <p className="text-muted-foreground mt-1.5 text-[16px]"> Tangani pesanan dari pelanggan dan yang anda buat</p>
                     </div>
 
-                    <Tabs defaultValue="unassignedOrders" className="mt-4 w-full">
+                    <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="mt-4 w-full">
                         <TabsList className="w-fit">
                             <TabsTrigger value="unassignedOrders" className="cursor-pointer">
                                 Pesanan Yang Belum Ditangani
@@ -40,12 +48,12 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
 
                         {/* Kontent untuk tab "Pesanan Yang Belum Ditangani" */}
                         <TabsContent value="unassignedOrders">
-                            <TabContentUnassignedOrders data={liveUnassignedOrders} />
+                            <TabContentUnassignedOrders data={liveUnassignedOrders} onOrderTaken={handleOrderTaken} />
                         </TabsContent>
 
                         {/* Konten untuk tab "Pesanan Yang Saya Tangani" */}
                         <TabsContent value="myOrders">
-                            <TabMyOrders data={myOrders} />
+                            <TabMyOrders data={liveMyOrders} />
                         </TabsContent>
                     </Tabs>
                 </div>

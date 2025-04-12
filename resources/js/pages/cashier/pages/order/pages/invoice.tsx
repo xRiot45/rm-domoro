@@ -70,37 +70,37 @@ export default function InvoiceOrderPage({ data }: InvoiceOrderProps) {
                                 <div className="grid grid-cols-2 gap-5 text-sm">
                                     <div>
                                         <h1 className="font-bold">Nama Lengkap Penerima</h1>
-                                        <p className="text-muted-foreground capitalize">{data.customer.user.full_name}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.customer?.user?.full_name || '-'}</p>
                                     </div>
                                     <div>
                                         <h1 className="font-bold">Nomor Telepon Penerima</h1>
-                                        <p className="text-muted-foreground capitalize">{data.customer.user.phone_number}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.customer?.user?.phone_number || '-'}</p>
                                     </div>
                                     <div>
                                         <h1 className="font-bold">Catatan Untuk Kurir</h1>
-                                        <p className="text-muted-foreground capitalize">{data.customer.note || '-'}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.customer?.note || '-'}</p>
                                     </div>
                                     <div>
                                         <p className="font-bold">Jenis Pesanan</p>
-                                        <p className="text-muted-foreground capitalize">{data.order_type}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.order_type || '-'}</p>
                                     </div>
                                     <div>
                                         <p className="font-bold">Metode Pembayaran</p>
-                                        <p className="text-muted-foreground capitalize">{data.payment_method}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.payment_method || '-'}</p>
                                     </div>
-                                    {data.order_type === OrderTypeEnum.DELIVERY && (
+                                    {data?.order_type === OrderTypeEnum.DELIVERY && (
                                         <div>
                                             <p className="font-bold">Alamat Pengiriman</p>
-                                            <p className="text-muted-foreground">{data.customer.address}</p>
+                                            <p className="text-muted-foreground">{data?.customer?.address || '-'}</p>
                                         </div>
                                     )}
                                     <div>
                                         <p className="font-bold">Label Alamat</p>
-                                        <p className="text-muted-foreground capitalize">{data.customer.address_label}</p>
+                                        <p className="text-muted-foreground capitalize">{data?.customer?.address_label || '-'}</p>
                                     </div>
                                     <div>
                                         <p className="font-bold">Tanggal Pemesanan</p>
-                                        <p className="text-muted-foreground capitalize">{formatDate(data.created_at ?? '')}</p>
+                                        <p className="text-muted-foreground capitalize">{formatDate(data?.created_at || '') || '-'}</p>
                                     </div>
                                 </div>
 

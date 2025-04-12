@@ -34,7 +34,7 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
     const total = subtotal;
 
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {/* Cart */}
             <Card className="col-span-2 w-full border-0 shadow-none lg:border lg:p-6">
                 <div className="flex items-center justify-between">

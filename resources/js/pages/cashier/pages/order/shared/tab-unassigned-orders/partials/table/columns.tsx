@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { DataTableColumnHeader } from './data-table-column-header';
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -199,6 +199,8 @@ export const columns: ColumnDef<Transaction>[] = [
                                     onClick: () => toast.dismiss(),
                                 },
                             });
+
+                            onOrderTaken(row.original);
                         },
                         onError: (errors) => {
                             toast.error('Failed', {
