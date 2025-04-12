@@ -84,29 +84,31 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: CashierLayoutPr
 
     return (
         <LithiumLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-            {isSoundEnabled ? (
-                <Alert className="mt-4">
-                    <Icon icon="material-symbols:done-rounded" className="h-4 w-4" />
-                    <AlertTitle className="font-bold">Notifikasi Suara Aktif</AlertTitle>
-                    <AlertDescription>
-                        Notifikasi suara telah aktif. Anda akan mendengar suara setiap kali ada pesanan baru.
-                        <div className="mt-2">
-                            <Button onClick={handleDisabledSound}>Nonaktifkan Notifikasi Suara</Button>
-                        </div>
-                    </AlertDescription>
-                </Alert>
-            ) : (
-                <Alert className="mt-4">
-                    <Icon icon="material-symbols:info-outline" className="h-4 w-4" />
-                    <AlertTitle className="font-bold">Notifikasi Suara Tidak Aktif</AlertTitle>
-                    <AlertDescription>
-                        Notifikasi suara belum aktif. Klik tombol di bawah untuk mengaktifkan.
-                        <div className="mt-2">
-                            <Button onClick={handleEnableSound}>Aktifkan Notifikasi Suara</Button>
-                        </div>
-                    </AlertDescription>
-                </Alert>
-            )}
+            <div className="px-4">
+                {isSoundEnabled ? (
+                    <Alert className="mt-4">
+                        <Icon icon="material-symbols:done-rounded" className="h-4 w-4" />
+                        <AlertTitle className="font-bold">Notifikasi Suara Aktif</AlertTitle>
+                        <AlertDescription>
+                            Notifikasi suara telah aktif. Anda akan mendengar suara setiap kali ada pesanan baru.
+                            <div className="mt-2">
+                                <Button onClick={handleDisabledSound}>Nonaktifkan Notifikasi Suara</Button>
+                            </div>
+                        </AlertDescription>
+                    </Alert>
+                ) : (
+                    <Alert className="mt-4">
+                        <Icon icon="material-symbols:info-outline" className="h-4 w-4" />
+                        <AlertTitle className="font-bold">Notifikasi Suara Tidak Aktif</AlertTitle>
+                        <AlertDescription>
+                            Notifikasi suara belum aktif. Klik tombol di bawah untuk mengaktifkan.
+                            <div className="mt-2">
+                                <Button onClick={handleEnableSound}>Aktifkan Notifikasi Suara</Button>
+                            </div>
+                        </AlertDescription>
+                    </Alert>
+                )}
+            </div>
 
             {children}
 

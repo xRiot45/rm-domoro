@@ -12,9 +12,9 @@ interface OrderPageProps {
 }
 
 export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps) {
-    const [activeTab, setActiveTab] = useState('unassignedOrders');
-    const [liveUnassignedOrders, setLiveUnassignedOrders] = useState(unassignedOrders);
-    const [liveMyOrders, setLiveMyOrders] = useState(myOrders);
+    const [activeTab, setActiveTab] = useState<string>('unassignedOrders');
+    const [liveUnassignedOrders, setLiveUnassignedOrders] = useState<Transaction[]>(unassignedOrders);
+    const [liveMyOrders, setLiveMyOrders] = useState<Transaction[]>(myOrders);
 
     const handleNewOrder = (newOrder: Transaction) => {
         setLiveUnassignedOrders((prevOrders) => [newOrder, ...prevOrders]);

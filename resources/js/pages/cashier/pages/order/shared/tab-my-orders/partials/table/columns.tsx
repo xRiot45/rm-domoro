@@ -57,7 +57,6 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
         cell: ({ row }) => {
             const items = row.original.transaction_items;
-
             return (
                 <div className="flex flex-col gap-1 space-y-13">
                     {items.map((item) => (
