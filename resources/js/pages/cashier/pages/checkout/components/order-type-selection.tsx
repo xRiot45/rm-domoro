@@ -22,12 +22,12 @@ const OrderTypeSelection: React.FC<OrderTypeSelectionProps> = ({ selectedOrderTy
             <RadioGroup
                 value={selectedOrderType || ''}
                 onValueChange={(value) => setSelectedOrderType(value as OrderTypeEnum)}
-                className="grid w-full space-y-4 md:grid-cols-2"
+                className="grid w-full md:grid-cols-2"
             >
                 {Object.entries(OrderTypeEnum).map(([key, value]) => (
                     <CardContent
                         key={key}
-                        className={`flex h-24 w-full cursor-pointer flex-row items-center gap-4 rounded-xl border px-8 py-6 shadow-none transition-colors ${selectedOrderType === value ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white text-black dark:bg-black dark:text-white'} `}
+                        className={`flex h-24 w-full cursor-pointer flex-row items-center gap-5 rounded-xl border px-8 py-6 shadow-none transition-colors ${selectedOrderType === value ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white text-black dark:bg-black dark:text-white'} `}
                         onClick={() => setSelectedOrderType(value)}
                     >
                         <RadioGroupItem

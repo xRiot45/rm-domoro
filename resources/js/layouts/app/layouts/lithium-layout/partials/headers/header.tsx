@@ -1,3 +1,4 @@
+import Logo from '@/assets/images/icons/logo.svg';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,6 @@ import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
-import Logo from '../logo';
 import LogoIcon from '../logo-icon';
 import mainNavItems from './main-nav-items';
 import { CustomerMenuContent } from './menu-content';
@@ -76,7 +76,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </Sheet>
                     </div>
                     <Link href="/" prefetch className="flex items-center space-x-2">
-                        <Logo />
+                        <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                     </Link>
 
                     {/* Desktop Navigation */}

@@ -1,3 +1,4 @@
+import Logo from '@/assets/images/icons/logo.svg';
 import { NavUser } from '@/components/nav-user';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -18,7 +19,6 @@ import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import Logo from '../logo';
 import mainNavItems from './main-nav-items';
 
 function SidebarGroupContent({ item }: { item: NavItem }) {
@@ -79,7 +79,7 @@ export function HydrogenSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild size="lg">
                             <Link href="/admin/dashboard" prefetch>
-                                <Logo />
+                                <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

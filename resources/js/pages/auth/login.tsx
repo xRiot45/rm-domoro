@@ -96,7 +96,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    Sudah memiliki akun?{' '}
+                    Belum memiliki akun?{' '}
                     <TextLink href={route('register')} tabIndex={5}>
                         Register
                     </TextLink>

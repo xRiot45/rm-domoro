@@ -1,3 +1,4 @@
+import Logo from '@/assets/images/icons/logo.svg';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,7 @@ import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
-import Logo from '../logo';
-import LogoIcon from '../logo-icon';
 import mainNavItems from './main-nav-items';
-import rightNavItems from './right-nav-items';
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
@@ -42,31 +40,16 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             <SheetContent side="left" className="bg-sidebar flex h-full w-64 flex-col items-stretch justify-between">
                                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <LogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                    <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
-                                        <div className="flex flex-col space-y-4">
+                                        <div className="flex flex-col space-y-6">
                                             {mainNavItems.map((item) => (
                                                 <Link key={item.title} href={item.href} className="flex items-center space-x-2 font-medium">
                                                     {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
                                                     <span>{item.title}</span>
                                                 </Link>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex flex-col space-y-4">
-                                            {rightNavItems.map((item) => (
-                                                <a
-                                                    key={item.title}
-                                                    href={item.href}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
-                                                    <span>{item.title}</span>
-                                                </a>
                                             ))}
                                         </div>
                                     </div>
@@ -76,7 +59,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
 
                     <Link href="/cashier/dashboard" prefetch className="flex items-center space-x-2">
-                        <Logo />
+                        <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                     </Link>
 
                     {/* Desktop Navigation */}
