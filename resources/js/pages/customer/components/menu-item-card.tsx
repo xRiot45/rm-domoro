@@ -106,7 +106,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                                     icon={user ? (item?.status === 'habis' ? 'ph:empty-duotone' : 'mdi:cart-outline') : 'mdi:login'}
                                     className="text-background"
                                 />
-                                {!user ? 'Login terlebih dahulu' : item?.status === 'habis' ? 'Habis' : 'Tambah'}
+                                {!user ? 'Login Dulu' : item?.status === 'habis' ? 'Habis' : 'Tambah'}
                             </Button>
 
                             {user && (
