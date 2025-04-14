@@ -26,7 +26,6 @@ class OrderController extends Controller
             return redirect()->back()->withErrors('Anda bukan kasir.');
         }
 
-
         $unassignedOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->whereNull('cashier_id')
             ->whereNotNull('customer_id')
@@ -65,6 +64,25 @@ class OrderController extends Controller
         ]);
     }
 
+    public function index_chef(): RedirectResponse|Response
+    {
+        $user = Auth::user();
+        $chef = Chef::where('user_id', $user->id)->first();
+
+        if (!$chef) {
+            return redirect()->back()->withErrors('Anda bukan koki.');
+        }
+
+        $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+            ->where('chef_id', $chef->id)
+            ->latest()
+            ->get();
+
+        return Inertia::render('chef/pages/order/index', [
+            'myOrders' => $myOrders,
+        ]);
+    }
+
     public function showOrderCustomer(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
@@ -75,8 +93,7 @@ class OrderController extends Controller
 
     public function showInvoiceCashier(int $transactionId): Response
     {
-        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
-            ->findOrFail($transactionId);
+        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
 
         if (!$transaction->customer || !$transaction->customer->user) {
             $transaction->setRelation('customer', null);
@@ -86,7 +103,6 @@ class OrderController extends Controller
             'data' => $transaction,
         ]);
     }
-
 
     public function edit(int $transactionId): Response
     {
@@ -150,6 +166,8 @@ class OrderController extends Controller
             'status' => OrderStatusEnum::PROCESSING,
         ]);
 
-        return redirect()->back()->with(['success' => 'Pesanan berhasil diambil']);
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan berhasil diambil']);
     }
 }

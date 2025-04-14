@@ -236,6 +236,14 @@ Route::middleware(['auth', 'verified', 'role:chef'])
     ->name('chef.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index_chef'])->name('dashboard');
+
+        // Orders
+        Route::prefix('order')
+            ->name('order.')
+            ->controller(OrderController::class)
+            ->group(function () {
+                Route::get('/', 'index_chef')->name('index_chef');
+            });
     });
 
 // Route for courier

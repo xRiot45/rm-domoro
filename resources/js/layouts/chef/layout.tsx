@@ -1,14 +1,14 @@
-import HydrogenLayoutTemplate from '@/layouts/chef/layouts/hydrogen-layout/layout';
+import LithiumLayoutTemplate from '@/layouts/chef/layouts/lithium-layout/layout';
 import { type BreadcrumbItem } from '@/types';
 import { type ReactNode } from 'react';
 
-interface AppLayoutProps {
+interface ChefLayoutProps {
     children: ReactNode;
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-    <HydrogenLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+export default ({ children, breadcrumbs, ...props }: ChefLayoutProps) => (
+    <LithiumLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
         {children}
-    </HydrogenLayoutTemplate>
+    </LithiumLayoutTemplate>
 );
