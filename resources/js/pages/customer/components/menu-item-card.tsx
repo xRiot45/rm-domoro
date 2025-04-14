@@ -102,10 +102,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                                           : 'bg-black hover:opacity-100 dark:bg-white dark:text-black dark:hover:opacity-50',
                                 )}
                             >
-                                <Icon
-                                    icon={user ? (item?.status === 'habis' ? 'ph:empty-duotone' : 'mdi:cart-outline') : 'mdi:login'}
-                                    className="text-background"
-                                />
+                                <Icon icon={user ? (item?.status === 'habis' ? 'ph:empty-duotone' : 'mdi:cart-outline') : 'mdi:login'} />
                                 {!user ? 'Login Dulu' : item?.status === 'habis' ? 'Habis' : 'Tambah'}
                             </Button>
 

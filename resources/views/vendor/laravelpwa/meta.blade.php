@@ -1,6 +1,6 @@
 <!-- Web Application Manifest -->
-<link rel="manifest" href="{{ url('manifest.json') }}">
-
+{{-- <link rel="manifest" href="{{ url('manifest.json') }}"> --}}
+<link rel="manifest" crossorigin="use-credentials" href="/manifest.json">
 
 <!-- Chrome for Android theme color -->
 <meta name="theme-color" content="{{ config('laravelpwa.manifest.theme_color') }}">
