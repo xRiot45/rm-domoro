@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlacedEvent implements ShouldBroadcast
+class OrderAssignedToChefEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,13 +32,10 @@ class OrderPlacedEvent implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return [
-            new Channel("orders")
-        ];
-    }
+        $chefId = $this->transaction->chef_id;
 
-    public function broadcastAs(): string
-    {
-        return 'order-created';
+        return [
+            new PrivateChannel('orders.to-chef.' . $chefId),
+        ];
     }
 }

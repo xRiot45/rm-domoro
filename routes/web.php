@@ -243,6 +243,8 @@ Route::middleware(['auth', 'verified', 'role:chef'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_chef')->name('index_chef');
+                Route::put('/{transactionId}/cook', 'cookOrder')->name('cookOrder');
+                Route::put('/{transactionId}/cooked', 'cookedOrder')->name('cookedOrder');
             });
     });
 

@@ -6,7 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
-use App\Events\OrderPlacedEvent;
+use App\Events\SelfOrderPlacedEvent;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Cashier;
 use App\Models\Customer;
@@ -115,7 +115,7 @@ class TransactionController extends Controller
             if ($cashier) {
                 return redirect()->route('cashier.cart.index')->with('success', 'Transaksi berhasil.');
             } elseif ($customer) {
-                broadcast(new OrderPlacedEvent($transaction))->toOthers();
+                broadcast(new SelfOrderPlacedEvent($transaction))->toOthers();
                 return redirect()->route('cart.index')->with('success', 'Transaksi berhasil.');
             }
         });
@@ -368,7 +368,7 @@ class TransactionController extends Controller
                 'payment_status' => PaymentStatusEnum::PAID,
                 'checked_out_at' => now(),
             ]);
-            broadcast(new OrderPlacedEvent($transaction))->toOthers();
+            broadcast(new SelfOrderPlacedEvent($transaction))->toOthers();
         }
 
 

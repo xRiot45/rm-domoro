@@ -138,16 +138,12 @@ class OrderController extends Controller
             'courier_id' => $courierId,
         ]);
 
-        OrderStatus::create([
-            'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::PROCESSING,
-        ]);
-
         return redirect()
             ->route('cashier.order.index_cashier')
             ->with(['success' => 'Pesanan berhasil diupdate']);
     }
 
+    // Ambil pesanan (cashier)
     public function takeOrder(int $transactionId): RedirectResponse
     {
         $user = Auth::user();
@@ -169,5 +165,33 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan berhasil diambil']);
+    }
+
+    // Masak pesanan (koki)
+    public function cookOrder(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::COOKING,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan sedang dimasak']);
+    }
+
+    // Pesanan selesai dimasak (koki)
+    public function cookedOrder(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::COOKED,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan selesai dimasak']);
     }
 }

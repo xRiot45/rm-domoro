@@ -1,27 +1,27 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import ChefLayout from '@/layouts/chef/layout';
+import { Transaction } from '@/models/transaction';
 import { Head } from '@inertiajs/react';
+import MyOrdersTable from './partials/table';
+import { columns } from './partials/table/columns';
 
-export default function OrderPage() {
+interface OrderPageProps {
+    myOrders: Transaction[];
+}
+
+export default function OrderPage({ myOrders }: OrderPageProps) {
     return (
         <>
             <ChefLayout>
                 <Head title="Order" />
-                <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
-                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        </div>
+                <div className="mb-2 flex flex-wrap justify-between space-y-2 p-4">
+                    <div>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-800 dark:text-gray-200">Daftar Pesanan</h1>
+                        <p className="text-muted-foreground mt-1.5 text-[16px]"> Tangani pesanan dari pelanggan</p>
                     </div>
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+                </div>
+
+                <div className="p-4">
+                    <MyOrdersTable data={myOrders} columns={columns} />
                 </div>
             </ChefLayout>
         </>
