@@ -7,7 +7,7 @@ import { Carts } from '@/models/cart';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
 import { Head, Link } from '@inertiajs/react';
-import { Minus, Plus, Trash } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { useCart } from '../../hooks/use-cart';
 import EmptyState from './empty-state';
 
@@ -35,8 +35,8 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
 
     return (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            {/* Cart */}
-            <Card className="col-span-2 w-full border-0 shadow-none lg:border lg:p-6">
+            {/* Section Cart */}
+            <Card className={`w-full border-1 p-6 shadow-none ${cartItems.length > 0 ? 'lg:col-span-2 lg:border' : 'lg:col-span-3'}`}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-bold">Keranjang</h2>
                     <Button className="text-sm" variant="destructive" onClick={handleDeleteAllItemFromCart}>
@@ -49,13 +49,13 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                         cartItems.map((item) => (
                             <div key={item?.id}>
                                 <div className="mb-8 flex items-center gap-4">
-                                    <Button
+                                    {/* <Button
                                         className="cursor-pointer text-red-500 transition-all hover:bg-gray-200 dark:hover:bg-gray-800"
                                         variant="ghost"
                                         onClick={() => handleDeleteItemFromCart(item?.id)}
                                     >
                                         <Trash size={16} />
-                                    </Button>
+                                    </Button> */}
                                     <img
                                         src={`${item?.menu_item?.image_url}`}
                                         alt={item?.menu_item?.name}
@@ -67,7 +67,7 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
                                         <p className="text-sm font-bold">{formatCurrency(item?.unit_price * item.quantity)}</p>
                                     </div>
 
-                                    <div className="flex items-center gap-4 pe-4">
+                                    <div className="flex items-center gap-4 md:pe-4">
                                         <Button
                                             onClick={() => handleUpdateQuantity(item?.id, false)}
                                             className="cursor-pointer text-black transition-all hover:bg-gray-200 dark:text-white dark:hover:bg-gray-800"
@@ -97,29 +97,31 @@ function CartContent({ cartItems }: { cartItems: Carts[] }) {
             </Card>
 
             {/* Section Total */}
-            <div className="flex w-full flex-col rounded-lg border p-4 md:col-span-1">
-                <div className="my-4 text-sm">
-                    <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>{formatCurrency(subtotal)}</span>
+            {cartItems.length > 0 && (
+                <div className="flex w-full flex-col rounded-lg border p-4 md:col-span-1">
+                    <div className="my-4 text-sm">
+                        <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>{formatCurrency(subtotal)}</span>
+                        </div>
                     </div>
-                </div>
-                <Separator />
-                <div className="mt-4 flex justify-between text-lg font-bold">
-                    <span>Total:</span>
-                    <span>{formatCurrency(total)}</span>
-                </div>
-                <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
-                    <Icon icon={'material-symbols:shopping-cart-checkout'} />
-                    Checkout Pesanan
-                </Button>
-                <Link href="/">
-                    <Button variant="outline" className="mt-2 w-full cursor-pointer py-5 text-black dark:bg-white dark:text-black">
-                        <Icon icon={'material-symbols:arrow-back'} />
-                        Kembali Ke Beranda
+                    <Separator />
+                    <div className="mt-4 flex justify-between text-lg font-bold">
+                        <span>Total:</span>
+                        <span>{formatCurrency(total)}</span>
+                    </div>
+                    <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
+                        <Icon icon={'material-symbols:shopping-cart-checkout'} />
+                        Checkout Pesanan
                     </Button>
-                </Link>
-            </div>
+                    <Link href="/">
+                        <Button variant="outline" className="mt-2 w-full cursor-pointer py-5 text-black dark:bg-white dark:text-black">
+                            <Icon icon={'material-symbols:arrow-back'} />
+                            Kembali Ke Beranda
+                        </Button>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

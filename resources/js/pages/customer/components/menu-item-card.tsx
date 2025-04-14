@@ -54,7 +54,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
     };
 
     return (
-        <div className="mb-20 grid w-full flex-1 auto-rows-min grid-cols-2 gap-6 space-y-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-20 grid w-full flex-1 auto-rows-min grid-cols-2 gap-4 space-y-5 md:grid-cols-2 lg:grid-cols-3">
             {menuItems?.map((item) => (
                 <div key={item.id} className={cn('pb-0.5')}>
                     <div className="relative">
@@ -82,9 +82,7 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
                     <div className="pt-3">
                         <div className="flex justify-between">
                             <div>
-                                <span className="text-muted-foreground text-sm font-medium italic dark:text-gray-200">
-                                    {item?.menu_category?.name}
-                                </span>
+                                <span className="text-sm font-medium dark:text-gray-200">{item?.menu_category?.name}</span>
                                 <h1 className="my-1 truncate font-bold">{item?.name}</h1>
                                 <span className="flex items-center text-sm font-medium text-gray-800 dark:text-gray-200">
                                     {formatCurrency(Number(item?.price))}
