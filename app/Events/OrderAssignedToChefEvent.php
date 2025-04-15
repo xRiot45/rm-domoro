@@ -32,10 +32,13 @@ class OrderAssignedToChefEvent implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        $chefId = $this->transaction->chef_id;
-
         return [
-            new PrivateChannel('orders.to-chef.' . $chefId),
+            new Channel('orders.to-chef'),
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'order-assigned';
     }
 }

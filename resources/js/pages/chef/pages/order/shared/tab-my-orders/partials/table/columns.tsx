@@ -15,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { DataTableColumnHeader } from './data-table-column-header';
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -184,7 +184,7 @@ export const columns: ColumnDef<Transaction>[] = [
     {
         id: 'created_at',
         accessorKey: 'created_at',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Waktu Order" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Pemesanan" />,
         cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
         enableHiding: true,
         enableSorting: true,
@@ -213,6 +213,16 @@ export const columns: ColumnDef<Transaction>[] = [
                                     onClick: () => toast.dismiss(),
                                 },
                             });
+
+                            onUpdateStatusOrder({
+                                ...row.original,
+                                order_status: [
+                                    ...orderStatusList,
+                                    {
+                                        status: OrderStatusEnum.COOKING,
+                                    },
+                                ],
+                            });
                         },
                         onError: (errors) => {
                             toast.error('Failed', {
@@ -240,6 +250,16 @@ export const columns: ColumnDef<Transaction>[] = [
                                     label: 'Tutup',
                                     onClick: () => toast.dismiss(),
                                 },
+                            });
+
+                            onUpdateStatusOrder({
+                                ...row.original,
+                                order_status: [
+                                    ...orderStatusList,
+                                    {
+                                        status: OrderStatusEnum.COOKED,
+                                    },
+                                ],
                             });
                         },
                         onError: (errors) => {

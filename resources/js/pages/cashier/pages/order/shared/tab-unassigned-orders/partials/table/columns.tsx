@@ -171,7 +171,7 @@ export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<T
     {
         id: 'created_at',
         accessorKey: 'created_at',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Waktu Order" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Pemesanan" />,
         cell: ({ row }) => {
             const createdAt = row.getValue('created_at') as string | undefined;
             return <span className="max-w-36">{createdAt ? formatDate(createdAt) : '-'}</span>;
@@ -188,7 +188,7 @@ export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<T
             const transactionId = row.original.id;
             const handleTakeOrder = () => {
                 router.put(
-                    route('cashier.order.takeOrder', transactionId),
+                    route('cashier.order.takeOrderCashier', transactionId),
                     {},
                     {
                         onSuccess: () => {

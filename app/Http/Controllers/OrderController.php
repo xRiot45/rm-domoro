@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
+use App\Events\OrderAssignedToChefEvent;
 use App\Models\Cashier;
 use App\Models\Chef;
-use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\OrderStatus;
 use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -35,6 +34,7 @@ class OrderController extends Controller
 
         $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('cashier_id', $cashier->id)
+            ->whereNotNull('checked_out_at')
             ->latest()
             ->get();
 
@@ -73,12 +73,19 @@ class OrderController extends Controller
             return redirect()->back()->withErrors('Anda bukan koki.');
         }
 
+        $unassignedOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+            ->whereNull('chef_id')
+            ->whereNotNull('order_sent_to_chef_at')
+            ->latest()
+            ->get();
+
         $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
             ->where('chef_id', $chef->id)
             ->latest()
             ->get();
 
         return Inertia::render('chef/pages/order/index', [
+            'unassignedOrders' => $unassignedOrders,
             'myOrders' => $myOrders,
         ]);
     }
@@ -104,47 +111,23 @@ class OrderController extends Controller
         ]);
     }
 
-    public function edit(int $transactionId): Response
-    {
-        $transaction = Transaction::with(['customer', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
-        return Inertia::render('cashier/pages/order/pages/edit', [
-            'data' => $transaction,
-        ]);
-    }
 
-    public function update(Request $request, int $transactionId): RedirectResponse
+    public function sendOrderToChef(int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);
-
-        $chef = Chef::find($request->chef_id);
-
-        if (!$chef) {
-            return back()->withErrors(['message' => 'Koki tidak ditemukan']);
-        }
-
-        $courierId = null;
-        if (!empty($request->courier_id)) {
-            $courier = Courier::find($request->courier_id);
-
-            if (!$courier) {
-                return back()->withErrors(['message' => 'Courier tidak ditemukan']);
-            }
-
-            $courierId = $courier->id;
-        }
-
         $transaction->update([
-            'chef_id' => $chef->id,
-            'courier_id' => $courierId,
+            'order_sent_to_chef_at' => now(),
         ]);
 
+        broadcast(new OrderAssignedToChefEvent($transaction))->toOthers();
+
         return redirect()
-            ->route('cashier.order.index_cashier')
-            ->with(['success' => 'Pesanan berhasil diupdate']);
+            ->back()
+            ->with(['success' => 'Pesanan berhasil dikirim ke koki']);
     }
 
     // Ambil pesanan (cashier)
-    public function takeOrder(int $transactionId): RedirectResponse
+    public function takeOrderCashier(int $transactionId): RedirectResponse
     {
         $user = Auth::user();
         $cashier = Cashier::where('user_id', $user->id)->first();
@@ -160,6 +143,25 @@ class OrderController extends Controller
         OrderStatus::create([
             'transaction_id' => $transaction->id,
             'status' => OrderStatusEnum::PROCESSING,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan berhasil diambil']);
+    }
+
+    // Ambil pesanan (chef)
+    public function takeOrderChef(int $transactionId): RedirectResponse
+    {
+        $user = Auth::user();
+        $chef = Chef::where('user_id', $user->id)->first();
+        if (!$chef) {
+            return redirect()->back()->withErrors('Anda bukan chef.');
+        }
+
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->update([
+            'chef_id' => $chef->id,
         ]);
 
         return redirect()

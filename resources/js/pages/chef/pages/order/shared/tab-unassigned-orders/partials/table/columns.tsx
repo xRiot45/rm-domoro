@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { OrderStatusEnum } from '@/enums/order-status';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { cn } from '@/lib/utils';
@@ -9,11 +10,12 @@ import { formatOrderType } from '@/utils/format-order-type';
 import { orderStatusMap } from '@/utils/order-status-map';
 import { paymentStatusMap } from '@/utils/payment-status-map';
 import { Icon } from '@iconify/react';
-import { ColumnDef, Row } from '@tanstack/react-table';
+import { router } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { toast } from 'sonner';
 import { DataTableColumnHeader } from './data-table-column-header';
-import { DataTableRowActions } from './data-table-row-actions';
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -27,7 +29,7 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
         cell: ({ row }) => {
-            const items = row.original.transaction_items;
+            const items = row.original.transaction_items ?? [];
 
             return (
                 <div className="flex flex-col gap-3">
@@ -56,7 +58,8 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'quantity',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
         cell: ({ row }) => {
-            const items = row.original.transaction_items;
+            const items = row.original.transaction_items ?? [];
+
             return (
                 <div className="flex flex-col gap-1 space-y-13">
                     {items.map((item) => (
@@ -75,7 +78,7 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'unit_price',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Harga Satuan" />,
         cell: ({ row }) => {
-            const unitPrice = row.original.transaction_items;
+            const unitPrice = row.original.transaction_items ?? [];
             return (
                 <div className="flex flex-col gap-1 space-y-13">
                     {unitPrice.map((item) => (
@@ -92,22 +95,18 @@ export const columns: ColumnDef<Transaction>[] = [
     {
         id: 'order_type',
         accessorKey: 'order_type',
-        accessorFn: (row) => row.order_type ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pemesanan" />,
         cell: ({ row }) => <span className="text-sm capitalize">{formatOrderType(row.getValue('order_type'))}</span>,
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
-        },
         enableHiding: false,
         enableSorting: false,
     },
     {
         id: 'payment_method',
         accessorKey: 'payment_method',
-        accessorFn: (row) => row.payment_method ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Metode Pembayaran" />,
         cell: ({ row }) => {
             const value = row.getValue('payment_method') as string;
+
             const isOnline = value === 'online';
             const colorClass = isOnline ? 'bg-blue-500 text-white' : 'bg-green-500 text-white';
             const icon = isOnline ? 'mdi:credit-card' : 'mdi:cash';
@@ -120,16 +119,12 @@ export const columns: ColumnDef<Transaction>[] = [
                 </Badge>
             );
         },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
-        },
         enableHiding: false,
         enableSorting: false,
     },
     {
         id: 'payment_status',
         accessorKey: 'payment_status',
-        accessorFn: (row) => row.payment_status ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pembayaran" />,
         cell: ({ row }) => {
             const value = row.getValue('payment_status') as PaymentStatusEnum;
@@ -139,9 +134,6 @@ export const columns: ColumnDef<Transaction>[] = [
             };
 
             return <Badge className={paymentStatus.className}>{paymentStatus.label}</Badge>;
-        },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
         },
         enableHiding: true,
         enableSorting: false,
@@ -156,7 +148,6 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     {
         id: 'latest_order_status',
-        accessorFn: (row) => row.order_status?.[row.order_status.length - 1]?.status ?? 'unknown',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status Pesanan" />,
         cell: ({ row }) => {
             const statuses = row.original.order_status;
@@ -173,17 +164,19 @@ export const columns: ColumnDef<Transaction>[] = [
 
             return <Badge className={orderStatus.className}>{orderStatus.label}</Badge>;
         },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
-        },
         enableHiding: false,
         enableSorting: false,
     },
+
     {
         id: 'created_at',
         accessorKey: 'created_at',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Pemesanan" />,
-        cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
+        cell: ({ row }) => {
+            const createdAt = row.getValue('created_at') as string | undefined;
+            return <span className="max-w-36">{createdAt ? formatDate(createdAt) : '-'}</span>;
+        },
+
         enableHiding: true,
         enableSorting: true,
     },
@@ -191,7 +184,46 @@ export const columns: ColumnDef<Transaction>[] = [
         id: 'actions',
         accessorKey: 'actions',
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">Aksi</span>,
-        cell: ({ row }) => <DataTableRowActions row={row as Row<Transaction>} />,
+        cell: ({ row }) => {
+            const transactionId = row.original.id;
+            const handleTakeOrder = () => {
+                router.put(
+                    route('chef.order.takeOrderChef', transactionId),
+                    {},
+                    {
+                        onSuccess: () => {
+                            toast.success('Success', {
+                                description: 'Pesanan Berhasil Diambil!',
+                                action: {
+                                    label: 'Tutup',
+                                    onClick: () => toast.dismiss(),
+                                },
+                            });
+
+                            onOrderTaken(row.original);
+                        },
+                        onError: (errors) => {
+                            toast.error('Failed', {
+                                description: errors.message || 'Pesanan Gagal Diambil!',
+                                action: {
+                                    label: 'Tutup',
+                                    onClick: () => toast.dismiss(),
+                                },
+                            });
+                        },
+                        preserveScroll: true,
+                    },
+                );
+            };
+
+            return (
+                <>
+                    <Button className="cursor-pointer" size="sm" onClick={handleTakeOrder}>
+                        Ambil Pesanan
+                    </Button>
+                </>
+            );
+        },
         enableHiding: false,
     },
 ];

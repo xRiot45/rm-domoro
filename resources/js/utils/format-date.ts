@@ -13,6 +13,7 @@ export const formatDate = (dateString: string, locale: string = 'id-ID', options
         minute: '2-digit',
         second: '2-digit',
         hour12: false,
+        timeZone: 'Asia/Jakarta',
     };
 
     return new Intl.DateTimeFormat(locale, { ...defaultOptions, ...options }).format(date);

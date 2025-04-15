@@ -58,7 +58,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </Sheet>
                     </div>
 
-                    <Link href="/cashier/dashboard" prefetch className="flex items-center space-x-2">
+                    <Link href="/chef/dashboard" prefetch className="flex items-center space-x-2">
                         <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                     </Link>
 

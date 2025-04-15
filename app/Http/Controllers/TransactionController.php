@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
 use App\Enums\PaymentMethodEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Events\OrderAssignedToChefEvent;
 use App\Events\SelfOrderPlacedEvent;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Cashier;
@@ -369,6 +370,7 @@ class TransactionController extends Controller
                 'checked_out_at' => now(),
             ]);
             broadcast(new SelfOrderPlacedEvent($transaction))->toOthers();
+            broadcast(new OrderAssignedToChefEvent($transaction))->toOthers();
         }
 
 

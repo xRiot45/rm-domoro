@@ -1,6 +1,7 @@
 import SummaryRow from '@/components/summary-row';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +10,8 @@ import { PaymentTypeEnum } from '@/enums/payment-type';
 import { TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { useState } from 'react';
 
 interface CheckoutSummaryProps {
     formData: Required<TransactionForm>;
@@ -39,6 +42,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
     handlePayWithMidtrans,
     processing,
 }) => {
+    const [showCashDialog, setShowCashDialog] = useState<boolean>(false);
     return (
         <Card className="mt-13 w-full border p-8 shadow-none">
             <div className="flex items-center justify-between">
@@ -138,17 +142,43 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                     value={formData.note}
                 />
 
-                {formData.payment_method === PaymentTypeEnum.ONLINE_PAYMENT ? (
-                    <Button type="button" className="mt-4 w-full py-6 text-sm" disabled={processing} onClick={handlePayWithMidtrans}>
-                        <Icon icon="mdi:credit-card" />
-                        Bayar dengan Midtrans
+                <Dialog open={showCashDialog} onOpenChange={setShowCashDialog}>
+                    <Button
+                        type="submit"
+                        className="mt-4 w-full py-6 text-sm"
+                        disabled={processing}
+                        onClick={() => {
+                            if (formData.payment_method === PaymentTypeEnum.CASH) {
+                                setShowCashDialog(true);
+                            } else {
+                                handlePayWithMidtrans();
+                            }
+                        }}
+                    >
+                        <Icon icon={formData.payment_method === PaymentTypeEnum.CASH ? 'mdi:cash' : 'mdi:credit-card'} />
+                        {formData.payment_method === PaymentTypeEnum.CASH ? 'Bayar dengan Cash / Tunai' : 'Bayar dengan Midtrans'}
                     </Button>
-                ) : (
-                    <Button type="submit" className="mt-4 w-full py-6 text-sm" disabled={processing} onClick={handlePayWithCash}>
-                        <Icon icon="mdi:cash" />
-                        Bayar dengan Cash / Tunai
-                    </Button>
-                )}
+
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Bayar dengan Tunai</DialogTitle>
+                        </DialogHeader>
+                        <DialogDescription className="text-sm">
+                            Cek semua data pembayaran diatas dan pastikan sudah benar. Jika sudah benar, klik tombol dibawah ini untuk melanjutkan
+                            pembayaran
+                        </DialogDescription>
+                        <DialogFooter className="mt-4">
+                            <Button
+                                onClick={() => {
+                                    handlePayWithCash();
+                                    setShowCashDialog(false);
+                                }}
+                            >
+                                Saya Mengerti & Lanjutkan Pembayaran
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </Card>
     );

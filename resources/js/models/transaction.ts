@@ -37,6 +37,8 @@ interface Transaction {
     recipient_phone_number?: string | null;
     shipping_address?: string | null;
     order_status: OrderStatus[];
+    checked_out_at?: string;
+    order_sent_to_chef_at?: string;
     created_at?: string;
     updated_at?: string;
 }

@@ -1,12 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Transaction } from '@/models/transaction';
 import { Icon } from '@iconify/react';
 import { Link } from '@inertiajs/react';
@@ -24,15 +17,6 @@ export function DataTableRowActions({ row }: { row: Row<Transaction> }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={route('cashier.order.edit', { id: row.original.id })} className="cursor-po">
-                        <DropdownMenuItem className="cursor-pointer">
-                            Edit Data Order
-                            <DropdownMenuShortcut>
-                                <Icon icon={'material-symbols:edit'} />
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuSeparator />
                     <Link href={route('cashier.order.show', { id: row.original.id })}>
                         <DropdownMenuItem className="cursor-pointer">
                             Lihat Invoice

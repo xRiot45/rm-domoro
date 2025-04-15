@@ -112,7 +112,7 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                     <p className="text-muted-foreground mt-1.5 text-[16px]">Tinjau pesanan Anda dan pilih metode pembayaran</p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4">
                     <div className="col-span-2 space-y-8">
                         {/* Menu Yang Dipesan */}
                         <div className="mt-2 space-y-3">

@@ -243,6 +243,7 @@ Route::middleware(['auth', 'verified', 'role:chef'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_chef')->name('index_chef');
+                Route::put('/{transactionId}', 'takeOrderChef')->name('takeOrderChef');
                 Route::put('/{transactionId}/cook', 'cookOrder')->name('cookOrder');
                 Route::put('/{transactionId}/cooked', 'cookedOrder')->name('cookedOrder');
             });
@@ -303,14 +304,14 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_cashier')->name('index_cashier');
-                Route::put('/{transactionId}', 'takeOrder')->name('takeOrder');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/edit/{id}', 'update')->name(name: 'update');
-                Route::get('/invoice/{id}', 'showInvoiceCashier')->name('show');
+                Route::put('/{transactionId}', 'takeOrderCashier')->name('takeOrderCashier');
+                Route::put('/{id}/send-to-chef', 'sendOrderToChef')->name('sendOrderToChef');
+                Route::get('/invoice/{id}', 'showInvoiceCashier')->name('showInvoiceCashier');
             });
     });
 
 Route::get('/midtrans/callback', [TransactionController::class, 'midtransCallback'])->name('midtrans.callback');
+Broadcast::routes();
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
