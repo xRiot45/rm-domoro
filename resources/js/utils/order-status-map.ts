@@ -25,9 +25,17 @@ export const orderStatusMap: Record<OrderStatusEnum, { label: string; className:
         label: 'Siap',
         className: 'bg-sky-500 text-white',
     },
+    [OrderStatusEnum.READY_FOR_DELIVERY]: {
+        label: 'Siap Diantar',
+        className: 'bg-cyan-500 text-white',
+    },
+    [OrderStatusEnum.READY_TO_SERVE]: {
+        label: 'Siap Disajikan',
+        className: 'bg-purple-500 text-white',
+    },
     [OrderStatusEnum.DELIVERING]: {
         label: 'Diantar',
-        className: 'bg-indigo-500 text-white',
+        className: 'bg-emerald-500 text-white',
     },
     [OrderStatusEnum.COMPLETED]: {
         label: 'Selesai',

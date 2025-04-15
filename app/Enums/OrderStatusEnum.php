@@ -14,7 +14,9 @@ enum OrderStatusEnum: string
 
     case COOKED = 'selesai dimasak';            // Masakan selesai dimasak
 
-    case READY = 'siap';                       // Makanan siap diambil / diantar
+    case READY_FOR_DELIVERY = 'siap diantar';   // Makanan siap diantar
+
+    case READY_TO_SERVE = 'siap disajikan';     // Makanan siap disajikan
 
     case DELIVERING = 'diantar';             // Kurir sedang mengantar
 

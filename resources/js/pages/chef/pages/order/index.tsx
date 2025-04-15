@@ -40,7 +40,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
                         <p className="text-muted-foreground mt-1.5 text-[16px]">Masak pesanan pelanggan</p>
                     </div>
 
-                    <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="mt-4 w-full">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 w-full">
                         <TabsList className="w-fit">
                             <TabsTrigger value="unassignedOrders" className="cursor-pointer">
                                 Pesanan Yang Belum Ditangani

@@ -186,6 +186,8 @@ export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<T
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">Aksi</span>,
         cell: ({ row }) => {
             const transactionId = row.original.id;
+            const orderStatusList = row.original.order_status;
+
             const handleTakeOrder = () => {
                 router.put(
                     route('cashier.order.takeOrderCashier', transactionId),
@@ -200,7 +202,15 @@ export const columns = (onOrderTaken: (order: Transaction) => void): ColumnDef<T
                                 },
                             });
 
-                            onOrderTaken(row.original);
+                            onOrderTaken({
+                                ...row.original,
+                                order_status: [
+                                    ...orderStatusList,
+                                    {
+                                        status: OrderStatusEnum.PROCESSING,
+                                    },
+                                ],
+                            });
                         },
                         onError: (errors) => {
                             toast.error('Failed', {
