@@ -1,6 +1,6 @@
 import { NavItem } from '@/types';
 
-const footerNavItems: NavItem[] = [
+const rightNavItems: NavItem[] = [
     {
         title: 'Repository',
         href: '#',
@@ -13,4 +13,4 @@ const footerNavItems: NavItem[] = [
     },
 ];
 
-export default footerNavItems;
+export default rightNavItems;

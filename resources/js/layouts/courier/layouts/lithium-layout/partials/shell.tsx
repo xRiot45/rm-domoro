@@ -6,7 +6,7 @@ interface AppShellProps {
     variant?: 'header' | 'sidebar';
 }
 
-export function HydrogenShell({ children, variant = 'header' }: AppShellProps) {
+export function LithiumShell({ children, variant = 'header' }: AppShellProps) {
     const [isOpen, setIsOpen] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('sidebar') !== 'false' : true));
 
     const handleSidebarChange = (open: boolean) => {
