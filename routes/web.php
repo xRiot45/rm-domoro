@@ -255,6 +255,13 @@ Route::middleware(['auth', 'verified', 'role:courier'])
     ->name('courier.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index_courier'])->name('dashboard');
+
+        Route::prefix('order')
+            ->name('order.')
+            ->controller(OrderController::class)
+            ->group(function () {
+                Route::get('/', 'index_courier')->name('index_courier');
+            });
     });
 
 // Route for cashier

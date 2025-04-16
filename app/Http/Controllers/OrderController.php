@@ -91,6 +91,32 @@ class OrderController extends Controller
         ]);
     }
 
+    public function index_courier(): RedirectResponse|Response
+    {
+        $user = Auth::user();
+        $courier = Courier::where('user_id', $user->id)->first();
+
+        if (!$courier) {
+            return redirect()->back()->withErrors('Anda bukan kurir.');
+        }
+
+        $unassignedOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+            ->whereNull('courier_id')
+            ->whereNotNull('order_sent_to_courier_at')
+            ->latest()
+            ->get();
+
+        $myOrders = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])
+            ->where('courier_id', $courier->id)
+            ->latest()
+            ->get();
+
+        return Inertia::render('courier/pages/order/index', [
+            'unassignedOrders' => $unassignedOrders,
+            'myOrders' => $myOrders,
+        ]);
+    }
+
     public function showOrderCustomer(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
