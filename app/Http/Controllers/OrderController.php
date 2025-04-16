@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Events\OrderAssignedToChefEvent;
 use App\Models\Cashier;
 use App\Models\Chef;
+use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\OrderStatus;
 use App\Models\Transaction;
@@ -111,7 +112,6 @@ class OrderController extends Controller
         ]);
     }
 
-
     public function sendOrderToChef(int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);
@@ -124,6 +124,18 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan berhasil dikirim ke koki']);
+    }
+
+    public function sendOrderToCourier(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->update([
+            'order_sent_to_courier_at' => now(),
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan berhasil dikirim ke kurir']);
     }
 
     // Ambil pesanan (cashier)
@@ -169,6 +181,25 @@ class OrderController extends Controller
             ->with(['success' => 'Pesanan berhasil diambil']);
     }
 
+    // Ambil pesanan (courier)
+    public function takeOrderCourier(int $transactionId): RedirectResponse
+    {
+        $user = Auth::user();
+        $courier = Courier::where('user_id', $user->id)->first();
+        if (!$courier) {
+            return redirect()->back()->withErrors('Anda bukan courier.');
+        }
+
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->update([
+            'courier_id' => $courier->id,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan berhasil diambil']);
+    }
+
     // Masak pesanan (koki)
     public function cookOrder(int $transactionId): RedirectResponse
     {
@@ -195,5 +226,47 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan selesai dimasak']);
+    }
+
+    // Pesanan siap diantar (courier)
+    public function readyForDelivery(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::READY_FOR_DELIVERY,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan siap diantar']);
+    }
+
+    // Pesanan diantar (courier)
+    public function deliverOrder(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::DELIVERING,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan sedang diantar']);
+    }
+
+    // Pesanan siap disajikan (cashier)
+    public function readyToServe(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::READY_TO_SERVE,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with(['success' => 'Pesanan siap disajikan']);
     }
 }

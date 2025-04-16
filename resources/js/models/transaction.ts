@@ -39,6 +39,7 @@ interface Transaction {
     order_status: OrderStatus[];
     checked_out_at?: string;
     order_sent_to_chef_at?: string;
+    order_sent_to_courier_at?: string;
     created_at?: string;
     updated_at?: string;
 }

@@ -4,12 +4,13 @@ import { columns } from './partials/table/columns';
 
 interface TabMyOrdersProps {
     data: Transaction[];
+    onUpdateStatusOrder: (transaction: Transaction) => void;
 }
 
-const TabMyOrders: React.FC<TabMyOrdersProps> = ({ data }) => {
+const TabMyOrders: React.FC<TabMyOrdersProps> = ({ data, onUpdateStatusOrder }) => {
     return (
         <div className="mt-8">
-            <MyOrdersTable data={data} columns={columns} />
+            <MyOrdersTable data={data} columns={columns(onUpdateStatusOrder)} />
         </div>
     );
 };

@@ -306,6 +306,8 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
                 Route::get('/', 'index_cashier')->name('index_cashier');
                 Route::put('/{transactionId}', 'takeOrderCashier')->name('takeOrderCashier');
                 Route::put('/{id}/send-to-chef', 'sendOrderToChef')->name('sendOrderToChef');
+                Route::put('/{id}/send-to-courier', 'sendOrderToCourier')->name('sendOrderToCourier');
+                Route::put('/{id}/ready-to-serve', 'readyToServe')->name('readyToServe');
                 Route::get('/invoice/{id}', 'showInvoiceCashier')->name('showInvoiceCashier');
             });
     });

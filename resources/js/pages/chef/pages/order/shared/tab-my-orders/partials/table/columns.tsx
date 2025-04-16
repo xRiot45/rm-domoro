@@ -197,8 +197,17 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
             const transactionId = row.original.id;
             const orderStatusList = row.original.order_status;
             const latestStatus = orderStatusList[orderStatusList.length - 1];
+            const cookedStatuses = [
+                OrderStatusEnum.COOKED,
+                OrderStatusEnum.READY_FOR_DELIVERY,
+                OrderStatusEnum.READY_TO_SERVE,
+                OrderStatusEnum.DELIVERING,
+                OrderStatusEnum.COMPLETED,
+                OrderStatusEnum.CANCELLED,
+            ];
+
             const beingCooked = latestStatus.status === OrderStatusEnum.COOKING;
-            const cooked = latestStatus.status === OrderStatusEnum.COOKED;
+            const cooked = cookedStatuses.includes(latestStatus.status as OrderStatusEnum);
 
             const handleCookOrder = () => {
                 router.put(
@@ -277,17 +286,16 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
             };
 
             return (
-                <>
-                    <Button
-                        className="cursor-pointer"
-                        size="sm"
-                        onClick={beingCooked ? handleOrderFinishedCooking : handleCookOrder}
-                        disabled={cooked}
-                        variant={beingCooked ? 'destructive' : 'default'}
-                    >
-                        {beingCooked ? 'Selesai Dimasak' : 'Masak Pesanan'}
-                    </Button>
-                </>
+                <Button
+                    className="cursor-pointer"
+                    size="sm"
+                    onClick={beingCooked ? handleOrderFinishedCooking : handleCookOrder}
+                    disabled={cooked}
+                    variant={beingCooked ? 'destructive' : 'default'}
+                    title={cooked ? 'Pesanan sudah selesai dimasak atau tidak dapat dimasak lagi' : ''}
+                >
+                    {cooked ? 'Sudah Dimasak' : beingCooked ? 'Selesai Dimasak' : 'Masak Pesanan'}
+                </Button>
             );
         },
         enableHiding: false,

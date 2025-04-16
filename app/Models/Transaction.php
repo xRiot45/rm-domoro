@@ -10,12 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-
 class Transaction extends Model
 {
     protected $table = 'transactions';
 
-    protected $fillable = ['customer_id', 'cashier_id', 'order_type', 'payment_method', 'payment_status', 'cash_received', 'change', 'table_number', 'shipping_address', 'recipient', 'recipient_phone_number', 'note', 'chef_id', 'courier_id', 'total_price', 'delivery_fee', 'service_charge', 'discount', 'tax', 'final_total', 'checked_out_at', 'order_sent_to_chef_at'];
+    protected $fillable = ['customer_id', 'cashier_id', 'order_type', 'payment_method', 'payment_status', 'cash_received', 'change', 'table_number', 'shipping_address', 'recipient', 'recipient_phone_number', 'note', 'chef_id', 'courier_id', 'total_price', 'delivery_fee', 'service_charge', 'discount', 'tax', 'final_total', 'checked_out_at', 'order_sent_to_chef_at', 'order_sent_to_courier_at'];
 
     protected function casts(): array
     {
@@ -35,7 +34,6 @@ class Transaction extends Model
             $transaction->order_number = 'ORD-' . now()->format('Ymd') . '-' . $randomString;
         });
     }
-
 
     public function customer(): BelongsTo
     {

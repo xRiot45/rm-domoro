@@ -35,6 +35,7 @@ return new class extends Migration {
             $table->integer('final_total')->default(0); // Total akhir
             $table->timestamp('checked_out_at')->nullable();
             $table->timestamp('order_sent_to_chef_at')->nullable();
+            $table->timestamp('order_sent_to_courier_at')->nullable();
             $table->timestamps();
         });
     }

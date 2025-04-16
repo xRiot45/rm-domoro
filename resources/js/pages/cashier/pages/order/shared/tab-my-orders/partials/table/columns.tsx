@@ -13,7 +13,7 @@ import { ColumnDef, Row } from '@tanstack/react-table';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -191,7 +191,7 @@ export const columns: ColumnDef<Transaction>[] = [
         id: 'actions',
         accessorKey: 'actions',
         header: () => <span className="text-md font-medium text-gray-900 dark:text-gray-200">Aksi</span>,
-        cell: ({ row }) => <DataTableRowActions row={row as Row<Transaction>} />,
+        cell: ({ row }) => <DataTableRowActions row={row as Row<Transaction>} onUpdateStatusOrder={onUpdateStatusOrder} />,
         enableHiding: false,
     },
 ];

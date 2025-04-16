@@ -26,6 +26,10 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
         setActiveTab('myOrders');
     };
 
+    const handleUpdateStatusOrder = (updatedOrder: Transaction) => {
+        setLiveMyOrders((prev) => prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)));
+    };
+
     return (
         <>
             <CashierLayout onNewOrder={handleNewOrder}>
@@ -53,7 +57,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
 
                         {/* Konten untuk tab "Pesanan Yang Saya Tangani" */}
                         <TabsContent value="myOrders">
-                            <TabMyOrders data={liveMyOrders} />
+                            <TabMyOrders data={liveMyOrders} onUpdateStatusOrder={handleUpdateStatusOrder} />
                         </TabsContent>
                     </Tabs>
                 </div>
