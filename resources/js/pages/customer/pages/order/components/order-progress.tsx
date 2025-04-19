@@ -15,7 +15,8 @@ const statusIcons: Record<OrderStatusEnum, JSX.Element> = {
     [OrderStatusEnum.PROCESSING]: <Icon icon="mdi:progress-clock" className="h-5 w-5" />,
     [OrderStatusEnum.COOKING]: <Icon icon="mdi:chef-hat" className="h-5 w-5" />,
     [OrderStatusEnum.COOKED]: <Icon icon="mdi:food-outline" className="h-5 w-5" />,
-    [OrderStatusEnum.READY]: <Icon icon="mdi:bell-ring-outline" className="h-5 w-5" />,
+    [OrderStatusEnum.READY_FOR_DELIVERY]: <Icon icon="solar:delivery-bold" className="h-5 w-5" />,
+    [OrderStatusEnum.READY_TO_SERVE]: <Icon icon="solar:delivery-bold" className="h-5 w-5" />,
     [OrderStatusEnum.DELIVERING]: <Icon icon="mdi:truck-delivery-outline" className="h-5 w-5" />,
     [OrderStatusEnum.COMPLETED]: <Icon icon="mdi:check-decagram" className="h-5 w-5" />,
     [OrderStatusEnum.CANCELLED]: <Icon icon="mdi:cancel" className="h-5 w-5" />,
@@ -50,19 +51,21 @@ const OrderProgress: React.FC<OrderProgressProps> = ({ orderId, orderStatus }) =
                                 <div className="mt-1 flex flex-col">
                                     {/* Waktu */}
                                     <span className="text-muted-foreground mt-1 text-xs">
-                                        {new Date(step.created_at).toLocaleTimeString('id-ID', {
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true,
-                                        })}
+                                        {step.created_at &&
+                                            new Date(step.created_at).toLocaleTimeString('id-ID', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true,
+                                            })}
                                     </span>
                                     {/* Tanggal */}
                                     <span className="text-muted-foreground mt-1 text-xs">
-                                        {new Date(step.created_at).toLocaleDateString('id-ID', {
-                                            day: '2-digit',
-                                            month: 'short',
-                                            year: 'numeric',
-                                        })}
+                                        {step.created_at &&
+                                            new Date(step.created_at).toLocaleTimeString('id-ID', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric',
+                                            })}
                                     </span>
                                 </div>
                             </div>

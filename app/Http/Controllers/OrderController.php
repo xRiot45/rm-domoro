@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
 use App\Events\OrderAssignedToChefEvent;
+use App\Events\OrderAssignedToCourierEvent;
 use App\Models\Cashier;
 use App\Models\Chef;
 use App\Models\Courier;
@@ -159,6 +160,8 @@ class OrderController extends Controller
             'order_sent_to_courier_at' => now(),
         ]);
 
+        broadcast(new OrderAssignedToCourierEvent($transaction))->toOthers();
+
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan berhasil dikirim ke kurir']);
@@ -269,7 +272,7 @@ class OrderController extends Controller
     }
 
     // Pesanan diantar (courier)
-    public function deliverOrder(int $transactionId): RedirectResponse
+    public function deliveringOrder(int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);
         OrderStatus::create([
@@ -294,5 +297,17 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan siap disajikan']);
+    }
+
+    // Pesanan Selesai (Cashier / Courier)
+    public function orderCompleted(int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::COMPLETED,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Pesanan selesai']);
     }
 }

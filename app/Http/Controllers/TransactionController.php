@@ -370,7 +370,6 @@ class TransactionController extends Controller
                 'checked_out_at' => now(),
             ]);
             broadcast(new SelfOrderPlacedEvent($transaction))->toOthers();
-            broadcast(new OrderAssignedToChefEvent($transaction))->toOthers();
         }
 
 

@@ -134,6 +134,45 @@ export function DataTableRowActions({
         );
     };
 
+    const handleOrderCompleted = () => {
+        router.put(
+            route('cashier.order.orderCompleted', { id: row?.original?.id }),
+            {},
+            {
+                onSuccess: () => {
+                    toast.success('Success', {
+                        description: 'Pesanan Selesai',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+
+                    router.reload();
+                    onUpdateStatusOrder({
+                        ...row.original,
+                        order_status: [
+                            ...row.original.order_status,
+                            {
+                                status: OrderStatusEnum.COMPLETED,
+                            },
+                        ],
+                    });
+                },
+
+                onError: () => {
+                    toast.error('Error', {
+                        description: 'Pesanan Gagal Selesai',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+                },
+            },
+        );
+    };
+
     return (
         <>
             <DropdownMenu>
@@ -157,7 +196,7 @@ export function DataTableRowActions({
                     )}
                     {orderIsDelivery && lastStatusOrder === OrderStatusEnum.COOKED && !isOrderSentToCourier && (
                         <>
-                            <DropdownMenuItem className="cursor-pointer" onClick={handleSendOrderToCourier}>
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => setShowDialogCourier(true)}>
                                 Kirim ke Kurir
                                 <DropdownMenuShortcut>
                                     <Icon icon={'material-symbols:send'} />
@@ -171,7 +210,19 @@ export function DataTableRowActions({
                             <DropdownMenuItem className="cursor-pointer" onClick={handleOrderReadyToServe}>
                                 Pesanan Siap Disajikan
                                 <DropdownMenuShortcut>
-                                    <Icon icon={'ic:outline-done-all'} />
+                                    <Icon icon={'icon-park-outline:delivery'} />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    )}
+
+                    {lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
+                        <>
+                            <DropdownMenuItem className="cursor-pointer" onClick={handleOrderCompleted}>
+                                Pesanan Selesai
+                                <DropdownMenuShortcut>
+                                    <Icon icon={'fluent-mdl2:completed-solid'} />
                                 </DropdownMenuShortcut>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderAssignedToChefEvent implements ShouldBroadcast
+class OrderAssignedToCourierEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,12 +31,12 @@ class OrderAssignedToChefEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('orders.to-chef'),
+            new Channel('orders.to-courier'),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'order-assigned-to-chef';
+        return 'order-assigned-to-courier';
     }
 }

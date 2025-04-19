@@ -42,7 +42,7 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps
         if (!window.Echo || !isSoundEnabled) return;
 
         const channel = window.Echo.channel(`orders.to-chef`);
-        channel.listen('.order-assigned', (event: { transaction: Transaction }) => {
+        channel.listen('.order-assigned-to-chef', (event: { transaction: Transaction }) => {
             const audio = audioRef.current;
             if (onNewOrder != null && event.transaction) {
                 if (audio) {
@@ -56,8 +56,8 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps
         });
 
         return () => {
-            channel.stopListening('.order-assigned');
-            window.Echo.leave(`orders.to-chef}`);
+            channel.stopListening('.order-assigned-to-chef');
+            window.Echo.leave(`orders.to-chef`);
         };
     }, [onNewOrder, isSoundEnabled]);
 
@@ -115,7 +115,7 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Pesanan Baru!!</DialogTitle>
-                        <DialogDescription>Ada pesanan baru yang telah masuk. Silahkan lakukan pengecekan.</DialogDescription>
+                        <DialogDescription>Ada pesanan baru yang telah masuk. Silahkan lakukan pengecekan dan masak pesanan!.</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <Button onClick={() => setShowDialog(false)}>Pesanan Sudah Saya Terima</Button>

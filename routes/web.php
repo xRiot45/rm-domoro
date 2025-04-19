@@ -261,6 +261,10 @@ Route::middleware(['auth', 'verified', 'role:courier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_courier')->name('index_courier');
+                Route::put('/{transactionId}',  'takeOrderCourier')->name('takeOrderCourier');
+                Route::put('/{id}/ready-to-delivery', 'readyForDelivery')->name('readyForDelivery');
+                Route::put('/{id}/delivering', 'deliveringOrder')->name('deliveringOrder');
+                Route::put('/{id}/complete', 'orderCompleted')->name('orderCompleted');
             });
     });
 
@@ -315,6 +319,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
                 Route::put('/{id}/send-to-chef', 'sendOrderToChef')->name('sendOrderToChef');
                 Route::put('/{id}/send-to-courier', 'sendOrderToCourier')->name('sendOrderToCourier');
                 Route::put('/{id}/ready-to-serve', 'readyToServe')->name('readyToServe');
+                Route::put('/{id}/complete', 'orderCompleted')->name('orderCompleted');
                 Route::get('/invoice/{id}', 'showInvoiceCashier')->name('showInvoiceCashier');
             });
     });
