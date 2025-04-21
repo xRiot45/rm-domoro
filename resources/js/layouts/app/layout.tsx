@@ -1,4 +1,4 @@
-import LithiumLayoutTemplate from '@/layouts/app/layouts/lithium-layout/layout';
+import LithiumLayoutTemplate from '@/layouts/app/layouts/lithium-layout/index';
 import { type BreadcrumbItem } from '@/types';
 import { type ReactNode } from 'react';
 
@@ -7,8 +7,10 @@ interface AppLayoutProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-    <LithiumLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-        {children}
-    </LithiumLayoutTemplate>
-);
+export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {
+    return (
+        <LithiumLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+            {children}
+        </LithiumLayoutTemplate>
+    );
+}

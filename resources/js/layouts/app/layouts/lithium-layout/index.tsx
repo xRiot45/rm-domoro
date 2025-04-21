@@ -5,7 +5,7 @@ import { LithiumFooter } from './partials/footer';
 import { LithiumHeader } from './partials/headers/header';
 import { LithiumShell } from './partials/shell';
 
-export default function LithiumLayout({ children, breadcrumbs }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+export default function LithiumLayoutTemplate({ children, breadcrumbs }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     return (
         <LithiumShell>
             <LithiumHeader breadcrumbs={breadcrumbs} />

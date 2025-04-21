@@ -6,7 +6,7 @@ import { Transaction } from '@/models/transaction';
 import { type BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import LithiumLayoutTemplate from './layouts/lithium-layout/layout';
+import LithiumLayoutTemplate from './layouts/lithium-layout/index';
 
 interface ChefLayoutProps {
     children: ReactNode;
@@ -14,7 +14,7 @@ interface ChefLayoutProps {
     onNewOrder?: (order: Transaction) => void;
 }
 
-export default ({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps) => {
+export default function ChefLayout({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps) {
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
         return localStorage.getItem('soundIsEnabled') === 'true';
@@ -124,4 +124,4 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: ChefLayoutProps
             </Dialog>
         </LithiumLayoutTemplate>
     );
-};
+}

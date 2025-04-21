@@ -5,7 +5,7 @@ import { HydrogenShell } from './partials/shell';
 import { HydrogenSidebar } from './partials/sidebar/sidebar';
 import { HydrogenSidebarHeader } from './partials/sidebar/sidebar-header';
 
-export default function HydrogenLayout({ children, breadcrumbs = [] }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+export default function HydrogenLayoutTemplate({ children, breadcrumbs = [] }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
     return (
         <HydrogenShell variant="sidebar">
             <HydrogenSidebar />

@@ -2,7 +2,7 @@ import OrderBellAudio from '@/assets/sounds/order-bell.mp3';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import LithiumLayoutTemplate from '@/layouts/cashier/layouts/lithium-layout/layout';
+import LithiumLayoutTemplate from '@/layouts/cashier/layouts/lithium-layout/index';
 import { Transaction } from '@/models/transaction';
 import { type BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
@@ -14,7 +14,7 @@ interface CashierLayoutProps {
     onNewOrder?: (order: Transaction) => void;
 }
 
-export default ({ children, breadcrumbs, onNewOrder, ...props }: CashierLayoutProps) => {
+export default function CashierLayout({ children, breadcrumbs, onNewOrder, ...props }: CashierLayoutProps) {
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
         return localStorage.getItem('soundIsEnabled') === 'true';
@@ -125,4 +125,4 @@ export default ({ children, breadcrumbs, onNewOrder, ...props }: CashierLayoutPr
             </Dialog>
         </LithiumLayoutTemplate>
     );
-};
+}
