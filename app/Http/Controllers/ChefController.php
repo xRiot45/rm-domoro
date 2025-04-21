@@ -13,14 +13,14 @@ class ChefController extends Controller
     public function index(): Response
     {
         $chefs = Chef::with('user')->get();
-        return Inertia::render('admin/users-management/chefs/index', [
+        return Inertia::render('admin/pages/users-management/chefs/index', [
             'data' => $chefs,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/users-management/chefs/pages/create');
+        return Inertia::render('admin/pages/users-management/chefs/pages/create');
     }
 
     public function store(ChefRequest $request): RedirectResponse
@@ -41,7 +41,7 @@ class ChefController extends Controller
     public function edit(int $id): Response
     {
         $chef = Chef::findOrFail($id);
-        return Inertia::render('admin/users-management/chefs/pages/edit', [
+        return Inertia::render('admin/pages/users-management/chefs/pages/edit', [
             'chef' => $chef,
         ]);
     }

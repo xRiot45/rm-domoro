@@ -29,14 +29,14 @@ class UserController extends Controller
                 ];
             });
 
-        return Inertia::render('admin/users-management/all-users/index', [
+        return Inertia::render('admin/pages/users-management/all-users/index', [
             'data' => $users,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/users-management/all-users/pages/create');
+        return Inertia::render('admin/pages/users-management/all-users/pages/create');
     }
 
     public function store(UserRequest $request): RedirectResponse
@@ -58,7 +58,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->getRoleNames();
-        return Inertia::render('admin/users-management/all-users/pages/edit', [
+        return Inertia::render('admin/pages/users-management/all-users/pages/edit', [
             'user' => $user,
         ]);
     }

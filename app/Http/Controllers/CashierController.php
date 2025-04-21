@@ -13,14 +13,14 @@ class CashierController extends Controller
     public function index(): Response
     {
         $cashiers = Cashier::with('user')->get();
-        return Inertia::render('admin/users-management/cashiers/index', [
+        return Inertia::render('admin/pages/users-management/cashiers/index', [
             'data' => $cashiers,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/users-management/cashiers/pages/create');
+        return Inertia::render('admin/pages/users-management/cashiers/pages/create');
     }
 
     public function store(CashierRequest $request): RedirectResponse
@@ -42,7 +42,7 @@ class CashierController extends Controller
     public function edit(int $id): Response
     {
         $cashier = Cashier::findOrFail($id);
-        return Inertia::render('admin/users-management/cashiers/pages/edit', [
+        return Inertia::render('admin/pages/users-management/cashiers/pages/edit', [
             'cashier' => $cashier,
         ]);
     }

@@ -13,14 +13,14 @@ class CourierController extends Controller
     public function index(): Response
     {
         $couriers = Courier::with('user')->get();
-        return Inertia::render('admin/users-management/couriers/index', [
+        return Inertia::render('admin/pages/users-management/couriers/index', [
             'data' => $couriers,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/users-management/couriers/pages/create');
+        return Inertia::render('admin/pages/users-management/couriers/pages/create');
     }
 
     public function store(CourierRequest $request): RedirectResponse
@@ -39,7 +39,7 @@ class CourierController extends Controller
     public function edit(int $id): Response
     {
         $courier = Courier::findOrFail($id);
-        return Inertia::render('admin/users-management/couriers/pages/edit', [
+        return Inertia::render('admin/pages/users-management/couriers/pages/edit', [
             'courier' => $courier,
         ]);
     }
