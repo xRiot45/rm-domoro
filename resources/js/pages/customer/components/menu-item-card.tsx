@@ -21,8 +21,6 @@ export default function MenuItemCard({ menuItems }: MenuItemCardProps) {
     const { addMenuToCart } = useCart();
     const [selectedItem, setSelectedItem] = useState<MenuItems | null>(null);
 
-    console.log(menuItems);
-
     const [wishlistItems, setWishlistItems] = useState<number[]>(props.auth?.wishlist || []);
 
     useEffect(() => {

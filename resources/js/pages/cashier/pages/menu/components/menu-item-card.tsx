@@ -1,8 +1,11 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { MenuItems } from '@/models/menu-items';
 import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 import { useCart } from '../hooks/use-cart';
 
 interface MenuItemCardProps {
@@ -11,6 +14,8 @@ interface MenuItemCardProps {
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ menuItems }) => {
     const { addMenuToCart } = useCart();
+
+    const [selectedItem, setSelectedItem] = useState<MenuItems | null>(null);
 
     return (
         <>
@@ -31,7 +36,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ menuItems }) => {
                             </div>
                         </div>
                         <div className="pt-3">
-                            <div className="flex justify-between">
+                            <div className="flex cursor-pointer justify-between" onClick={() => setSelectedItem(item)}>
                                 <div>
                                     <h1 className="mb-1 truncate font-bold">{item?.name}</h1>
                                     <span className="flex items-center text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -62,6 +67,49 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ menuItems }) => {
                         </div>
                     </div>
                 ))}
+
+                <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
+                    <DialogContent className="overflow-hidden rounded-xl border-none p-0 shadow-none dark:bg-zinc-900">
+                        {selectedItem && (
+                            <div className="flex flex-col bg-white md:flex-row dark:bg-zinc-900">
+                                {/* Gambar */}
+                                <div className="w-full md:w-1/2">
+                                    <img src={`${selectedItem.image_url}`} alt={selectedItem.name} className="h-full w-full object-cover" />
+                                </div>
+
+                                {/* Detail */}
+                                <div className="flex w-full flex-col justify-between space-y-4 p-6 md:w-1/2">
+                                    <div className="space-y-4">
+                                        <DialogHeader className="text-start">
+                                            <DialogTitle className="text-xl font-bold text-black dark:text-white">{selectedItem.name}</DialogTitle>
+                                            <DialogDescription className="text-muted-foreground text-sm dark:text-zinc-400">
+                                                {selectedItem.menu_category.name}
+                                            </DialogDescription>
+                                        </DialogHeader>
+
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-lg font-semibold text-black dark:text-white">
+                                                {formatCurrency(Number(selectedItem.price))}
+                                            </p>
+                                            <Badge variant={selectedItem.status === 'tersedia' ? 'default' : 'destructive'} className="capitalize">
+                                                {selectedItem.status}
+                                            </Badge>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="mb-2 text-sm font-semibold text-gray-700 dark:text-zinc-200">Bahan-Bahan:</h4>
+                                            <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-zinc-400">
+                                                {selectedItem.ingredients.map((ingredient, index) => (
+                                                    <li key={index}>{ingredient}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
             </div>
         </>
     );
