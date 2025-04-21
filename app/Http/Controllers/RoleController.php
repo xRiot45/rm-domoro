@@ -13,14 +13,14 @@ class RoleController extends Controller
     public function index(): Response
     {
         $roles = Role::all();
-        return Inertia::render('admin/access-control-management/roles/index', [
+        return Inertia::render('admin/pages/access-control-management/roles/index', [
             'data' => $roles,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/access-control-management/roles/pages/create');
+        return Inertia::render('admin/pages/access-control-management/roles/pages/create');
     }
 
     public function store(RoleRequest $request): RedirectResponse
@@ -36,7 +36,7 @@ class RoleController extends Controller
     public function edit(int $id): Response
     {
         $role = Role::findOrFail($id);
-        return Inertia::render('admin/access-control-management/roles/pages/edit', [
+        return Inertia::render('admin/pages/access-control-management/roles/pages/edit', [
             'role' => $role,
         ]);
     }

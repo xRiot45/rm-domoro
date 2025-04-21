@@ -13,14 +13,14 @@ class PermissionController extends Controller
     public function index(): Response
     {
         $permissions = Permission::all();
-        return Inertia::render('admin/access-control-management/permissions/index', [
+        return Inertia::render('admin/pages/access-control-management/permissions/index', [
             'data' => $permissions,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/access-control-management/permissions/pages/create');
+        return Inertia::render('admin/pages/access-control-management/permissions/pages/create');
     }
 
     public function store(PermissionRequest $request): RedirectResponse
@@ -36,7 +36,7 @@ class PermissionController extends Controller
     public function edit(int $id): Response
     {
         $permission = Permission::findOrFail($id);
-        return Inertia::render('admin/access-control-management/permissions/pages/edit', [
+        return Inertia::render('admin/pages/access-control-management/permissions/pages/edit', [
             'permission' => $permission,
         ]);
     }

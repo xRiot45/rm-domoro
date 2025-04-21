@@ -14,14 +14,14 @@ class ManageRolePermissionController extends Controller
     public function index(): Response
     {
         $role_has_permissions = Role::with('permissions:id,name')->get();
-        return Inertia::render('admin/access-control-management/manage-role-permissions/index', [
+        return Inertia::render('admin/pages/access-control-management/manage-role-permissions/index', [
             'data' => $role_has_permissions,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/access-control-management/manage-role-permissions/pages/create');
+        return Inertia::render('admin/pages/access-control-management/manage-role-permissions/pages/create');
     }
 
     public function store(ManageRolePermissionRequest $request): RedirectResponse
@@ -37,7 +37,7 @@ class ManageRolePermissionController extends Controller
     public function edit(int $id): Response
     {
         $role_has_permissions = Role::with('permissions:id,name')->findOrFail($id);
-        return Inertia::render('admin/access-control-management/manage-role-permissions/pages/edit', [
+        return Inertia::render('admin/pages/access-control-management/manage-role-permissions/pages/edit', [
             'role_has_permissions' => $role_has_permissions,
         ]);
     }
