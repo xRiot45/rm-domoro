@@ -21,4 +21,10 @@ interface Fee {
     };
 }
 
-export type { Fee };
+interface FeeItem {
+    id: number;
+    type: string;
+    amount: number;
+}
+
+export type { Fee, FeeItem };

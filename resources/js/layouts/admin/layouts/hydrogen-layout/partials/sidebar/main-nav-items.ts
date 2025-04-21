@@ -81,7 +81,7 @@ const mainNavItems: NavGroup[] = [
         items: [
             {
                 title: 'Biaya',
-                href: '/admin/menu-management/fee',
+                href: '/admin/settings/fee',
                 icon: 'tabler:cash',
             },
         ],

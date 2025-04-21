@@ -7,6 +7,7 @@ use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeeController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuItemController;
@@ -228,6 +229,19 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
                 });
         });
+
+        // Settings
+        Route::prefix('settings')
+            ->name('settings.')
+            ->group(function () {
+                Route::prefix('fee')
+                    ->name('fee.')
+                    ->controller(FeeController::class)
+                    ->group(function () {
+                        Route::get('/', 'index_admin')->name('index');
+                        Route::put('/{id}', 'update')->name('update');
+                    });
+            });
     });
 
 // Route for chef
@@ -261,7 +275,7 @@ Route::middleware(['auth', 'verified', 'role:courier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_courier')->name('index_courier');
-                Route::put('/{transactionId}',  'takeOrderCourier')->name('takeOrderCourier');
+                Route::put('/{transactionId}', 'takeOrderCourier')->name('takeOrderCourier');
                 Route::put('/{id}/ready-to-delivery', 'readyForDelivery')->name('readyForDelivery');
                 Route::put('/{id}/delivering', 'deliveringOrder')->name('deliveringOrder');
                 Route::put('/{id}/complete', 'orderCompleted')->name('orderCompleted');
