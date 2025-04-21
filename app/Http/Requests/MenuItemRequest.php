@@ -20,6 +20,7 @@ class MenuItemRequest extends FormRequest
             'price' => 'sometimes|required|numeric',
             'image_url' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status' => ['sometimes', 'required', new Enum(MenuItemStatusEnum::class)],
+            'ingredients' => 'sometimes|nullable',
             'menu_category_id' => 'sometimes|required|exists:menu_categories,id',
         ];
     }

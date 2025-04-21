@@ -37,6 +37,7 @@ export default function EditPage({ menu_item }: { menu_item: MenuItems }) {
         price: menu_item?.price,
         image_url: menu_item?.image_url,
         status: menu_item?.status,
+        ingredients: menu_item?.ingredients,
         menu_category_id: menu_item?.menu_category_id,
     });
 
@@ -49,9 +50,14 @@ export default function EditPage({ menu_item }: { menu_item: MenuItems }) {
 
         const formData = new FormData();
         Object.entries(data).forEach(([key, value]) => {
-            if (value !== menu_item[key as keyof MenuItems]) {
+            const originalValue = menu_item[key as keyof MenuItems];
+            if (value !== originalValue) {
                 if (key === 'image_url' && value instanceof File) {
                     formData.append(key, value);
+                } else if (key === 'ingredients' && Array.isArray(value)) {
+                    value.forEach((ingredient, index) => {
+                        formData.append(`ingredients[${index}]`, ingredient);
+                    });
                 } else {
                     formData.append(key, String(value));
                 }
@@ -159,6 +165,43 @@ export default function EditPage({ menu_item }: { menu_item: MenuItems }) {
                             </SelectContent>
                         </Select>
                         <InputError message={errors.status} className="mt-2" />
+                    </div>
+
+                    <div id="ingredients">
+                        <Label htmlFor="ingredients">Bahan - Bahan</Label>
+                        <div className="mt-2 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                {data?.ingredients.map((ingredient, index) => (
+                                    <div key={index} className="flex items-center space-x-2">
+                                        <Input
+                                            type="text"
+                                            value={ingredient}
+                                            onChange={(e) => {
+                                                const newIngredients = [...data.ingredients];
+                                                newIngredients[index] = e.target.value;
+                                                setData('ingredients', newIngredients);
+                                            }}
+                                            placeholder="Masukkan bahan-bahan"
+                                            className="flex-1 shadow-none"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => {
+                                                const newIngredients = [...data.ingredients];
+                                                newIngredients.splice(index, 1);
+                                                setData('ingredients', newIngredients);
+                                            }}
+                                        >
+                                            <Icon icon="tabler:trash" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <Button type="button" onClick={() => setData('ingredients', [...data.ingredients, ''])}>
+                                Tambah Bahan
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="mt-4 flex justify-end space-x-3">

@@ -13,6 +13,7 @@ interface MenuItems {
     status: MenuItemStatusEnum;
     menu_category_id: number;
     menu_category: MenuCategory;
+    ingredients: string[];
     created_at?: string;
     updated_at?: string;
 }
@@ -22,6 +23,7 @@ interface MenuItemForm {
     price: number;
     image_url: string | File | null;
     status: MenuItemStatusEnum;
+    ingredients: string[];
     menu_category_id: number;
 }
 

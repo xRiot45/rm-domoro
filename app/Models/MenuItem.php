@@ -16,11 +16,13 @@ class MenuItem extends Model
         'price',
         'image_url',
         'status',
+        'ingredients',
         'menu_category_id',
     ];
 
     protected $casts = [
-        'status' => MenuItemStatusEnum::class
+        'status' => MenuItemStatusEnum::class,
+        'ingredients' => 'array',
     ];
 
     public function menuCategory(): BelongsTo

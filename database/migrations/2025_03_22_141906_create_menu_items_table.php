@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('price');
             $table->text('image_url');
             $table->enum('status', MenuItemStatusEnum::values())->default(MenuItemStatusEnum::Available->value);
+            $table->json('ingredients')->nullable();
             $table->foreignId('menu_category_id')->constrained('menu_categories')->cascadeOnDelete();
             $table->timestamps();
         });

@@ -37,6 +37,7 @@ export default function CreateMenuItemPage() {
         price: 0,
         image_url: null,
         status: MenuItemStatusEnum.AVAILABLE,
+        ingredients: [],
         menu_category_id: 0,
     });
 
@@ -51,6 +52,7 @@ export default function CreateMenuItemPage() {
         formData.append('name', data.name);
         formData.append('price', data.price.toString());
         formData.append('status', data.status);
+        formData.append('ingredients', JSON.stringify(data.ingredients));
         formData.append('menu_category_id', data.menu_category_id.toString());
 
         if (data.image_url) {
@@ -155,6 +157,43 @@ export default function CreateMenuItemPage() {
                             </SelectContent>
                         </Select>
                         <InputError message={errors.status} className="mt-2" />
+                    </div>
+
+                    <div id="ingredients">
+                        <Label htmlFor="ingredients">Bahan - Bahan</Label>
+                        <div className="mt-2 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                {data?.ingredients.map((ingredient, index) => (
+                                    <div key={index} className="flex items-center space-x-2">
+                                        <Input
+                                            type="text"
+                                            value={ingredient}
+                                            onChange={(e) => {
+                                                const newIngredients = [...data.ingredients];
+                                                newIngredients[index] = e.target.value;
+                                                setData('ingredients', newIngredients);
+                                            }}
+                                            placeholder="Masukkan bahan-bahan"
+                                            className="flex-1 shadow-none"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => {
+                                                const newIngredients = [...data.ingredients];
+                                                newIngredients.splice(index, 1);
+                                                setData('ingredients', newIngredients);
+                                            }}
+                                        >
+                                            <Icon icon="tabler:trash" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <Button type="button" onClick={() => setData('ingredients', [...data.ingredients, ''])}>
+                                Tambah Bahan
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="mt-4 flex justify-end space-x-3">
