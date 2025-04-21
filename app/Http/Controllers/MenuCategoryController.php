@@ -13,14 +13,14 @@ class MenuCategoryController extends Controller
     public function index(): Response
     {
         $menu_categories = MenuCategory::all();
-        return Inertia::render('admin/menu-management/menu-categories/index', [
+        return Inertia::render('admin/pages/menu-management/menu-categories/index', [
             'data' => $menu_categories,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('admin/menu-management/menu-categories/pages/create');
+        return Inertia::render('admin/pages/menu-management/menu-categories/pages/create');
     }
 
     public function store(MenuCategoryRequest $request): RedirectResponse
@@ -36,7 +36,7 @@ class MenuCategoryController extends Controller
     public function edit(int $id): Response
     {
         $menu_category = MenuCategory::findOrFail($id);
-        return Inertia::render('admin/menu-management/menu-categories/pages/edit', [
+        return Inertia::render('admin/pages/menu-management/menu-categories/pages/edit', [
             'menu_category' => $menu_category,
         ]);
     }

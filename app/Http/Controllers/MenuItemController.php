@@ -18,7 +18,7 @@ class MenuItemController extends Controller
 
     public function index_admin(): Response
     {
-        return Inertia::render('admin/menu-management/menu-items/index', [
+        return Inertia::render('admin/pages/menu-management/menu-items/index', [
             'data' => $this->getDataMenuItems(),
         ]);
     }
@@ -39,7 +39,7 @@ class MenuItemController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('admin/menu-management/menu-items/pages/create');
+        return Inertia::render('admin/pages/menu-management/menu-items/pages/create');
     }
 
     public function store(MenuItemRequest $request): RedirectResponse
@@ -64,7 +64,7 @@ class MenuItemController extends Controller
     public function edit(int $id): Response
     {
         $menu_item = MenuItem::findOrFail($id);
-        return Inertia::render('admin/menu-management/menu-items/pages/edit', [
+        return Inertia::render('admin/pages/menu-management/menu-items/pages/edit', [
             'menu_item' => $menu_item,
         ]);
     }
