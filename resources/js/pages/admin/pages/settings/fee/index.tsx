@@ -34,8 +34,8 @@ export default function FeePage({ data }: FeePageProps) {
                 <Head title="Fee" />
                 <div className="mb-2 flex flex-wrap justify-between space-y-2 p-4">
                     <div>
-                        <h2 className="text-2xl font-black tracking-tight text-gray-700 dark:text-gray-200">Daftar Karyawan Kurir</h2>
-                        <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola data semua karyawan kurir yang terdaftar di aplikasi anda</p>
+                        <h2 className="text-2xl font-black tracking-tight text-gray-700 dark:text-gray-200">Daftar Biaya</h2>
+                        <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola data biaya untuk aplikasi anda.</p>
                     </div>
                     <ButtonPartials />
                 </div>
