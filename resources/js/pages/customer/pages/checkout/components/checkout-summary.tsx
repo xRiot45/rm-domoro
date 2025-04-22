@@ -108,8 +108,8 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                             <DialogTitle>Bayar dengan Tunai</DialogTitle>
                         </DialogHeader>
                         <p className="text-sm">
-                            Mohon siapkan uang tunai yang pas sejumlah <strong className="font-bold italic">{formatCurrency(finalTotal)}</strong> saat
-                            kurir tiba untuk mempercepat proses pembayaran.
+                            Mohon siapkan uang tunai yang pas sejumlah <strong className="font-bold italic">{formatCurrency(finalTotal)}</strong>{' '}
+                            untuk mempercepat proses pembayaran.
                         </p>
                         <DialogFooter className="mt-4">
                             <Button
