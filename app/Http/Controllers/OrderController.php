@@ -118,6 +118,12 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Menampilkan detail pesanan pelanggan.
+     *
+     * @param int $transactionId ID transaksi.
+     * @return Response
+     */
     public function showOrderCustomer(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
@@ -126,6 +132,12 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Menampilkan halaman cetak nota pesanan untuk kasir.
+     *
+     * @param int $transactionId ID transaksi.
+     * @return Response
+     */
     public function showInvoiceCashier(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);

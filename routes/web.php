@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CheckoutController;
@@ -227,6 +228,18 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     Route::put('/edit/{id}', 'update')->name('update');
                     Route::delete('/delete/{id}', 'destroy')->name('destroy');
                     Route::delete('/delete-all', 'destroy_all')->name('destroy_all');
+                });
+        });
+
+        // Order Management
+        Route::prefix('order-management')->group(function () {
+            // All Orders
+            Route::prefix('all-orders')
+                ->name('all-orders.')
+                ->controller(AdminOrderController::class)
+                ->group(function () {
+                    Route::get('/', 'allOrders')->name('index');
+                    Route::get('/{transaction}', 'orderDetails')->name('orderDetails');
                 });
         });
 
