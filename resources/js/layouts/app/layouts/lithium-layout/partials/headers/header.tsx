@@ -3,14 +3,11 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useInitials } from '@/hooks/use-initials';
-import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
-import mainNavItems from './main-nav-items';
 import { CustomerMenuContent } from './menu-content';
 import rightNavItems from './right-nav-items';
 
