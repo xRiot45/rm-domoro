@@ -342,7 +342,9 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_cashier')->name('index_cashier');
-                Route::put('/{transactionId}', 'takeOrderCashier')->name('takeOrderCashier');
+                Route::put('/{transactionId}/update', 'update')->name('update');
+                Route::get('/{transactionId}', 'edit')->name('edit');
+                Route::put('/{transactionId}/take-order-cashier', 'takeOrderCashier')->name('takeOrderCashier');
                 Route::put('/{id}/send-to-chef', 'sendOrderToChef')->name('sendOrderToChef');
                 Route::put('/{id}/send-to-courier', 'sendOrderToCourier')->name('sendOrderToCourier');
                 Route::put('/{id}/ready-to-serve', 'readyToServe')->name('readyToServe');

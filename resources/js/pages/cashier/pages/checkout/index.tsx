@@ -128,7 +128,7 @@ export default function CheckoutPage({ data, fees }: CheckoutPageProps) {
                                         <div className="flex w-full items-center justify-between">
                                             <div className="space-y-1">
                                                 <h3 className="text-lg font-semibold">{item.menu_item?.name}</h3>
-                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-200">Qty: {item.quantity}</p>
+                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-200">Jumlah : {item.quantity}</p>
                                                 <p className="text-sm font-medium text-gray-500 dark:text-gray-200">
                                                     {formatCurrency(item.unit_price)} / Menu
                                                 </p>

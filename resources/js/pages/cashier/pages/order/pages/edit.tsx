@@ -1,34 +1,31 @@
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentTypeEnum } from '@/enums/payment-type';
 import CashierLayout from '@/layouts/cashier/layout';
-import { Chef } from '@/models/chef';
-import { Courier } from '@/models/courier';
+import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
 import { formatOrderType } from '@/utils/format-order-type';
 import { Icon } from '@iconify/react';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { toast } from 'sonner';
 
 export default function EditPage({ data }: { data: Transaction }) {
-    const { chefs } = usePage<{ chefs: Chef[] }>().props;
-    const { couriers } = usePage<{ couriers: Courier[] }>().props;
-
     const {
         data: formData,
+        errors,
         setData,
         processing,
         reset,
     } = useForm({
-        chef_id: 0,
-        courier_id: 0,
+        cash_received: 0,
     });
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
@@ -44,7 +41,7 @@ export default function EditPage({ data }: { data: Transaction }) {
                 });
                 reset();
             },
-            onError: (errors) => {
+            onError: () => {
                 toast.error('Failed', {
                     description: 'Pesanan Gagal Diedit!',
                     action: {
@@ -123,7 +120,7 @@ export default function EditPage({ data }: { data: Transaction }) {
                         )}
 
                         <p className="capitalize">
-                            <strong>Waktu Order Dibuat :</strong> {formatDate(data.created_at ?? '-')}
+                            <strong>Waktu & Tanggal Checkout Pesanan :</strong> {formatDate(data.checked_out_at ?? '-')}
                         </p>
 
                         <p className="capitalize">
@@ -207,40 +204,21 @@ export default function EditPage({ data }: { data: Transaction }) {
                 </section>
 
                 <form onSubmit={handleSubmit} className="mt-8">
-                    <section className="space-y-4">
-                        <div id="chef_id">
-                            <Label htmlFor="chef_id">Chef / Koki</Label>
-                            <Select onValueChange={(value) => setData('chef_id', parseInt(value))}>
-                                <SelectTrigger className="mt-2 w-full">
-                                    <SelectValue placeholder="Pilih Chef / Koki" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {chefs.map((item) => (
-                                        <SelectItem key={item.id} value={String(item.id)}>
-                                            {item.user.full_name} - {item.user.phone_number}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                    <section>
+                        <div id="cash_received">
+                            <Label htmlFor="cash_received">Uang Tunai Yang Diterima</Label>
+                            <Input
+                                id="price"
+                                type="number"
+                                tabIndex={2}
+                                autoComplete="price"
+                                value={formData.cash_received}
+                                onChange={(e) => setData('cash_received', parseInt(e.target.value))}
+                                placeholder="Masukkan uang tunai yang diterima"
+                                className={cn('mt-2', errors.cash_received && 'border border-red-500')}
+                            />
+                            <InputError message={errors.cash_received} className="mt-2" />
                         </div>
-
-                        {data?.order_type === OrderTypeEnum.DELIVERY && (
-                            <div id="courier_id">
-                                <Label htmlFor="courier_id">Courier / Kurir</Label>
-                                <Select onValueChange={(value) => setData('courier_id', parseInt(value))}>
-                                    <SelectTrigger className="mt-2 w-full">
-                                        <SelectValue placeholder="Pilih Courier / Kurir" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {couriers.map((item) => (
-                                            <SelectItem key={item.id} value={String(item.id)}>
-                                                {item.user.full_name} - {item.user.phone_number}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        )}
                     </section>
 
                     <div className="mt-4 flex justify-end space-x-3">

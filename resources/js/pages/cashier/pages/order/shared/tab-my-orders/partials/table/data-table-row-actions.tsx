@@ -8,8 +8,10 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { OrderStatusEnum } from '@/enums/order-status';
 import { OrderTypeEnum } from '@/enums/order-type';
+import { PaymentStatusEnum } from '@/enums/payment-status';
 import { Transaction } from '@/models/transaction';
 import { Icon } from '@iconify/react';
 import { Link, router } from '@inertiajs/react';
@@ -29,9 +31,12 @@ export function DataTableRowActions({
     const [showDialogCourier, setShowDialogCourier] = useState<boolean>(false);
     const [isOrderSentToChef, setIsOrderSentToChef] = useState(!!row?.original?.order_sent_to_chef_at);
     const [isOrderSentToCourier, setIsOrderSentToCourier] = useState(!!row?.original?.order_sent_to_courier_at);
+    const [showDialogPaymentCash, setShowDialogPaymentCash] = useState<boolean>(false);
+    const [cashReceived, setCashReceived] = useState<number | string>('');
 
     const orderIsDelivery = row?.original?.order_type === OrderTypeEnum.DELIVERY;
     const orderIsDineIn = row?.original?.order_type === OrderTypeEnum.DINEIN;
+    const orderIsPickup = row?.original?.order_type === OrderTypeEnum.PICKUP;
 
     const lastStatusOrder = row.original.order_status.at(-1)?.status;
 
@@ -173,6 +178,38 @@ export function DataTableRowActions({
         );
     };
 
+    const handlePaymentCash = () => {
+        router.put(
+            route('cashier.order.update', { id: row?.original?.id }),
+            { cash_received: cashReceived },
+            {
+                onSuccess: () => {
+                    toast.success('Success', {
+                        description: 'Pembayaran Tunai Berhasil',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+
+                    onUpdateStatusOrder({
+                        ...row.original,
+                        order_status: [...row.original.order_status, { status: PaymentStatusEnum.PAID }],
+                    });
+                },
+                onError: () => {
+                    toast.error('Error', {
+                        description: 'Pembayaran Tunai Gagal',
+                        action: {
+                            label: 'Tutup',
+                            onClick: () => toast.dismiss(),
+                        },
+                    });
+                },
+            },
+        );
+    };
+
     return (
         <>
             <DropdownMenu>
@@ -182,7 +219,37 @@ export function DataTableRowActions({
                         <span className="sr-only">Open menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuContent align="end" className="w-[300px]">
+                    {/* <Link href={route('cashier.order.edit', { id: row.original.id })}>
+                        <DropdownMenuItem className="cursor-pointer">
+                            Edit Data
+                            <DropdownMenuShortcut>
+                                <Icon icon={'material-symbols:edit'} />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                    </Link> */}
+
+                    {(orderIsPickup || orderIsDineIn) && (
+                        <>
+                            <DropdownMenuItem className="cursor-pointer" onClick={() => setShowDialogPaymentCash(true)}>
+                                Masukkan Pembayaran Tunai
+                                <DropdownMenuShortcut>
+                                    <Icon icon={'material-symbols:attach-money'} />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    )}
+
+                    <DropdownMenuItem className="cursor-pointer">
+                        Lihat Detail Pesanan
+                        <DropdownMenuShortcut>
+                            <Icon icon={'material-symbols:info'} />
+                        </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+
                     {!isOrderSentToChef && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={() => setShowDialogChef(true)}>
@@ -217,7 +284,7 @@ export function DataTableRowActions({
                         </>
                     )}
 
-                    {lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
+                    {(orderIsPickup || orderIsDineIn) && lastStatusOrder === OrderStatusEnum.COOKED && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={handleOrderCompleted}>
                                 Pesanan Selesai
@@ -228,6 +295,7 @@ export function DataTableRowActions({
                             <DropdownMenuSeparator />
                         </>
                     )}
+
                     <Link href={route('cashier.order.showInvoiceCashier', { id: row.original.id })}>
                         <DropdownMenuItem className="cursor-pointer">
                             Lihat Invoice
@@ -274,6 +342,33 @@ export function DataTableRowActions({
                             }}
                         >
                             Saya Mengerti & Kirim Pesanan Ke Kurir
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={showDialogPaymentCash} onOpenChange={setShowDialogPaymentCash}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Masukkan Uang yang Diterima</DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription className="text-sm">
+                        Pastikan jumlah uang yang diterima sesuai dengan jumlah total pesanan nya
+                    </DialogDescription>
+
+                    <div className="mt-4">
+                        <Input
+                            type="number"
+                            placeholder="Masukkan jumlah uang pelanggan"
+                            value={cashReceived}
+                            onChange={(e) => setCashReceived(e.target.value)}
+                            className="w-full"
+                        />
+                    </div>
+
+                    <DialogFooter className="mt-4">
+                        <Button onClick={handlePaymentCash} disabled={!cashReceived || isNaN(Number(cashReceived))}>
+                            Selesaikan Pesanan
                         </Button>
                     </DialogFooter>
                 </DialogContent>

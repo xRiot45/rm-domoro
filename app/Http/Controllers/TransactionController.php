@@ -71,11 +71,24 @@ class TransactionController extends Controller
 
             $finalTotal = $subtotal + $deliveryFee + $serviceCharge - $discount + $tax;
 
-            if ($paymentMethod === PaymentMethodEnum::Cash && $transaction->cashier_id !== null && $request->cash_received < $finalTotal) {
+            if (
+                $paymentMethod === PaymentMethodEnum::Cash &&
+                $transaction->cashier_id !== null &&
+                $request->order_type !== OrderTypeEnum::Delivery->value &&
+                $request->order_type !== OrderTypeEnum::Pickup->value &&
+                $request->cash_received < $finalTotal
+            ) {
                 return redirect()
                     ->back()
                     ->withErrors(['cash_received' => 'Uang Anda kurang.']);
             }
+
+            $paymentStatus = PaymentStatusEnum::PENDING;
+
+            if ($paymentMethod === PaymentMethodEnum::Cash && $request->cash_received >= $finalTotal) {
+                $paymentStatus = PaymentStatusEnum::PAID;
+            }
+
 
             $cashReceived = $transaction->cashier_id !== null ? $request->cash_received : 0;
             $change = $cashReceived !== 0 ? $cashReceived - $finalTotal : 0;
@@ -83,7 +96,7 @@ class TransactionController extends Controller
             $transaction->update([
                 'order_type' => $orderType,
                 'payment_method' => $paymentMethod,
-                'payment_status' => $paymentMethod === PaymentMethodEnum::Cash ? ($transaction->cashier_id !== null ? PaymentStatusEnum::PAID : PaymentStatusEnum::PENDING) : PaymentStatusEnum::PENDING,
+                'payment_status' => $paymentStatus,
                 'cash_received' => $cashReceived,
                 'change' => $change,
                 'table_number' => $request->table_number,
@@ -121,6 +134,7 @@ class TransactionController extends Controller
             }
         });
     }
+
 
     public function payWithMidtrans(TransactionRequest $request, Transaction $transaction): RedirectResponse
     {

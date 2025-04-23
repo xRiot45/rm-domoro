@@ -114,26 +114,31 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                     </div>
                 )}
 
-                {formData.payment_method === PaymentTypeEnum.CASH && (
-                    <div className="flex justify-between">
-                        <span>Jumlah Uang Diterima</span>
-                        <Input
-                            type="number"
-                            className="w-44 border text-right shadow-none"
-                            value={formData.cash_received || ''}
-                            placeholder="0"
-                            onChange={(e) => setData('cash_received', e.target.value ? Number(e.target.value) : 0)}
-                        />
-                    </div>
-                )}
+                {formData.payment_method === PaymentTypeEnum.CASH &&
+                    formData.order_type !== OrderTypeEnum.DELIVERY &&
+                    formData.order_type !== OrderTypeEnum.PICKUP && (
+                        <div className="flex justify-between">
+                            <span>Jumlah Uang Diterima</span>
+                            <Input
+                                type="number"
+                                className="w-44 border text-right shadow-none"
+                                value={formData.cash_received || ''}
+                                placeholder="0"
+                                onChange={(e) => setData('cash_received', e.target.value ? Number(e.target.value) : 0)}
+                            />
+                        </div>
+                    )}
 
-                {formData.payment_method === PaymentTypeEnum.CASH && formData.cash_received !== null && (
-                    <SummaryRow
-                        label="Kembalian"
-                        value={formData.cash_received >= finalTotal ? formatCurrency(formData.cash_received - finalTotal) : formatCurrency(0)}
-                        isBold
-                    />
-                )}
+                {formData.payment_method === PaymentTypeEnum.CASH &&
+                    formData.order_type !== OrderTypeEnum.DELIVERY &&
+                    formData.order_type !== OrderTypeEnum.PICKUP &&
+                    formData.cash_received !== null && (
+                        <SummaryRow
+                            label="Kembalian"
+                            value={formData.cash_received >= finalTotal ? formatCurrency(formData.cash_received - finalTotal) : formatCurrency(0)}
+                            isBold
+                        />
+                    )}
 
                 <Textarea
                     className="mt-4 h-28"
@@ -165,7 +170,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                         </DialogHeader>
                         <DialogDescription className="text-sm">
                             Cek semua data pembayaran diatas dan pastikan sudah benar. Jika sudah benar, klik tombol dibawah ini untuk melanjutkan
-                            pembayaran
+                            proses nya
                         </DialogDescription>
                         <DialogFooter className="mt-4">
                             <Button
@@ -174,7 +179,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                                     setShowCashDialog(false);
                                 }}
                             >
-                                Saya Mengerti & Lanjutkan Pembayaran
+                                Saya Mengerti & Lanjutkan Proses
                             </Button>
                         </DialogFooter>
                     </DialogContent>
