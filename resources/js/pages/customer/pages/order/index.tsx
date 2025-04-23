@@ -52,34 +52,36 @@ export default function OrderPage({ myOrders }: OrderPageProps) {
 
                                                 {/* Menu Cell */}
                                                 <TableCell>
-                                                    <div className="flex flex-col gap-3 space-y-4">
-                                                        {order.transaction_items.map((item) => (
-                                                            <div key={item.id} className="flex items-center gap-3">
-                                                                {item.menu_item?.image_url && (
-                                                                    <img
-                                                                        src={`${item.menu_item.image_url}`}
-                                                                        alt={item.menu_item.name}
-                                                                        className="h-16 w-16 shrink-0 rounded-md object-cover"
-                                                                    />
-                                                                )}
-                                                                <div className="flex flex-col">
-                                                                    <span className="font-medium">{item.menu_item?.name ?? '-'}</span>
-                                                                    <span className="text-muted-foreground text-sm">
-                                                                        {item.menu_item?.menu_category?.name ?? '-'}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        ))}
+                                                    <div className="flex items-start gap-3">
+                                                        {order.transaction_items[0]?.menu_item?.image_url && (
+                                                            <img
+                                                                src={`${order.transaction_items[0].menu_item.image_url}`}
+                                                                alt={order.transaction_items[0].menu_item?.name}
+                                                                className="h-16 w-16 rounded-md object-cover"
+                                                            />
+                                                        )}
+                                                        <div className="flex flex-col justify-center">
+                                                            <h1 className="font-bold">{order.transaction_items[0]?.menu_item?.name ?? '-'}</h1>
+                                                            <span className="text-muted-foreground text-sm">
+                                                                {order.transaction_items[0]?.menu_item?.menu_category?.name ?? '-'}
+                                                            </span>
+                                                            {order.transaction_items.length > 1 && (
+                                                                <span className="text-muted-foreground mt-1 text-xs">
+                                                                    dan {order.transaction_items.length - 1} menu lainnya
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </TableCell>
 
                                                 {/* Qty Cell */}
-                                                <TableCell className="text-center">
-                                                    <div className="flex flex-col space-y-18">
-                                                        {order.transaction_items.map((item) => (
-                                                            <span key={item.id}>{item.quantity}x</span>
-                                                        ))}
-                                                    </div>
+                                                <TableCell className="text-center align-top">
+                                                    <span className="font-medium">{order.transaction_items[0]?.quantity ?? 0}x</span>
+                                                    {order.transaction_items.length > 1 && (
+                                                        <div className="text-muted-foreground mt-1 text-xs">
+                                                            +{order.transaction_items.length - 1} item
+                                                        </div>
+                                                    )}
                                                 </TableCell>
 
                                                 {/* Status Pembayaran Cell*/}
@@ -104,7 +106,7 @@ export default function OrderPage({ myOrders }: OrderPageProps) {
                                                 <TableCell>
                                                     <Link href={route('order.show', { id: order.id })}>
                                                         <Button variant="outline" size="sm">
-                                                            Detail
+                                                            Lihat Detail Pesanan
                                                         </Button>
                                                     </Link>
                                                 </TableCell>

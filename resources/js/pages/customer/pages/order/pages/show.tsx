@@ -125,7 +125,7 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
 
                                 <div>
                                     <p className="mb-4 font-bold">Menu Pesanan</p>
-                                    <ScrollArea className="s scroll-print h-48 pr-4">
+                                    <ScrollArea className="s scroll-print h-64 pr-4">
                                         {data.transaction_items.map((item, index) => (
                                             <div key={index} className="mb-4 flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
