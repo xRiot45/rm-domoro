@@ -12,13 +12,8 @@ const validateFormCash = ({ formData }: { formData: TransactionForm }) => {
         showErrorToast('Nama penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Takeway.');
         return false;
     }
-    if (
-        order_type === OrderTypeEnum.DELIVERY &&
-        (!shipping_address.trim() || !recipient.trim() || !recipient_phone_number.trim())
-    ) {
-        showErrorToast(
-            'Alamat pengiriman, nama penerima, nomor telepon penerima harus diisi untuk pemesanan Delivery.',
-        );
+    if (order_type === OrderTypeEnum.DELIVERY && (!shipping_address.trim() || !recipient.trim() || !recipient_phone_number.trim())) {
+        showErrorToast('Alamat pengiriman, nama penerima, nomor telepon penerima harus diisi untuk pemesanan Delivery.');
         return false;
     }
     if (order_type === OrderTypeEnum.PICKUP && (!recipient.trim() || !recipient_phone_number.trim())) {
