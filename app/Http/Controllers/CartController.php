@@ -55,6 +55,8 @@ class CartController extends Controller
     public function index_customer(): RedirectResponse|Response
     {
         $data = $this->getCartItems();
+        $user = Auth::user();
+        $customer = Customer::where('user_id', $user->id)->first();
 
         if ($data instanceof RedirectResponse) {
             return $data;
@@ -62,6 +64,7 @@ class CartController extends Controller
 
         return Inertia::render('customer/pages/cart/index', [
             'carts' => $data['carts'],
+            'customer' => $customer
         ]);
     }
 

@@ -108,8 +108,8 @@ export default function CheckoutPage({ data, fees, customer }: CheckoutPageProps
                 <Head title="Checkout" />
                 <div className="mt-2 flex flex-1 flex-col gap-4 rounded-xl py-4">
                     <div className="mb-4">
-                        <h1 className="text-2xl font-black tracking-tight text-gray-800 dark:text-gray-200">Selesaikan Pesanan</h1>
-                        <p className="text-muted-foreground mt-1.5 text-[16px]">Tinjau pesanan Anda dan pilih metode pembayaran</p>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-800 dark:text-gray-200">Checkout Pesanan</h1>
+                        <p className="text-muted-foreground mt-1.5 text-[16px]">Tinjau pesanan Anda dan pilih metode pembayaran & pesanan yang sesuai</p>
                     </div>
 
                     {formData?.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer?.address.trim() === '') && (

@@ -5,8 +5,8 @@ interface CustomerProfileForm {
     email: string;
     phone_number: string;
     avatar: File | null;
-    birthplace: string;
-    birthdate: Date | null;
+    birthplace?: string;
+    birthdate?: Date | null;
     address: string;
     address_label: string;
     note: string;

@@ -4,15 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Icon } from '@iconify/react';
 import { Link, usePage } from '@inertiajs/react';
-import { Menu } from 'lucide-react';
-import LogoIcon from '../logo-icon';
 import mainNavItems from './main-nav-items';
 import { CustomerMenuContent } from './menu-content';
 import rightNavItems from './right-nav-items';
@@ -33,7 +30,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
             <div className="border-sidebar-border/80 border-b">
                 <div className="mx-auto flex h-16 max-w-7xl items-center px-4 lg:px-0">
                     {/* Mobile Menu */}
-                    <div className="lg:hidden">
+                    {/* <div className="lg:hidden">
                         <Sheet>
                             <SheetTrigger>
                                 <Button variant="ghost" size="icon" className="mr-2 h-[34px] w-[34px]">
@@ -74,13 +71,13 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </div>
                             </SheetContent>
                         </Sheet>
-                    </div>
+                    </div> */}
                     <Link href="/" prefetch className="flex items-center space-x-2">
                         <img src={Logo} alt="Logo" className="h-12 w-12 fill-current text-black dark:text-white" />
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="mx-auto ml-6 hidden h-full items-center justify-center space-x-6 lg:flex">
+                    {/* <div className="mx-auto ml-6 hidden h-full items-center justify-center space-x-6 lg:flex">
                         <NavigationMenu className="flex h-full items-stretch">
                             <NavigationMenuList className="flex h-full items-stretch space-x-2">
                                 {mainNavItems.map((item, index) => (
@@ -103,7 +100,7 @@ export function LithiumHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 ))}
                             </NavigationMenuList>
                         </NavigationMenu>
-                    </div>
+                    </div> */}
 
                     {auth?.user === null ? (
                         <div className="ml-auto flex items-center space-x-2">

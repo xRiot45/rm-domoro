@@ -43,7 +43,7 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
         phone_number: customer?.user?.phone_number,
         avatar: customer?.user?.avatar,
         birthplace: customer?.birthplace,
-        birthdate: new Date(customer?.birthdate ?? ''),
+        birthdate: customer?.birthdate ? new Date(customer.birthdate) : null,
         address: customer?.address,
         address_label: customer?.address_label,
         note: customer?.note,
@@ -105,6 +105,7 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                 reset();
             },
             onError: (errors) => {
+                console.log(errors);
                 Object.entries(errors).forEach(([key, value]) => {
                     setError(key as keyof CustomerProfileForm, value);
                 });
@@ -210,6 +211,8 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                                 placeholder="Masukkan Tempat Lahir"
                                 className="mt-1 block w-full"
                             />
+
+                            <InputError className="mt-1" message={errors.birthplace} />
                         </div>
 
                         <div id="birthdate" className="flex flex-col">
@@ -234,6 +237,7 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                                         className="mb-2 py-6 text-center"
                                         placeholder="Masukkan Tanggal Lahir"
                                     />
+
                                     <Calendar
                                         mode="single"
                                         selected={data.birthdate ?? new Date()}
@@ -246,6 +250,7 @@ export default function Profile({ mustVerifyEmail, status, customer }: { mustVer
                                     />
                                 </PopoverContent>
                             </Popover>
+                            <InputError className="mt-1" message={errors.birthdate} />
                         </div>
 
                         <div id="gender">

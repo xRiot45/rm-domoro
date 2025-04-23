@@ -45,7 +45,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
 }) => {
     const [showCashDialog, setShowCashDialog] = useState<boolean>(false);
     return (
-        <Card className="mt-4 w-full border p-8 shadow-none lg:mt-13">
+        <Card className="mt-4 w-full border p-7 shadow-none lg:mt-13">
             <div className="flex items-center justify-between">
                 <div className="w-full">
                     <div className="flex items-center justify-between">
@@ -73,7 +73,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                 <SummaryRow label="Total Akhir" value={formatCurrency(finalTotal)} isBold />
 
                 <Textarea
-                    className="mt-4 h-28"
+                    className="mt-4 h-30"
                     placeholder="Tambahkan catatan (Optional)"
                     onChange={(e) => setData('note', e.target.value)}
                     value={formData.note}
