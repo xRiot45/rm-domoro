@@ -44,14 +44,26 @@ export default function CourierLayout({ children, breadcrumbs, onNewOrder, ...pr
         const channel = window.Echo.channel(`orders.to-courier`);
         channel.listen('.order-assigned-to-courier', (event: { transaction: Transaction }) => {
             const audio = audioRef.current;
-            if (onNewOrder != null && event.transaction) {
+            // if (onNewOrder != null && event.transaction) {
+            //     if (audio) {
+            //         audio.currentTime = 0;
+            //         audio.play();
+            //     }
+
+            //     setShowDialog(true);
+            //     onNewOrder(event.transaction);
+            // }
+            if (event.transaction) {
                 if (audio) {
                     audio.currentTime = 0;
                     audio.play();
                 }
 
                 setShowDialog(true);
-                onNewOrder(event.transaction);
+
+                if (typeof onNewOrder === 'function') {
+                    onNewOrder(event.transaction);
+                }
             }
         });
 

@@ -45,14 +45,26 @@ export default function CashierLayout({ children, breadcrumbs, onNewOrder, ...pr
         const channel = window.Echo.channel('orders');
         channel.listen('.order-created', (event: { transaction: Transaction }) => {
             const audio = audioRef.current;
-            if (onNewOrder != null && event.transaction) {
+            // if (onNewOrder != null && event.transaction) {
+            //     if (audio) {
+            //         audio.currentTime = 0;
+            //         audio.play();
+            //     }
+
+            //     setShowDialog(true);
+            //     onNewOrder(event.transaction);
+            // }
+            if (event.transaction) {
                 if (audio) {
                     audio.currentTime = 0;
                     audio.play();
                 }
 
                 setShowDialog(true);
-                onNewOrder(event.transaction);
+
+                if (typeof onNewOrder === 'function') {
+                    onNewOrder(event.transaction);
+                }
             }
         });
 

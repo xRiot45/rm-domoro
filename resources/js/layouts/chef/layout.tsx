@@ -44,14 +44,26 @@ export default function ChefLayout({ children, breadcrumbs, onNewOrder, ...props
         const channel = window.Echo.channel(`orders.to-chef`);
         channel.listen('.order-assigned-to-chef', (event: { transaction: Transaction }) => {
             const audio = audioRef.current;
-            if (onNewOrder != null && event.transaction) {
+            // if (onNewOrder != null && event.transaction) {
+            //     if (audio) {
+            //         audio.currentTime = 0;
+            //         audio.play();
+            //     }
+
+            //     setShowDialog(true);
+            //     onNewOrder(event.transaction);
+            // }
+            if (event.transaction) {
                 if (audio) {
                     audio.currentTime = 0;
                     audio.play();
                 }
 
                 setShowDialog(true);
-                onNewOrder(event.transaction);
+
+                if (typeof onNewOrder === 'function') {
+                    onNewOrder(event.transaction);
+                }
             }
         });
 
