@@ -140,12 +140,12 @@ class OrderController extends Controller
             'note' => $request->note,
             'cash_received' => $cashReceived,
             'change' => $change,
-            'payment_status' => PaymentStatusEnum::PAID
+            'payment_status' => PaymentStatusEnum::PAID,
         ]);
 
         OrderStatus::create([
             'transaction_id' => $transaction->id,
-            'status' => OrderStatusEnum::COMPLETED
+            'status' => OrderStatusEnum::COMPLETED,
         ]);
 
         return redirect()
@@ -347,9 +347,31 @@ class OrderController extends Controller
     }
 
     // Pesanan Selesai (Cashier / Courier)
-    public function orderCompleted(int $transactionId): RedirectResponse
+    public function orderCompleted(Request $request, int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);
+
+        $validated = $request->validate([
+            'cash_received' => 'nullable|integer|min:0',
+            'proof_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('proof_photo') && $request->file('proof_photo')->isValid()) {
+            $file = $request->file('proof_photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('', $filename, 'public');
+
+            $validated['proof_photo'] = '/' . 'storage/' . $path;
+        }
+
+        if (isset($validated['cash_received'])) {
+            $transaction->cash_received = $validated['cash_received'];
+            $transaction->change = max(0, $transaction->cash_received - $transaction->final_total);
+            $transaction->payment_status = PaymentStatusEnum::PAID;
+        }
+
+        $transaction->save();
+
         OrderStatus::create([
             'transaction_id' => $transaction->id,
             'status' => OrderStatusEnum::COMPLETED,

@@ -1,7 +1,16 @@
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { OrderStatusEnum } from '@/enums/order-status';
 import { PaymentStatusEnum } from '@/enums/payment-status';
+import { PaymentTypeEnum } from '@/enums/payment-type';
 import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
@@ -13,9 +22,13 @@ import { Icon } from '@iconify/react';
 import { router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { toast } from 'sonner';
+import FormDialogOrderCompleted from '../components/form-dialog-order-completed';
 import { DataTableColumnHeader } from './data-table-column-header';
 
-export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void): ColumnDef<Transaction>[] => [
+export const columns = (
+    onUpdateStatusOrder: (transaction: Transaction) => void,
+    onUpdatePaymentStatusOrder: (transaction: Transaction) => void,
+): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -199,6 +212,10 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
             const latestStatus = orderStatusList[orderStatusList.length - 1];
             const status = latestStatus.status as OrderStatusEnum;
 
+            const isCash = row.original.payment_method === PaymentTypeEnum.CASH;
+
+            const isCompletedAndPaid = status === OrderStatusEnum.COMPLETED && row.original.payment_status === PaymentStatusEnum.PAID;
+
             const handleOrderReadyToDeliver = () => {
                 router.put(
                     route('courier.order.readyForDelivery', transactionId),
@@ -265,42 +282,50 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
                 );
             };
 
-            const handleOrderComplete = () => {
-                router.put(
-                    route('courier.order.orderCompleted', transactionId),
-                    {},
-                    {
-                        onSuccess: () => {
-                            toast.success('Success', {
-                                description: 'Pesanan Selesai!',
-                                action: {
-                                    label: 'Tutup',
-                                    onClick: () => toast.dismiss(),
-                                },
-                            });
+            const handleOrderCompleteWithForm = (formData: { proof_photo: string; cash_received: number }) => {
+                const form = new FormData();
+                form.append('proof_photo', formData.proof_photo);
+                if (isCash && formData.cash_received) {
+                    form.append('cash_received', formData.cash_received.toString());
+                }
 
-                            onUpdateStatusOrder({
-                                ...row.original,
-                                order_status: [...orderStatusList, { status: OrderStatusEnum.COMPLETED }],
-                            });
-                        },
-                        onError: (errors) => {
-                            toast.error('Failed', {
-                                description: errors.message || 'Gagal menyelesaikan pesanan!',
-                                action: {
-                                    label: 'Tutup',
-                                    onClick: () => toast.dismiss(),
-                                },
-                            });
-                        },
-                        preserveScroll: true,
+                form.append('_method', 'PUT');
+                router.post(route('courier.order.orderCompleted', transactionId), form, {
+                    onSuccess: () => {
+                        toast.success('Pesanan Selesai!', {
+                            description: 'Pesanan berhasil diselesaikan.',
+                            action: {
+                                label: 'Tutup',
+                                onClick: () => toast.dismiss(),
+                            },
+                        });
+                        onUpdateStatusOrder({
+                            ...row.original,
+                            order_status: [...orderStatusList, { status: OrderStatusEnum.COMPLETED }],
+                        });
+
+                        onUpdatePaymentStatusOrder({
+                            ...row.original,
+                            payment_status: PaymentStatusEnum.PAID,
+                        });
                     },
-                );
+                    onError: (errors) => {
+                        console.log(errors);
+                        toast.error('Gagal', {
+                            description: errors.message || 'Gagal menyelesaikan pesanan!',
+                            action: {
+                                label: 'Tutup',
+                                onClick: () => toast.dismiss(),
+                            },
+                        });
+                    },
+                    preserveScroll: true,
+                });
             };
 
             let buttonText = '';
             let buttonHandler: () => void = () => {};
-            let isDisabled = false;
+            let isDisabled = isCompletedAndPaid;
             let variant: 'default' | 'destructive' = 'default';
 
             if (status === OrderStatusEnum.COOKED) {
@@ -311,14 +336,30 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
                 buttonText = 'Antar Pesanan';
                 buttonHandler = handleOrderToDelivering;
             } else if (status === OrderStatusEnum.DELIVERING) {
-                buttonText = 'Pesanan Selesai';
-                buttonHandler = handleOrderComplete;
+                buttonText = 'Selesaikan Pesanan';
             } else {
                 buttonText = 'Pesanan Selesai';
                 isDisabled = true;
             }
 
-            return (
+            return status === OrderStatusEnum.DELIVERING ? (
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button className="cursor-pointer" size="sm" variant={variant}>
+                            {buttonText}
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Konfirmasi Penyelesaian Pesanan</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Apakah Anda yakin ingin menyelesaikan pesanan ini? Tindakan ini tidak dapat dibatalkan.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <FormDialogOrderCompleted isCash={isCash} onSubmit={handleOrderCompleteWithForm} />
+                    </AlertDialogContent>
+                </AlertDialog>
+            ) : (
                 <Button
                     className="cursor-pointer"
                     size="sm"
@@ -331,7 +372,6 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
                 </Button>
             );
         },
-
         enableHiding: false,
     },
 ];
