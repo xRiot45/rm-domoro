@@ -13,6 +13,7 @@ import { OrderStatusEnum } from '@/enums/order-status';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { Transaction } from '@/models/transaction';
+import { formatCurrency } from '@/utils/format-currency';
 import { Icon } from '@iconify/react';
 import { Link, router } from '@inertiajs/react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
@@ -39,6 +40,7 @@ export function DataTableRowActions({
     const orderIsPickup = row?.original?.order_type === OrderTypeEnum.PICKUP;
 
     const lastStatusOrder = row.original.order_status.at(-1)?.status;
+    const isOrderPaymentPending = row?.original?.payment_status === PaymentStatusEnum.PENDING;
 
     const handleSendOrderToChef = () => {
         router.put(
@@ -180,7 +182,7 @@ export function DataTableRowActions({
 
     const handlePaymentCash = () => {
         router.put(
-            route('cashier.order.update', { id: row?.original?.id }),
+            route('cashier.order.confirmSelfOrderCashPayment', { id: row?.original?.id }),
             { cash_received: cashReceived },
             {
                 onSuccess: () => {
@@ -194,7 +196,7 @@ export function DataTableRowActions({
 
                     onUpdateStatusOrder({
                         ...row.original,
-                        order_status: [...row.original.order_status, { status: PaymentStatusEnum.PAID }],
+                        order_status: [...row.original.order_status, { status: OrderStatusEnum.COMPLETED }],
                     });
                 },
                 onError: () => {
@@ -230,7 +232,7 @@ export function DataTableRowActions({
                         <DropdownMenuSeparator />
                     </Link> */}
 
-                    {(orderIsPickup || orderIsDineIn) && (
+                    {isOrderPaymentPending && (orderIsPickup || orderIsDelivery) && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={() => setShowDialogPaymentCash(true)}>
                                 Masukkan Pembayaran Tunai
@@ -242,13 +244,13 @@ export function DataTableRowActions({
                         </>
                     )}
 
-                    <DropdownMenuItem className="cursor-pointer">
+                    {/* <DropdownMenuItem className="cursor-pointer">
                         Lihat Detail Pesanan
                         <DropdownMenuShortcut>
                             <Icon icon={'material-symbols:info'} />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator /> */}
 
                     {!isOrderSentToChef && (
                         <>
@@ -272,19 +274,20 @@ export function DataTableRowActions({
                             <DropdownMenuSeparator />
                         </>
                     )}
-                    {orderIsDineIn && lastStatusOrder === OrderStatusEnum.COOKED && (
-                        <>
-                            <DropdownMenuItem className="cursor-pointer" onClick={handleOrderReadyToServe}>
-                                Pesanan Siap Disajikan
-                                <DropdownMenuShortcut>
-                                    <Icon icon={'icon-park-outline:delivery'} />
-                                </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                        </>
-                    )}
+                    {orderIsDineIn ||
+                        (orderIsPickup && lastStatusOrder === OrderStatusEnum.COOKED && (
+                            <>
+                                <DropdownMenuItem className="cursor-pointer" onClick={handleOrderReadyToServe}>
+                                    Pesanan Siap Disajikan
+                                    <DropdownMenuShortcut>
+                                        <Icon icon={'icon-park-outline:delivery'} />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                            </>
+                        ))}
 
-                    {(orderIsPickup || orderIsDineIn) && lastStatusOrder === OrderStatusEnum.COOKED && (
+                    {lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={handleOrderCompleted}>
                                 Pesanan Selesai
@@ -353,7 +356,8 @@ export function DataTableRowActions({
                         <DialogTitle>Masukkan Uang yang Diterima</DialogTitle>
                     </DialogHeader>
                     <DialogDescription className="text-sm">
-                        Pastikan jumlah uang yang diterima sesuai dengan jumlah total pesanan nya
+                        Pastikan jumlah uang yang diterima sesuai dengan jumlah total pesanan nya (Total pesanan:{' '}
+                        <strong className="text-black italic">{formatCurrency(row?.original?.total_price)}</strong>)
                     </DialogDescription>
 
                     <div className="mt-4">

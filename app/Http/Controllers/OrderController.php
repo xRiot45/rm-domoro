@@ -129,18 +129,23 @@ class OrderController extends Controller
         ]);
     }
 
-    public function update(Request $request, int $transactionId): RedirectResponse
+    public function confirmSelfOrderCashPayment(Request $request, int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);
         $cashReceived = (int) $request->cash_received;
-        $totalPrice = (int) $transaction->total_price;
-        $change = max(0, $cashReceived - $totalPrice);
+        $finalTotal = (int) $transaction->final_total;
+        $change = max(0, $cashReceived - $finalTotal);
 
         $transaction->update([
             'note' => $request->note,
             'cash_received' => $cashReceived,
             'change' => $change,
             'payment_status' => PaymentStatusEnum::PAID
+        ]);
+
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::COMPLETED
         ]);
 
         return redirect()
