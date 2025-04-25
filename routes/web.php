@@ -270,6 +270,7 @@ Route::middleware(['auth', 'verified', 'role:chef'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_chef')->name('index_chef');
+                Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
                 Route::put('/{transactionId}', 'takeOrderChef')->name('takeOrderChef');
                 Route::put('/{transactionId}/cook', 'cookOrder')->name('cookOrder');
                 Route::put('/{transactionId}/cooked', 'cookedOrder')->name('cookedOrder');
@@ -288,7 +289,7 @@ Route::middleware(['auth', 'verified', 'role:courier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_courier')->name('index_courier');
-                Route::get('/{transaction}', 'orderDetails')->name('orderDetails');
+                Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
                 Route::put('/{transactionId}', 'takeOrderCourier')->name('takeOrderCourier');
                 Route::put('/{id}/ready-to-delivery', 'readyForDelivery')->name('readyForDelivery');
                 Route::put('/{id}/delivering', 'deliveringOrder')->name('deliveringOrder');
@@ -343,8 +344,8 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_cashier')->name('index_cashier');
+                Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
                 Route::put('/{transactionId}/confirm-self-order-cash-payment', 'confirmSelfOrderCashPayment')->name('confirmSelfOrderCashPayment');
-                Route::get('/{transactionId}', 'edit')->name('edit');
                 Route::put('/{transactionId}/take-order-cashier', 'takeOrderCashier')->name('takeOrderCashier');
                 Route::put('/{id}/send-to-chef', 'sendOrderToChef')->name('sendOrderToChef');
                 Route::put('/{id}/send-to-courier', 'sendOrderToCourier')->name('sendOrderToCourier');

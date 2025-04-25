@@ -385,18 +385,20 @@ class OrderController extends Controller
             ->with(['success' => 'Pesanan selesai']);
     }
 
-    public function orderDetails(Transaction $transaction): Response
+    public function orderDetails(Transaction $transaction, int $transactionId): Response
     {
-        $data = $transaction->load([
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->load([
             'transactionItems.menuItem.menuCategory',
             'orderStatus',
             'customer.user',
             'cashier.user',
             'courier.user',
+            'chef.user',
         ]);
 
         return Inertia::render('shared/order-detail', [
-            'transaction' => $data,
+            'transaction' => $transaction,
         ]);
     }
 }

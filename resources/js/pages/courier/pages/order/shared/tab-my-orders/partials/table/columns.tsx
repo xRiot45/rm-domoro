@@ -31,6 +31,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         accessorKey: 'order_number',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor Pesanan" />,
         cell: ({ row }) => <span className="text-sm">{row.getValue('order_number')}</span>,
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableSorting: true,
         enableHiding: false,
     },
@@ -40,25 +43,23 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
         cell: ({ row }) => {
             const items = row.original.transaction_items;
+            const firstItem = items[0];
 
             return (
-                <div className="flex flex-col gap-3">
-                    {items.map((item) => (
-                        <div key={item.id} className="flex items-center space-x-4">
-                            {item.menu_item?.image_url && (
-                                <img src={`${item.menu_item.image_url}`} alt={item.menu_item.name} className="h-16 w-16 rounded-md object-cover" />
-                            )}
-                            <div>
-                                <span className="block font-medium">{item.menu_item?.name ?? '-'}</span>
-                                <span className="text-muted-foreground block text-sm">{item.menu_item?.menu_category?.name ?? '-'}</span>
-                            </div>
-                        </div>
-                    ))}
+                <div className="flex items-start gap-3">
+                    {firstItem?.menu_item?.image_url && (
+                        <img src={`${firstItem.menu_item.image_url}`} alt={firstItem.menu_item?.name} className="h-16 w-16 rounded-md object-cover" />
+                    )}
+                    <div className="flex flex-col justify-center">
+                        <h1 className="font-bold">{firstItem?.menu_item?.name ?? '-'}</h1>
+                        <span className="text-muted-foreground text-sm">{firstItem?.menu_item?.menu_category?.name ?? '-'}</span>
+                        {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} menu lainnya</span>}
+                    </div>
                 </div>
             );
         },
         meta: {
-            className: cn('pe-22 lg:pe-0'),
+            className: cn('pe-22'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -69,15 +70,19 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
         cell: ({ row }) => {
             const items = row.original.transaction_items;
+            const firstItem = items[0];
+
             return (
-                <div className="flex flex-col gap-1 space-y-13">
-                    {items.map((item) => (
-                        <span key={item.id} className="text-sm">
-                            {item.quantity}x {item.menu_item?.name ?? '-'}
-                        </span>
-                    ))}
+                <div className="flex flex-col justify-center">
+                    <span className="text-sm">
+                        {firstItem?.quantity}x {firstItem?.menu_item?.name ?? '-'}
+                    </span>
+                    {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} menu lainnya</span>}
                 </div>
             );
+        },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -87,16 +92,18 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         accessorKey: 'unit_price',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Harga Satuan" />,
         cell: ({ row }) => {
-            const unitPrice = row.original.transaction_items;
+            const items = row.original.transaction_items;
+            const firstItem = items[0];
+
             return (
-                <div className="flex flex-col gap-1 space-y-13">
-                    {unitPrice.map((item) => (
-                        <span key={item.id} className="text-sm">
-                            {formatCurrency(item.unit_price)}
-                        </span>
-                    ))}
+                <div className="flex flex-col justify-center">
+                    <span className="text-sm">{formatCurrency(firstItem?.unit_price)}</span>
+                    {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} harga lainnya</span>}
                 </div>
             );
+        },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -109,6 +116,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         cell: ({ row }) => <span className="text-sm capitalize">{formatOrderType(row.getValue('order_type'))}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
+        },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -135,6 +145,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableHiding: false,
         enableSorting: false,
     },
@@ -155,6 +168,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableHiding: true,
         enableSorting: false,
     },
@@ -163,6 +179,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         accessorKey: 'final_total',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
         cell: ({ row }) => <span className="text-sm">{formatCurrency(row.getValue('final_total'))}</span>,
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableHiding: true,
         enableSorting: false,
     },
@@ -188,6 +207,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableHiding: false,
         enableSorting: false,
     },
@@ -196,6 +218,9 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         accessorKey: 'created_at',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Pemesanan" />,
         cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
+        meta: {
+            className: cn('pe-22 md:pe-10'),
+        },
         enableHiding: true,
         enableSorting: true,
     },
@@ -337,16 +362,7 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
             }
 
             return (
-                <div className="flex flex-col gap-2">
-                    <Button
-                        className="cursor-pointer"
-                        size="sm"
-                        variant="outline"
-                        onClick={() => router.visit(route('courier.order.orderDetails', transactionId))}
-                    >
-                        Lihat Detail Pesanan
-                    </Button>
-
+                <div className="flex flex-col gap-4">
                     {status === OrderStatusEnum.DELIVERING ? (
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
@@ -376,6 +392,13 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
                             {buttonText}
                         </Button>
                     )}
+                    <Button
+                        className="cursor-pointer bg-blue-500 text-white"
+                        size="sm"
+                        onClick={() => router.visit(route('courier.order.orderDetails', transactionId))}
+                    >
+                        Lihat Detail Pesanan
+                    </Button>
                 </div>
             );
         },

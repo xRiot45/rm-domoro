@@ -224,17 +224,17 @@ export function DataTableRowActions({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[300px]">
-                    {/* <Link href={route('cashier.order.edit', { id: row.original.id })}>
+                    <Link href={route('cashier.order.orderDetails', { id: row.original.id })}>
                         <DropdownMenuItem className="cursor-pointer">
-                            Edit Data
+                            Lihat Detail Pesanan
                             <DropdownMenuShortcut>
-                                <Icon icon={'material-symbols:edit'} />
+                                <Icon icon={'material-symbols:info'} />
                             </DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                    </Link> */}
+                    </Link>
 
-                    {isOrderPaymentPending && (orderIsPickup || orderIsDelivery) && (
+                    {isOrderPaymentPending && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={() => setShowDialogPaymentCash(true)}>
                                 Masukkan Pembayaran Tunai
@@ -245,14 +245,6 @@ export function DataTableRowActions({
                             <DropdownMenuSeparator />
                         </>
                     )}
-
-                    {/* <DropdownMenuItem className="cursor-pointer">
-                        Lihat Detail Pesanan
-                        <DropdownMenuShortcut>
-                            <Icon icon={'material-symbols:info'} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator /> */}
 
                     {!isOrderSentToChef && (
                         <>
@@ -291,7 +283,7 @@ export function DataTableRowActions({
                         </>
                     ) : null}
 
-                    {(orderIsDineIn || orderIsTakeaway) && lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
+                    {(orderIsDineIn || orderIsTakeaway || orderIsPickup) && lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={handleOrderCompleted}>
                                 Pesanan Selesai
