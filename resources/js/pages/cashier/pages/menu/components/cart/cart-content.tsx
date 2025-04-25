@@ -108,7 +108,7 @@ const CartContent: React.FC<CartContentProps> = ({ cartItems }) => {
             </div>
             <Button type="submit" className="mt-8 w-full py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
                 <Icon icon={'material-symbols:shopping-cart-checkout'} />
-                Checkout Pesanan
+                Lanjut Ke Pembayaran
             </Button>
         </Card>
     );

@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { OrderStatusEnum } from '@/enums/order-status';
+import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
@@ -99,6 +100,23 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         cell: ({ row }) => <span className="text-sm capitalize">{formatOrderType(row.getValue('order_type'))}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'table_number',
+        accessorKey: 'table_number',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor Meja" />,
+        cell: ({ row }) => {
+            const orderType = row.original.order_type;
+            const tableNumber = row.original.table_number;
+
+            if (orderType === OrderTypeEnum.DINEIN) {
+                return <span className="text-sm">{tableNumber ?? '-'}</span>;
+            }
+
+            return <span className="text-muted-foreground text-sm italic">-</span>;
         },
         enableHiding: false,
         enableSorting: false,

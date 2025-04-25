@@ -11,6 +11,7 @@ import AppLayout from '@/layouts/app/layout';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
+import { formatOrderType } from '@/utils/format-order-type';
 import { paymentStatusMap } from '@/utils/payment-status-map';
 import { Icon } from '@iconify/react';
 import { Head } from '@inertiajs/react';
@@ -98,8 +99,8 @@ export default function DetailOrderPage({ data }: DetailOrderProps) {
                                         <p className="text-muted-foreground capitalize">{data.customer.note || '-'}</p>
                                     </div>
                                     <div>
-                                        <p className="font-bold">Jenis Pesanan</p>
-                                        <p className="text-muted-foreground capitalize">{data.order_type}</p>
+                                        <p className="font-bold">Metode Pemesanan</p>
+                                        <p className="text-muted-foreground capitalize">{formatOrderType(data.order_type ?? '')}</p>
                                     </div>
                                     <div>
                                         <p className="font-bold">Metode Pembayaran</p>

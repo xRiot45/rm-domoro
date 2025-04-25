@@ -38,6 +38,7 @@ export function DataTableRowActions({
     const orderIsDelivery = row?.original?.order_type === OrderTypeEnum.DELIVERY;
     const orderIsDineIn = row?.original?.order_type === OrderTypeEnum.DINEIN;
     const orderIsPickup = row?.original?.order_type === OrderTypeEnum.PICKUP;
+    const orderIsTakeaway = row?.original?.order_type === OrderTypeEnum.TAKEAWAY;
 
     const lastStatusOrder = row.original.order_status.at(-1)?.status;
     const isOrderPaymentPending = row?.original?.payment_status === PaymentStatusEnum.PENDING;
@@ -197,6 +198,7 @@ export function DataTableRowActions({
                     onUpdateStatusOrder({
                         ...row.original,
                         order_status: [...row.original.order_status, { status: OrderStatusEnum.COMPLETED }],
+                        payment_status: PaymentStatusEnum.PAID,
                     });
                 },
                 onError: () => {
@@ -274,20 +276,22 @@ export function DataTableRowActions({
                             <DropdownMenuSeparator />
                         </>
                     )}
-                    {orderIsDineIn ||
-                        (orderIsPickup && lastStatusOrder === OrderStatusEnum.COOKED && (
-                            <>
-                                <DropdownMenuItem className="cursor-pointer" onClick={handleOrderReadyToServe}>
-                                    Pesanan Siap Disajikan
-                                    <DropdownMenuShortcut>
-                                        <Icon icon={'icon-park-outline:delivery'} />
-                                    </DropdownMenuShortcut>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                            </>
-                        ))}
 
-                    {lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
+                    {(orderIsDineIn && lastStatusOrder === OrderStatusEnum.COOKED) ||
+                    (orderIsPickup && lastStatusOrder === OrderStatusEnum.COOKED) ||
+                    (orderIsTakeaway && lastStatusOrder === OrderStatusEnum.COOKED) ? (
+                        <>
+                            <DropdownMenuItem className="cursor-pointer" onClick={handleOrderReadyToServe}>
+                                Pesanan Siap Disajikan
+                                <DropdownMenuShortcut>
+                                    <Icon icon={'icon-park-outline:delivery'} />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    ) : null}
+
+                    {(orderIsDineIn || orderIsTakeaway) && lastStatusOrder === OrderStatusEnum.READY_TO_SERVE && (
                         <>
                             <DropdownMenuItem className="cursor-pointer" onClick={handleOrderCompleted}>
                                 Pesanan Selesai

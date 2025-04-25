@@ -11,7 +11,17 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
+    resolve: (name) => {
+        const pages = import.meta.glob('./pages/**/*.tsx');
+        const shared = import.meta.glob('./shared/**/*.tsx');
+
+        if (name.startsWith('shared/')) {
+            return resolvePageComponent(`./shared/${name.replace('shared/', '')}.tsx`, shared);
+        }
+
+        return resolvePageComponent(`./pages/${name}.tsx`, pages);
+    },
+
     setup({ el, App, props }) {
         const root = createRoot(el);
 

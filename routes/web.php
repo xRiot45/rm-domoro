@@ -288,6 +288,7 @@ Route::middleware(['auth', 'verified', 'role:courier'])
             ->controller(OrderController::class)
             ->group(function () {
                 Route::get('/', 'index_courier')->name('index_courier');
+                Route::get('/{transaction}', 'orderDetails')->name('orderDetails');
                 Route::put('/{transactionId}', 'takeOrderCourier')->name('takeOrderCourier');
                 Route::put('/{id}/ready-to-delivery', 'readyForDelivery')->name('readyForDelivery');
                 Route::put('/{id}/delivering', 'deliveringOrder')->name('deliveringOrder');

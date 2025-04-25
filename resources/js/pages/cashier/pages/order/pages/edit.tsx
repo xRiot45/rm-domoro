@@ -159,7 +159,7 @@ export default function EditPage({ data }: { data: Transaction }) {
                     </section>
 
                     {/* Info Penerima */}
-                    {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEWAY, OrderTypeEnum.PICKUP].includes(data.order_type ?? OrderTypeEnum.DINEIN) && (
+                    {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEAWAY, OrderTypeEnum.PICKUP].includes(data.order_type ?? OrderTypeEnum.DINEIN) && (
                         <section className="mt-6 space-y-4 rounded-xl border p-8">
                             <h1 className="mb-6 text-xl font-bold">Info Penerima</h1>
 

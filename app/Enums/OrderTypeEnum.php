@@ -6,7 +6,7 @@ enum OrderTypeEnum: string
 {
     case DineIn = 'makan di tempat';
 
-    case Takeway = 'pesan lalu dibawa pulang';
+    case Takeaway = 'pesan lalu dibawa pulang';
 
     case Delivery = 'antar ke rumah';
 

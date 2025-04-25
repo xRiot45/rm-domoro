@@ -8,8 +8,8 @@ const validateFormCash = ({ formData }: { formData: TransactionForm }) => {
         showErrorToast('Nomor meja dan jumlah uang yang diterima harus diisi untuk pemesanan Dine In.');
         return false;
     }
-    if (order_type === OrderTypeEnum.TAKEWAY && (!recipient.trim() || !cash_received)) {
-        showErrorToast('Nama penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Takeway.');
+    if (order_type === OrderTypeEnum.TAKEAWAY && (!recipient.trim() || !cash_received)) {
+        showErrorToast('Nama penerima dan jumlah uang yang diterima harus diisi untuk pemesanan Takeaway.');
         return false;
     }
     if (order_type === OrderTypeEnum.DELIVERY && (!shipping_address.trim() || !recipient.trim() || !recipient_phone_number.trim())) {

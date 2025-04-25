@@ -10,7 +10,7 @@ interface OrderTypeSelectionProps {
 
 const iconsOrderType = {
     DINEIN: <Icon icon="mdi:food" width={24} height={24} />,
-    TAKEWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
+    TAKEAWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
     DELIVERY: <Icon icon="mdi:truck-delivery" width={24} height={24} />,
     PICKUP: <Icon icon="tdesign:undertake-delivery-filled" width={24} height={24} />,
 };

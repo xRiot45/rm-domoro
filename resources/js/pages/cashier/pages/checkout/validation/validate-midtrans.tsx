@@ -8,8 +8,8 @@ const validateFormMidtrans = ({ formData }: { formData: TransactionForm }) => {
         showErrorToast('Nomor meja harus diisi untuk pemesanan Dine In.');
         return false;
     }
-    if (order_type === OrderTypeEnum.TAKEWAY && !recipient.trim()) {
-        showErrorToast('Nama penerima harus diisi untuk pemesanan Takeway.');
+    if (order_type === OrderTypeEnum.TAKEAWAY && !recipient.trim()) {
+        showErrorToast('Nama penerima harus diisi untuk pemesanan Takeaway.');
         return false;
     }
     if (order_type === OrderTypeEnum.DELIVERY && (!shipping_address.trim() || !recipient.trim() || !recipient_phone_number.trim())) {

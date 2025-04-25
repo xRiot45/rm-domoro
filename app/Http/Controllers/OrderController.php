@@ -370,6 +370,9 @@ class OrderController extends Controller
             $transaction->payment_status = PaymentStatusEnum::PAID;
         }
 
+        if (isset($validated['proof_photo'])) {
+            $transaction->proof_photo = $validated['proof_photo'];
+        }
         $transaction->save();
 
         OrderStatus::create([
@@ -380,5 +383,20 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with(['success' => 'Pesanan selesai']);
+    }
+
+    public function orderDetails(Transaction $transaction): Response
+    {
+        $data = $transaction->load([
+            'transactionItems.menuItem.menuCategory',
+            'orderStatus',
+            'customer.user',
+            'cashier.user',
+            'courier.user',
+        ]);
+
+        return Inertia::render('shared/order-detail', [
+            'transaction' => $data,
+        ]);
     }
 }

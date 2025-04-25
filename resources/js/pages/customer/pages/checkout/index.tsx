@@ -10,6 +10,7 @@ import { Fee } from '@/models/fee';
 import { Transaction, TransactionForm } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { AlertCircle } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -113,6 +114,15 @@ export default function CheckoutPage({ data, fees, customer }: CheckoutPageProps
                             Tinjau pesanan Anda dan pilih metode pembayaran & pesanan yang sesuai
                         </p>
                     </div>
+
+                    <Alert variant="destructive" className="rounded-lg py-6">
+                        <ExclamationTriangleIcon className="h-4 w-4" />
+                        <AlertTitle>Perhatian</AlertTitle>
+                        <AlertDescription>
+                            Jika sudah melakukan checkout, pesanan tidak dapat dilakukan refund kembali, harap cek dengan baik pesanan anda sebelum
+                            melakukan checkout.
+                        </AlertDescription>
+                    </Alert>
 
                     {formData?.order_type === OrderTypeEnum.DELIVERY && (!customer?.address || customer?.address.trim() === '') && (
                         <Alert variant="destructive">

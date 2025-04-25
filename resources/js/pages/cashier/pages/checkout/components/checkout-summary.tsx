@@ -82,7 +82,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({
                         </div>
                     )}
 
-                {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEWAY, OrderTypeEnum.PICKUP].includes(formData.order_type) && (
+                {[OrderTypeEnum.DELIVERY, OrderTypeEnum.TAKEAWAY, OrderTypeEnum.PICKUP].includes(formData.order_type) && (
                     <div className="block">
                         <span>Informasi Penerima</span>
                         <div className="mt-3 flex flex-col gap-2">

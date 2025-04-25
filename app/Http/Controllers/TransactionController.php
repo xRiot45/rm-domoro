@@ -159,7 +159,7 @@ class TransactionController extends Controller
         // Isi informasi tambahan berdasarkan jenis pesanan (Untuk role Cashier)
         if ($orderType === OrderTypeEnum::DineIn && $request->has('table_number')) {
             $transaction->table_number = $request->input('table_number');
-        } elseif ($orderType === OrderTypeEnum::Takeway && $request->has('recipient')) {
+        } elseif ($orderType === OrderTypeEnum::Takeaway && $request->has('recipient')) {
             $transaction->recipient = $request->input('recipient');
         } elseif ($orderType === OrderTypeEnum::Delivery && $request->has('shipping_address') && $request->has('recipient') && $request->has('recipient_phone_number')) {
             $transaction->shipping_address = $request->input('shipping_address');

@@ -30,10 +30,6 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
         setLiveMyOrders((prev) => prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)));
     };
 
-    const handleUpdatePaymentStatusOrder = (updatedOrder: Transaction) => {
-        setLiveMyOrders((prev) => prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)));
-    };
-
     return (
         <>
             <CourierLayout onNewOrder={handleNewOrder}>
@@ -61,11 +57,7 @@ export default function OrderPage({ unassignedOrders, myOrders }: OrderPageProps
 
                         {/* Konten untuk tab "Pesanan Yang Saya Tangani" */}
                         <TabsContent value="myOrders">
-                            <TabMyOrders
-                                data={liveMyOrders}
-                                onUpdateStatusOrder={handleUpdateStatusOrder}
-                                onUpdatePaymentStatusOrder={handleUpdatePaymentStatusOrder}
-                            />
+                            <TabMyOrders data={liveMyOrders} onUpdateStatusOrder={handleUpdateStatusOrder} />
                         </TabsContent>
                     </Tabs>
                 </div>

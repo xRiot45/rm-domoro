@@ -25,10 +25,7 @@ import { toast } from 'sonner';
 import FormDialogOrderCompleted from '../components/form-dialog-order-completed';
 import { DataTableColumnHeader } from './data-table-column-header';
 
-export const columns = (
-    onUpdateStatusOrder: (transaction: Transaction) => void,
-    onUpdatePaymentStatusOrder: (transaction: Transaction) => void,
-): ColumnDef<Transaction>[] => [
+export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void): ColumnDef<Transaction>[] => [
     {
         id: 'order_number',
         accessorKey: 'order_number',
@@ -299,13 +296,10 @@ export const columns = (
                                 onClick: () => toast.dismiss(),
                             },
                         });
+
                         onUpdateStatusOrder({
                             ...row.original,
                             order_status: [...orderStatusList, { status: OrderStatusEnum.COMPLETED }],
-                        });
-
-                        onUpdatePaymentStatusOrder({
-                            ...row.original,
                             payment_status: PaymentStatusEnum.PAID,
                         });
                     },
@@ -342,34 +336,47 @@ export const columns = (
                 isDisabled = true;
             }
 
-            return status === OrderStatusEnum.DELIVERING ? (
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button className="cursor-pointer" size="sm" variant={variant}>
+            return (
+                <div className="flex flex-col gap-2">
+                    <Button
+                        className="cursor-pointer"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.visit(route('courier.order.orderDetails', transactionId))}
+                    >
+                        Lihat Detail Pesanan
+                    </Button>
+
+                    {status === OrderStatusEnum.DELIVERING ? (
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button className="cursor-pointer" size="sm" variant={variant}>
+                                    {buttonText}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Konfirmasi Penyelesaian Pesanan</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Apakah Anda yakin ingin menyelesaikan pesanan ini? Tindakan ini tidak dapat dibatalkan.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <FormDialogOrderCompleted isCash={isCash} onSubmit={handleOrderCompleteWithForm} />
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    ) : (
+                        <Button
+                            className="cursor-pointer"
+                            size="sm"
+                            onClick={buttonHandler}
+                            disabled={isDisabled}
+                            variant={variant}
+                            title={isDisabled ? 'Status pesanan belum siap' : ''}
+                        >
                             {buttonText}
                         </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Konfirmasi Penyelesaian Pesanan</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Apakah Anda yakin ingin menyelesaikan pesanan ini? Tindakan ini tidak dapat dibatalkan.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <FormDialogOrderCompleted isCash={isCash} onSubmit={handleOrderCompleteWithForm} />
-                    </AlertDialogContent>
-                </AlertDialog>
-            ) : (
-                <Button
-                    className="cursor-pointer"
-                    size="sm"
-                    onClick={buttonHandler}
-                    disabled={isDisabled}
-                    variant={variant}
-                    title={isDisabled ? 'Status pesanan belum siap' : ''}
-                >
-                    {buttonText}
-                </Button>
+                    )}
+                </div>
             );
         },
         enableHiding: false,

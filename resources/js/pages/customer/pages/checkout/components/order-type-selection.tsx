@@ -10,7 +10,7 @@ interface OrderTypeSelectionProps {
 
 const iconsOrderType = {
     DINEIN: <Icon icon="mdi:food" width={24} height={24} />,
-    TAKEWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
+    TAKEAWAY: <Icon icon="solar:bag-bold" width={24} height={24} />,
     DELIVERY: <Icon icon="mdi:truck-delivery" width={24} height={24} />,
     PICKUP: <Icon icon="tdesign:undertake-delivery-filled" width={24} height={24} />,
 };
@@ -25,7 +25,7 @@ const OrderTypeSelection: React.FC<OrderTypeSelectionProps> = ({ selectedOrderTy
                 className="grid w-full space-y-4 md:grid-cols-2"
             >
                 {Object.entries(OrderTypeEnum)
-                    .filter(([key]) => key !== 'DINEIN' && key !== 'TAKEWAY')
+                    .filter(([key]) => key !== 'DINEIN' && key !== 'TAKEAWAY')
                     .map(([key, value]) => (
                         <CardContent
                             key={key}

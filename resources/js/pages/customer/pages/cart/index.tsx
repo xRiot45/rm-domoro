@@ -130,7 +130,7 @@ export default function CartPage({ carts, customer }: CartPageProps) {
                                 </div>
                                 <Button className="mt-8 w-full cursor-pointer py-5 text-white dark:bg-white dark:text-black" onClick={handleCheckout}>
                                     <Icon icon={'material-symbols:shopping-cart-checkout'} />
-                                    Checkout Pesanan
+                                    Lanjut Ke Pembayaran
                                 </Button>
                                 <Link href="/">
                                     <Button variant="outline" className="mt-2 w-full cursor-pointer py-5 text-black dark:bg-white dark:text-black">

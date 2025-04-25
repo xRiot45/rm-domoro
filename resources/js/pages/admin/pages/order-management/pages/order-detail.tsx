@@ -63,7 +63,7 @@ export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
     const isDelivery = order_type === OrderTypeEnum.DELIVERY;
     const isCash = payment_method === PaymentTypeEnum.CASH;
     const isSelfOrder = customer_id;
-    const isTakeway = order_type === OrderTypeEnum.TAKEWAY;
+    const isTakeaway = order_type === OrderTypeEnum.TAKEAWAY;
     const isPickup = order_type === OrderTypeEnum.PICKUP;
 
     return (
@@ -106,7 +106,7 @@ export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
                             </div>
                         )}
 
-                        {isTakeway && (
+                        {isTakeaway && (
                             <div>
                                 <strong>Nama Penerima :</strong> {recipient ?? '-'}
                             </div>

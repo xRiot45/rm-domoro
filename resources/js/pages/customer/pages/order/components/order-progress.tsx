@@ -26,7 +26,7 @@ const OrderProgress: React.FC<OrderProgressProps> = ({ orderId, orderStatus }) =
     return (
         <div className="rounded-2xl border p-6 shadow-none">
             <div className="mb-16">
-                <h3 className="mb-2 text-center text-xl font-semibold">Lacak Pesanan</h3>
+                <h3 className="mb-2 text-center text-xl font-semibold">Status Pesanan</h3>
                 <div className="text-muted-foreground text-center text-sm">
                     Nomor Pesanan : <span className="font-medium text-black dark:text-white">{orderId}</span>
                 </div>
