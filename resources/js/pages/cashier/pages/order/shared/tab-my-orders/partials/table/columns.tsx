@@ -223,10 +223,10 @@ export const columns = (onUpdateStatusOrder: (transaction: Transaction) => void)
         enableSorting: false,
     },
     {
-        id: 'created_at',
-        accessorKey: 'created_at',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Pemesanan" />,
-        cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('created_at'))}</span>,
+        id: 'checked_out_at',
+        accessorKey: 'checked_out_at',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Checkout Pesanan" />,
+        cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('checked_out_at'))}</span>,
         meta: {
             className: cn('pe-22 md:pe-10'),
         },
