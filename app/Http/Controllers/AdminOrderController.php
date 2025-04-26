@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
+use App\Models\OrderStatus;
 use App\Models\Transaction;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -51,5 +54,17 @@ class AdminOrderController extends Controller
         return Inertia::render('shared/order-detail', [
             'transaction' => $transaction,
         ]);
+    }
+
+    public function cancelledOrder(Transaction $transaction, int $transactionId): RedirectResponse
+    {
+        $transaction = Transaction::findOrFail($transactionId);
+
+        OrderStatus::create([
+            'transaction_id' => $transaction->id,
+            'status' => OrderStatusEnum::CANCELLED,
+        ]);
+
+        return redirect()->back()->with('success', 'Order has been cancelled.');
     }
 }

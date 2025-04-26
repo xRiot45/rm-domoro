@@ -240,6 +240,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                 ->group(function () {
                     Route::get('/', 'allOrders')->name('index');
                     Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
+                    Route::put('/{transactionId}', 'cancelledOrder')->name('cancelledOrder');
                 });
         });
 
