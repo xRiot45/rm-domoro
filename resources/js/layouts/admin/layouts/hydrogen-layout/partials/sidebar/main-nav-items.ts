@@ -19,16 +19,16 @@ const mainNavItems: NavGroup[] = [
                 href: '/admin/manajemen-kontrol-akses/roles',
                 icon: 'eos-icons:role-binding',
             },
-            {
-                title: 'Permissions / Izin',
-                href: '/admin/manajemen-kontrol-akses/permissions',
-                icon: 'material-symbols:security',
-            },
-            {
-                title: 'Kelola Izin Peran',
-                href: '/admin/manajemen-kontrol-akses/manage-role-permissions',
-                icon: 'material-symbols:manage-accounts-outline-rounded',
-            },
+            // {
+            //     title: 'Permissions / Izin',
+            //     href: '/admin/manajemen-kontrol-akses/permissions',
+            //     icon: 'material-symbols:security',
+            // },
+            // {
+            //     title: 'Kelola Izin Peran',
+            //     href: '/admin/manajemen-kontrol-akses/manage-role-permissions',
+            //     icon: 'material-symbols:manage-accounts-outline-rounded',
+            // },
         ],
     },
     {
@@ -84,41 +84,41 @@ const mainNavItems: NavGroup[] = [
                 href: '/admin/order-management/all-orders',
                 icon: 'material-symbols:receipt-long',
             },
-            {
-                title: 'Order Baru',
-                href: '/admin/order-management/new-orders',
-                icon: 'lets-icons:order',
-            },
-            {
-                title: 'Order Dikonfirmasi & Diproses',
-                href: '/admin/order-management/confirmed-orders',
-                icon: 'material-symbols:checklist',
-            },
-            {
-                title: 'Order Dimasak & Selesai Dimasak',
-                href: '/admin/order-management/cooking-orders',
-                icon: 'material-symbols:cooking',
-            },
-            {
-                title: 'Order Siap Disajikan & Diantar',
-                href: '/admin/order-management/delivering-orders',
-                icon: 'icon-park-outline:delivery',
-            },
-            {
-                title: 'Order Dalam Pengiriman',
-                href: '/admin/order-management/delivered-orders',
-                icon: 'carbon:delivery',
-            },
-            {
-                title: 'Order Selesai',
-                href: '/admin/order-management/done-orders',
-                icon: 'material-symbols:done',
-            },
-            {
-                title: 'Order Dibatalkan',
-                href: '/admin/order-management/canceled-orders',
-                icon: 'material-symbols:cancel',
-            },
+            // {
+            //     title: 'Order Baru',
+            //     href: '/admin/order-management/new-orders',
+            //     icon: 'lets-icons:order',
+            // },
+            // {
+            //     title: 'Order Dikonfirmasi & Diproses',
+            //     href: '/admin/order-management/confirmed-orders',
+            //     icon: 'material-symbols:checklist',
+            // },
+            // {
+            //     title: 'Order Dimasak & Selesai Dimasak',
+            //     href: '/admin/order-management/cooking-orders',
+            //     icon: 'material-symbols:cooking',
+            // },
+            // {
+            //     title: 'Order Siap Disajikan & Diantar',
+            //     href: '/admin/order-management/delivering-orders',
+            //     icon: 'icon-park-outline:delivery',
+            // },
+            // {
+            //     title: 'Order Dalam Pengiriman',
+            //     href: '/admin/order-management/delivered-orders',
+            //     icon: 'carbon:delivery',
+            // },
+            // {
+            //     title: 'Order Selesai',
+            //     href: '/admin/order-management/done-orders',
+            //     icon: 'material-symbols:done',
+            // },
+            // {
+            //     title: 'Order Dibatalkan',
+            //     href: '/admin/order-management/canceled-orders',
+            //     icon: 'material-symbols:cancel',
+            // },
         ],
     },
     {
