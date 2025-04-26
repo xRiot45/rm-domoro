@@ -5,13 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@inertiajs/react';
 
+interface FormDialogOrderCompletedProps {
+    onSubmit: (data: PropsForm) => void;
+    isCash: boolean;
+}
+
 interface PropsForm {
     proof_photo: File | null;
     cash_received: number;
 }
 
-const FormDialogOrderCompleted = ({ onSubmit, isCash }: { onSubmit: any; isCash: any }) => {
-    const { data, setData, processing, errors, reset } = useForm<Required<PropsForm>>({
+const FormDialogOrderCompleted = ({ onSubmit, isCash }: FormDialogOrderCompletedProps) => {
+    const { data, setData, processing, errors } = useForm<Required<PropsForm>>({
         proof_photo: null,
         cash_received: 0,
     });
@@ -51,7 +56,9 @@ const FormDialogOrderCompleted = ({ onSubmit, isCash }: { onSubmit: any; isCash:
 
                 <AlertDialogFooter>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
-                    <Button type="submit">Selesaikan Pesanan</Button>
+                    <Button type="submit" disabled={processing}>
+                        Selesaikan Pesanan
+                    </Button>
                 </AlertDialogFooter>
             </form>
         </>
