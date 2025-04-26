@@ -239,7 +239,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                 ->controller(AdminOrderController::class)
                 ->group(function () {
                     Route::get('/', 'allOrders')->name('index');
-                    Route::get('/{transaction}', 'orderDetails')->name('orderDetails');
+                    Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
                 });
         });
 

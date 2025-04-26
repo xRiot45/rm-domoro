@@ -36,9 +36,20 @@ class AdminOrderController extends Controller
         ]);
     }
 
-    public function orderDetails(Transaction $transaction): Response
+    public function orderDetails(Transaction $transaction, int $transactionId): Response
     {
-        $data = $this->getOrderDetails($transaction);
-        return Inertia::render('admin/pages/order-management/pages/order-detail', $data);
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->load([
+            'transactionItems.menuItem.menuCategory',
+            'orderStatus',
+            'customer.user',
+            'cashier.user',
+            'courier.user',
+            'chef.user',
+        ]);
+
+        return Inertia::render('shared/order-detail', [
+            'transaction' => $transaction,
+        ]);
     }
 }

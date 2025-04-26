@@ -6,7 +6,6 @@ import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { PaymentTypeEnum } from '@/enums/payment-type';
 import { Transaction } from '@/models/transaction';
-import { BreadcrumbItem } from '@/types';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
 import { paymentStatusMap } from '@/utils/payment-status-map';
@@ -17,17 +16,6 @@ import OrderProgress from './order-progress';
 interface OrderDetailPageProps {
     transaction: Transaction;
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Manajemen Order / Pesanan',
-        href: '#',
-    },
-    {
-        title: 'Detail Order',
-        href: '#',
-    },
-];
 
 export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
     const {

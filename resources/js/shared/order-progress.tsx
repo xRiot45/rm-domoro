@@ -52,16 +52,18 @@ const OrderProgress: React.FC<OrderProgressProps> = ({ orderId, orderStatus }) =
                                     {/* Waktu */}
                                     <span className="text-muted-foreground mt-1 text-xs">
                                         {step.created_at &&
-                                            new Date(step.created_at).toLocaleTimeString('id-ID', {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                hour12: true,
-                                            })}
+                                            (() => {
+                                                const date = new Date(step.created_at);
+                                                const hours = date.getHours().toString().padStart(2, '0');
+                                                const minutes = date.getMinutes().toString().padStart(2, '0');
+                                                const period = date.getHours() >= 12 ? 'PM' : 'AM';
+                                                return `${hours}:${minutes} ${period}`;
+                                            })()}
                                     </span>
                                     {/* Tanggal */}
                                     <span className="text-muted-foreground mt-1 text-xs">
                                         {step.created_at &&
-                                            new Date(step.created_at).toLocaleTimeString('id-ID', {
+                                            new Date(step.created_at).toLocaleDateString('id-ID', {
                                                 day: '2-digit',
                                                 month: 'short',
                                                 year: 'numeric',

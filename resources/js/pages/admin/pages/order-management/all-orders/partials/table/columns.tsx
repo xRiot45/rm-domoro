@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { OrderStatusEnum } from '@/enums/order-status';
+import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { cn } from '@/lib/utils';
 import { Transaction } from '@/models/transaction';
@@ -20,7 +21,7 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor Pesanan" />,
         cell: ({ row }) => <span className="text-sm">{row.getValue('order_number')}</span>,
         meta: {
-            className: cn('px-5'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableSorting: true,
         enableHiding: false,
@@ -31,19 +32,18 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Menu" />,
         cell: ({ row }) => {
             const items = row.original.transaction_items;
+            const firstItem = items[0];
+
             return (
-                <div className="flex flex-col gap-3">
-                    {items.map((item) => (
-                        <div key={item.id} className="flex items-center space-x-4">
-                            {item.menu_item?.image_url && (
-                                <img src={`${item.menu_item.image_url}`} alt={item.menu_item.name} className="h-16 w-16 rounded-md object-cover" />
-                            )}
-                            <div>
-                                <span className="block font-medium">{item.menu_item?.name ?? '-'}</span>
-                                <span className="text-muted-foreground block text-sm">{item.menu_item?.menu_category?.name ?? '-'}</span>
-                            </div>
-                        </div>
-                    ))}
+                <div className="flex items-start gap-3">
+                    {firstItem?.menu_item?.image_url && (
+                        <img src={`${firstItem.menu_item.image_url}`} alt={firstItem.menu_item?.name} className="h-16 w-16 rounded-md object-cover" />
+                    )}
+                    <div className="flex flex-col justify-center">
+                        <h1 className="font-bold">{firstItem?.menu_item?.name ?? '-'}</h1>
+                        <span className="text-muted-foreground text-sm">{firstItem?.menu_item?.menu_category?.name ?? '-'}</span>
+                        {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} menu lainnya</span>}
+                    </div>
                 </div>
             );
         },
@@ -59,18 +59,19 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Jumlah Menu" />,
         cell: ({ row }) => {
             const items = row.original.transaction_items;
+            const firstItem = items[0];
+
             return (
-                <div className="flex flex-col gap-1 space-y-13">
-                    {items.map((item) => (
-                        <span key={item.id} className="text-sm">
-                            {item.quantity}x {item.menu_item?.name ?? '-'}
-                        </span>
-                    ))}
+                <div className="flex flex-col justify-center">
+                    <span className="text-sm">
+                        {firstItem?.quantity}x {firstItem?.menu_item?.name ?? '-'}
+                    </span>
+                    {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} menu lainnya</span>}
                 </div>
             );
         },
         meta: {
-            className: cn('pe-22'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -80,19 +81,18 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: 'unit_price',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Harga Satuan" />,
         cell: ({ row }) => {
-            const unitPrice = row.original.transaction_items;
+            const items = row.original.transaction_items;
+            const firstItem = items[0];
+
             return (
-                <div className="flex flex-col gap-1 space-y-13">
-                    {unitPrice.map((item) => (
-                        <span key={item.id} className="text-sm">
-                            {formatCurrency(item.unit_price)}
-                        </span>
-                    ))}
+                <div className="flex flex-col justify-center">
+                    <span className="text-sm">{formatCurrency(firstItem?.unit_price)}</span>
+                    {items.length > 1 && <span className="text-muted-foreground mt-1 text-xs">dan {items.length - 1} harga lainnya</span>}
                 </div>
             );
         },
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -107,7 +107,27 @@ export const columns: ColumnDef<Transaction>[] = [
             return value.includes(row.getValue(id));
         },
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
+        },
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
+        id: 'table_number',
+        accessorKey: 'table_number',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Nomor Meja" />,
+        cell: ({ row }) => {
+            const orderType = row.original.order_type;
+            const tableNumber = row.original.table_number;
+
+            if (orderType === OrderTypeEnum.DINEIN) {
+                return <span className="text-sm">{tableNumber ?? '-'}</span>;
+            }
+
+            return <span className="text-muted-foreground text-sm italic">-</span>;
+        },
+        meta: {
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -135,7 +155,7 @@ export const columns: ColumnDef<Transaction>[] = [
             return value.includes(row.getValue(id));
         },
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -158,7 +178,7 @@ export const columns: ColumnDef<Transaction>[] = [
             return value.includes(row.getValue(id));
         },
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: true,
         enableSorting: false,
@@ -169,7 +189,7 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
         cell: ({ row }) => <span className="text-sm">{formatCurrency(row.getValue('final_total'))}</span>,
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: true,
         enableSorting: false,
@@ -197,7 +217,7 @@ export const columns: ColumnDef<Transaction>[] = [
             return value.includes(row.getValue(id));
         },
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: false,
         enableSorting: false,
@@ -208,7 +228,7 @@ export const columns: ColumnDef<Transaction>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Checkout Pesanan" />,
         cell: ({ row }) => <span className="max-w-36">{formatDate(row.getValue('checked_out_at'))}</span>,
         meta: {
-            className: cn('pe-10'),
+            className: cn('pe-22 md:pe-10'),
         },
         enableHiding: true,
         enableSorting: true,
