@@ -38,6 +38,7 @@ interface Transaction {
     shipping_address?: string | null;
     order_status: OrderStatus[];
     checked_out_at?: string;
+    proof_photo?: File | null;
     order_sent_to_chef_at?: string;
     order_sent_to_courier_at?: string;
     created_at?: string;

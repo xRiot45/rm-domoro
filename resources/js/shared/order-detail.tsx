@@ -44,6 +44,7 @@ export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
         final_total,
         cash_received,
         change,
+        proof_photo,
     } = transaction;
 
     const isDineIn = order_type === OrderTypeEnum.DINEIN;
@@ -164,6 +165,21 @@ export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
                             <div>
                                 <strong>No. Telp Penerima :</strong> {recipient_phone_number ?? '-'}
                             </div>
+                            {/* <div>
+                                <strong>Bukti Foto :</strong> <img src={`${proof_photo}`} alt="Bukti Foto" className="w-44" />
+                            </div> */}
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* Bukti Foto Pengiriman */}
+                {isDelivery && proof_photo && (
+                    <Card className="rounded-2xl px-4 py-8 shadow-none">
+                        <CardHeader>
+                            <CardTitle className="text-xl">Bukti Pengiriman</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex justify-center">
+                            <img src={`${proof_photo}`} alt="Bukti Pengiriman" className="w-44 rounded-lg object-cover shadow-md" />
                         </CardContent>
                     </Card>
                 )}
