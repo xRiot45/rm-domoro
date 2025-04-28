@@ -8,6 +8,7 @@ import { PaymentTypeEnum } from '@/enums/payment-type';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
+import { formatOrderType } from '@/utils/format-order-type';
 import { paymentStatusMap } from '@/utils/payment-status-map';
 import { Icon } from '@iconify/react';
 import { Head } from '@inertiajs/react';
@@ -76,7 +77,7 @@ export default function OrderDetailPage({ transaction }: OrderDetailPageProps) {
                             <strong>Nomor Pesanan :</strong> {order_number}
                         </div>
                         <div>
-                            <strong>Metode Pemesanan :</strong> {order_type}
+                            <strong>Metode Pemesanan :</strong> {formatOrderType(order_type ?? '-')}
                         </div>
                         <div>
                             <strong>Metode Pembayaran :</strong> {payment_method}

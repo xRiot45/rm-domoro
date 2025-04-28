@@ -75,7 +75,7 @@ export function DataTableRowActions({ row }: { row: Row<Transaction> }) {
                             </DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </Link>
-                    {!orderIsCancelled && (
+                    {/* {!orderIsCancelled && (
                         <>
                             <DropdownMenuSeparator />
                             <AlertDialog>
@@ -105,7 +105,7 @@ export function DataTableRowActions({ row }: { row: Row<Transaction> }) {
                                 </AlertDialogContent>
                             </AlertDialog>
                         </>
-                    )}
+                    )} */}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
