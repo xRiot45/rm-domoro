@@ -122,6 +122,21 @@ const mainNavItems: NavGroup[] = [
         ],
     },
     {
+        group: 'LAPORAN KEUANGAN',
+        items: [
+            {
+                title: 'Pemasukan',
+                href: '/admin/financial-reports/revenue',
+                icon: 'tabler:cash-plus',
+            },
+            {
+                title: 'Pengeluaran',
+                href: '/admin/financial-reports/expenses',
+                icon: 'mdi:cash-minus',
+            },
+        ],
+    },
+    {
         group: 'PENGATURAN',
         items: [
             {
