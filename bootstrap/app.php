@@ -1,7 +1,10 @@
 <?php
 
+use App\Console\Commands\ReportGenerateCommand;
+use App\Console\Schedule\ReportSchedule;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -30,6 +33,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
+
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->command('report-revenue:generate')->everyMinute();
+    })
+
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e, $request) {
             if ($request->wantsJson() || $request->is('api/*')) {

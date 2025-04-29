@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('revenue_reports', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('report_date');
+            $table->date('report_date');
             $table->integer('total_transactions');
             $table->integer('total_revenue');
             $table->timestamps();
