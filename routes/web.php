@@ -255,6 +255,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     ->controller(RevenueReportController::class)
                     ->group(function () {
                         Route::get('/', 'index')->name('index');
+                        Route::get('/detail/date/{reportDate}', 'detailReport')->name('detailReport');
+                        Route::get('/detail/order/{transactionId}', 'orderDetails')->name('orderDetails');
                     });
             });
 

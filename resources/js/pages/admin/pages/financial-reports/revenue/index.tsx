@@ -22,7 +22,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function RevenueReportPage({ data }: RevenueReportPageProps) {
-    console.log(data);
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>

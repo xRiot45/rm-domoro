@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { RevenueReport } from '@/models/financial-reports';
 import { Icon } from '@iconify/react';
+import { Link } from '@inertiajs/react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Row } from '@tanstack/react-table';
 
@@ -38,20 +39,17 @@ export function DataTableRowActions({ row }: { row: Row<RevenueReport> }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[200px]">
-                    {/* <Link href={route('admin.roles.edit', { id: row.original.id })} className="cursor-po">
+                    <Link
+                        href={route('admin.financial-reports.revenue.detailReport', { reportDate: row.original.report_date })}
+                        className="cursor-po"
+                    >
                         <DropdownMenuItem className="cursor-pointer">
-                            Edit Data
+                            Lihat Detail Transaksi
                             <DropdownMenuShortcut>
-                                <Icon icon={'material-symbols:edit'} />
+                                <Icon icon={'material-symbols:visibility'} />
                             </DropdownMenuShortcut>
                         </DropdownMenuItem>
-                    </Link> */}
-                    <DropdownMenuItem className="cursor-pointer">
-                        Lihat Detail Transaksi
-                        <DropdownMenuShortcut>
-                            <Icon icon={'material-symbols:visibility'} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
