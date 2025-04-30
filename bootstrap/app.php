@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
 
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->command('report-revenue:generate')->everyMinute();
+        $schedule->command('report-revenue:generate')->everySecond();
     })
 
     ->withExceptions(function (Exceptions $exceptions) {

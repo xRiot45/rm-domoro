@@ -14,11 +14,12 @@ use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RevenueReportController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Settings\CustomerProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Settings\CustomerProfileController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
@@ -243,6 +244,19 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     Route::put('/{transactionId}', 'cancelledOrder')->name('cancelledOrder');
                 });
         });
+
+        // Financial Reports
+        Route::prefix('financial-reports')
+            ->name('financial-reports.')
+            ->group(function () {
+                // Revenue / Pendapatan
+                Route::prefix('revenue')
+                    ->name('revenue.')
+                    ->controller(RevenueReportController::class)
+                    ->group(function () {
+                        Route::get('/', 'index')->name('index');
+                    });
+            });
 
         // Settings
         Route::prefix('settings')

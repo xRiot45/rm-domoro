@@ -37,6 +37,9 @@ $ php artisan schedule:work
 # perintah untuk melihat list dari schedule
 $ php artisan schedule:list
 
+# Perintah untuk menjalankan revenue report dan melihat error nya di console
+$ php artisan report-revenue:generate
+
 # Jika testing schedule sudah oke jangan lupa ganti kode di console.php seperti ini (Fungsi kode untuk mengenerate report setiap jam 12 malam)
 Schedule::command('app:report-generate-command')->dailyAt('00:00');
 

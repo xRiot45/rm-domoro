@@ -17,7 +17,7 @@ class ReportGenerateCommand extends Command
 
     public function handle()
     {
-        $today = Carbon::today()->toDateString();
+        $today = Carbon::yesterday(config('app.timezone'))->toDateString();
         $transactions = Transaction::whereDate('checked_out_at', $today)
             ->where('payment_status', PaymentStatusEnum::PAID)
             ->whereHas('orderStatus', function ($query) {
