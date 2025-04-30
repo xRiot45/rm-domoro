@@ -11,21 +11,57 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminRole = Role::where('name', 'admin')->first();
+        $roles = [
+            'admin'   => Role::where('name', 'admin')->first(),
+            'cashier' => Role::where('name', 'cashier')->first(),
+            'courier' => Role::where('name', 'courier')->first(),
+            'chef'    => Role::where('name', 'chef')->first(),
+        ];
 
-        if (!$adminRole) {
-            $this->command->error("Role 'admin' belum ada. Jalankan RoleSeeder terlebih dahulu.");
-            return;
+        foreach ($roles as $roleName => $role) {
+            if (!$role) {
+                $this->command->error("Role '{$roleName}' is missing. Please run RoleSeeder first.");
+                return;
+            }
         }
 
-        $admin = User::create([
-            'full_name' => 'Admin Utama',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('12345678'),
-            'phone_number' => '081234567890',
-            'avatar' => null,
-        ]);
+        $users = [
+            [
+                'full_name' => 'Admin Utama',
+                'email'     => 'admin@gmail.com',
+                'phone'     => '081234567890',
+                'role'      => 'admin',
+            ],
+            [
+                'full_name' => 'Kasir Utama',
+                'email'     => 'cashier@gmail.com',
+                'phone'     => '082292092345',
+                'role'      => 'cashier',
+            ],
+            [
+                'full_name' => 'Kurir Utama',
+                'email'     => 'courier@gmail.com',
+                'phone'     => '082278902345',
+                'role'      => 'courier',
+            ],
+            [
+                'full_name' => 'Chef Utama',
+                'email'     => 'chef@gmail.com',
+                'phone'     => '082290920202',
+                'role'      => 'chef',
+            ],
+        ];
 
-        $admin->assignRole($adminRole);
+        foreach ($users as $userData) {
+            $user = User::create([
+                'full_name'    => $userData['full_name'],
+                'email'        => $userData['email'],
+                'password'     => Hash::make('12345678'),
+                'phone_number' => $userData['phone'],
+                'avatar'       => null,
+            ]);
+
+            $user->assignRole($roles[$userData['role']]);
+        }
     }
 }
