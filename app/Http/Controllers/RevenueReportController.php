@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Models\RevenueReport;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -13,8 +15,32 @@ class RevenueReportController extends Controller
     public function index(): Response
     {
         $revenueReports = RevenueReport::all();
+        $totalTransactions = RevenueReport::sum('total_transactions');
+        $totalRevenue = RevenueReport::sum('total_revenue');
+        $averageRevenuePerTransaction = $totalTransactions > 0 ? $totalRevenue / $totalTransactions : 0;
+
+        $todayReport = RevenueReport::whereDate('report_date', Carbon::today())->first();
+
+        $todayTransactions = 0;
+        $todayRevenue = 0;
+        $todayAverageRevenuePerTransaction = 0;
+
+        if ($todayReport) {
+            $todayTransactions = $todayReport->total_transactions;
+            $todayRevenue = $todayReport->total_revenue;
+            $todayAverageRevenuePerTransaction = $todayTransactions > 0
+                ? $todayRevenue / $todayTransactions
+                : 0;
+        }
+
         return Inertia::render('admin/pages/financial-reports/revenue/index', [
             'data' => $revenueReports,
+            'totalTransactions' => $totalTransactions,
+            'totalRevenue' => $totalRevenue,
+            'averageRevenuePerTransaction' => $averageRevenuePerTransaction,
+            'todayTransactions' => $todayTransactions,
+            'todayRevenue' => $todayRevenue,
+            'todayAverageRevenuePerTransaction' => $todayAverageRevenuePerTransaction,
         ]);
     }
 
