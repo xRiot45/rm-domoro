@@ -1,34 +1,11 @@
-import { Checkbox } from '@/components/ui/checkbox';
 import { RevenueReport } from '@/models/financial-reports';
 import { formatCurrency } from '@/utils/format-currency';
 import { ColumnDef, Row } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 
 export const columns: ColumnDef<RevenueReport>[] = [
-    {
-        id: 'select',
-        accessorKey: 'id',
-        size: 20,
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
     {
         id: 'no',
         accessorKey: 'no',
@@ -38,18 +15,27 @@ export const columns: ColumnDef<RevenueReport>[] = [
         enableHiding: false,
     },
     {
-        id: 'report_date',
         accessorKey: 'report_date',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tanggal Laporan" />,
-        cell: ({ row }) => <span className="max-w-36">{row.getValue('report_date')}</span>,
-        enableHiding: true,
-        enableSorting: true,
+        header: 'Tanggal Laporan',
+        cell: ({ row }) => format(new Date(row.original.report_date), 'dd/MM/yyyy'),
+        filterFn: (row, columnId, value) => {
+            const date = new Date(row.getValue(columnId));
+            const from = value?.from ? new Date(value.from) : null;
+            const to = value?.to ? new Date(value.to) : null;
+            return (!from || date >= from) && (!to || date <= to);
+        },
     },
     {
         id: 'total_transactions',
         accessorKey: 'total_transactions',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Total Transaksi" />,
         cell: ({ row }) => <span className="max-w-36">{row.getValue('total_transactions')} Transaksi</span>,
+        filterFn: (row, columnId, value) => {
+            const val = row.getValue(columnId) as number;
+            const min = value?.min ?? 0;
+            const max = value?.max ?? Infinity;
+            return val >= min && val <= max;
+        },
         enableHiding: true,
         enableSorting: true,
     },
@@ -58,6 +44,12 @@ export const columns: ColumnDef<RevenueReport>[] = [
         accessorKey: 'total_revenue',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Total Pendapatan" />,
         cell: ({ row }) => <span className="max-w-36">{formatCurrency(row.getValue('total_revenue'))}</span>,
+        filterFn: (row, columnId, value) => {
+            const val = row.getValue(columnId) as number;
+            const min = value?.min ?? 0;
+            const max = value?.max ?? Infinity;
+            return val >= min && val <= max;
+        },
         enableHiding: true,
         enableSorting: true,
     },
