@@ -168,12 +168,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Menampilkan halaman cetak nota pesanan untuk kasir.
+     * Menampilkan halaman cetak nota pesanan.
      *
      * @param int $transactionId ID transaksi.
      * @return Response
      */
-    public function showInvoiceCashier(int $transactionId): Response
+    public function showInvoice(int $transactionId): Response
     {
         $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
 
@@ -181,7 +181,7 @@ class OrderController extends Controller
             $transaction->setRelation('customer', null);
         }
 
-        return Inertia::render('cashier/pages/order/pages/invoice', [
+        return Inertia::render('shared/invoice', [
             'data' => $transaction,
         ]);
     }

@@ -242,6 +242,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     Route::get('/', 'allOrders')->name('index');
                     Route::get('/{transactionId}', 'orderDetails')->name('orderDetails');
                     Route::put('/{transactionId}', 'cancelledOrder')->name('cancelledOrder');
+                    Route::get('/invoice/{transactionId}', 'showInvoice')->name('showInvoice');
                 });
         });
 
@@ -368,7 +369,7 @@ Route::middleware(['auth', 'verified', 'role:cashier'])
                 Route::put('/{id}/send-to-courier', 'sendOrderToCourier')->name('sendOrderToCourier');
                 Route::put('/{id}/ready-to-serve', 'readyToServe')->name('readyToServe');
                 Route::put('/{id}/complete', 'orderCompleted')->name('orderCompleted');
-                Route::get('/invoice/{id}', 'showInvoiceCashier')->name('showInvoiceCashier');
+                Route::get('/invoice/{id}', 'showInvoice')->name('showInvoice');
             });
     });
 

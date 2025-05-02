@@ -57,6 +57,14 @@ export function DataTableRowActions({ row }: { row: Row<Transaction> }) {
                             </DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </Link>
+                    <Link href={route('admin.all-orders.showInvoice', { id: row.original.id })}>
+                        <DropdownMenuItem className="cursor-pointer">
+                            Lihat Invoice
+                            <DropdownMenuShortcut>
+                                <Icon icon={'iconamoon:invoice'} />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </Link>
                     {/* {!orderIsCancelled && (
                         <>
                             <DropdownMenuSeparator />

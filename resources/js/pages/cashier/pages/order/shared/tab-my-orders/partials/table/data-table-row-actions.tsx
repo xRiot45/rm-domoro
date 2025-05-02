@@ -295,7 +295,7 @@ export function DataTableRowActions({
                         </>
                     )}
 
-                    <Link href={route('cashier.order.showInvoiceCashier', { id: row.original.id })}>
+                    <Link href={route('cashier.order.showInvoice', { id: row.original.id })}>
                         <DropdownMenuItem className="cursor-pointer">
                             Lihat Invoice
                             <DropdownMenuShortcut>

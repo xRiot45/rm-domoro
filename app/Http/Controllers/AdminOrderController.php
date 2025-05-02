@@ -56,6 +56,19 @@ class AdminOrderController extends Controller
         ]);
     }
 
+    public function showInvoice(int $transactionId): Response
+    {
+        $transaction = Transaction::with(['customer.user', 'transactionItems.menuItem.menuCategory', 'orderStatus'])->findOrFail($transactionId);
+
+        if (!$transaction->customer || !$transaction->customer->user) {
+            $transaction->setRelation('customer', null);
+        }
+
+        return Inertia::render('shared/invoice', [
+            'data' => $transaction,
+        ]);
+    }
+
     public function cancelledOrder(Transaction $transaction, int $transactionId): RedirectResponse
     {
         $transaction = Transaction::findOrFail($transactionId);

@@ -6,7 +6,6 @@ import { Separator } from '@/components/ui/separator';
 import { OrderTypeEnum } from '@/enums/order-type';
 import { PaymentStatusEnum } from '@/enums/payment-status';
 import { PaymentTypeEnum } from '@/enums/payment-type';
-import CashierLayout from '@/layouts/cashier/layout';
 import { Transaction } from '@/models/transaction';
 import { formatCurrency } from '@/utils/format-currency';
 import { formatDate } from '@/utils/format-date';
@@ -27,7 +26,7 @@ export default function InvoiceOrderPage({ data }: InvoiceOrderProps) {
 
     return (
         <>
-            <CashierLayout>
+            <main>
                 <Head title="Detail Order" />
                 <div className="flex min-h-screen items-center justify-center px-4">
                     <div className="mt-2 flex max-w-7xl flex-1 flex-col gap-4 rounded-xl py-4">
@@ -187,7 +186,7 @@ export default function InvoiceOrderPage({ data }: InvoiceOrderProps) {
                         </div>
                     </div>
                 </div>
-            </CashierLayout>
+            </main>
         </>
     );
 }
