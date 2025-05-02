@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExpenseReport extends Model
 {
@@ -13,4 +14,9 @@ class ExpenseReport extends Model
         'description',
         'total_expense'
     ];
+
+    public function expenseItems(): HasMany
+    {
+        return $this->hasMany(ExpenseItem::class);
+    }
 }
