@@ -8,10 +8,6 @@ export default function ButtonPartials() {
                 <span>Refresh Halaman</span>
                 <Icon icon={'material-symbols:refresh'} className="text-background" />
             </Button>
-            <Button className="cursor-pointer bg-green-600 hover:bg-green-700">
-                <span>Print Laporan</span>
-                <Icon icon={'material-symbols:print'} className="text-background" />
-            </Button>
         </div>
     );
 }
