@@ -1,5 +1,6 @@
 import AdminLayout from '@/layouts/admin/layout';
 import { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,6 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function CreateExpenseReportPage() {
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
+            <Head title="Tambah Laporan Pengeluaran" />
             <h1>Create Expense Report</h1>
         </AdminLayout>
     );
