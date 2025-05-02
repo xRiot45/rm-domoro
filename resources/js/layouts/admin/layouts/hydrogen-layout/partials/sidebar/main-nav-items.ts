@@ -131,8 +131,13 @@ const mainNavItems: NavGroup[] = [
             },
             {
                 title: 'Pengeluaran',
-                href: '/admin/financial-reports/expenses',
+                href: '/admin/financial-reports/expense',
                 icon: 'mdi:cash-minus',
+            },
+            {
+                title: 'Laba Bersih',
+                href: '/admin/financial-reports/profit',
+                icon: 'tabler:currency-dollar',
             },
         ],
     },

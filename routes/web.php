@@ -8,6 +8,7 @@ use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
@@ -258,6 +259,13 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                         Route::get('/', 'index')->name('index');
                         Route::get('/detail/date/{reportDate}', 'detailReport')->name('detailReport');
                         Route::get('/detail/order/{transactionId}', 'orderDetails')->name('orderDetails');
+                    });
+
+                Route::prefix('expense')
+                    ->name('expense.')
+                    ->controller(ExpenseReportController::class)
+                    ->group(function () {
+                        Route::get('/', 'index')->name('index');
                     });
             });
 
