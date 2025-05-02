@@ -1,7 +1,30 @@
+import AdminLayout from '@/layouts/admin/layout';
+import { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
+import ButtonPartials from './partials/buttons';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Laporan Keuangan',
+        href: '#',
+    },
+    {
+        title: 'Pengeluaran',
+        href: '/admin/financial-reports/expense',
+    },
+];
+
 export default function ExpenseReportPage() {
     return (
-        <div>
-            <h1>Expense Report</h1>
-        </div>
+        <AdminLayout breadcrumbs={breadcrumbs}>
+            <Head title="Laporan Pengeluaran" />
+            <div className="mb-2 flex flex-wrap justify-between space-y-2 p-4">
+                <div>
+                    <h2 className="text-2xl font-black tracking-tight text-gray-700 dark:text-gray-200">Laporan Pengeluaran</h2>
+                    <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola laporan pengeluaran anda di sini</p>
+                </div>
+                <ButtonPartials />
+            </div>
+        </AdminLayout>
     );
 }
