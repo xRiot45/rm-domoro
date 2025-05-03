@@ -266,6 +266,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                     ->controller(ExpenseReportController::class)
                     ->group(function () {
                         Route::get('/', 'index')->name('index');
+                        Route::get('/detail/date/{reportDate}', 'detailReport')->name('detailReport');
                         Route::get('/create', 'create')->name('create');
                         Route::post('/create', 'store')->name('store');
                     });

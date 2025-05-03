@@ -20,6 +20,14 @@ class ExpenseReportController extends Controller
         ]);
     }
 
+    public function detailReport($reportDate): Response
+    {
+        $expenseReport = ExpenseReport::with('expenseItems')->where('report_date', $reportDate)->first();
+        return Inertia::render('admin/pages/financial-reports/expense/pages/detail', [
+            'data' => $expenseReport
+        ]);
+    }
+
     public function create(): Response
     {
         $revenueReports = RevenueReport::pluck('report_date')->map(fn($date) => Carbon::parse($date)->toDateString());
