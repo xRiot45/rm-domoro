@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin/layout';
 import { BreadcrumbItem } from '@/types';
+import { Icon } from '@iconify/react';
 import { Head, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -201,11 +202,13 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
                     ))}
                 </div>
                 <div className="flex items-center justify-end gap-2">
-                    <Button type="button" onClick={handleAddItem}>
+                    <Button type="button" onClick={handleAddItem} className="cursor-pointer bg-blue-500 hover:bg-blue-600">
+                        <Icon icon={'heroicons:plus'} />
                         Tambah Item
                     </Button>
-                    <Button type="submit" disabled={processing}>
-                        Simpan
+                    <Button type="submit" disabled={processing} className="cursor-pointer">
+                        <Icon icon={'ic:outline-done-all'} />
+                        Simpan Data
                     </Button>
                 </div>
             </form>
