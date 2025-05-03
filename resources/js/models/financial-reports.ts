@@ -31,3 +31,10 @@ export interface ExpenseSummary {
         total: number;
     }[];
 }
+
+export interface NetProfit {
+    date: string;
+    revenue: number;
+    expense: number;
+    net_profit: number;
+}
