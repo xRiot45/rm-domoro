@@ -14,7 +14,10 @@ class ExpenseReportController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('admin/pages/financial-reports/expense/index');
+        $expenseReport = ExpenseReport::with('expenseItems')->get();
+        return Inertia::render('admin/pages/financial-reports/expense/index', [
+            'data' => $expenseReport
+        ]);
     }
 
     public function create(): Response
