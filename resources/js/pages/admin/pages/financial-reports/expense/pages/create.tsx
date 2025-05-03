@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin/layout';
-import { ExpenseReportItem } from '@/models/expense';
+import { ExpenseReportItem } from '@/models/financial-reports';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { Head, Link, router, useForm } from '@inertiajs/react';

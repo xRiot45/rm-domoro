@@ -1,7 +1,14 @@
 import AdminLayout from '@/layouts/admin/layout';
+import { ExpenseReport } from '@/models/financial-reports';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import ButtonPartials from './partials/buttons';
+import ExpenseReportTable from './partials/table';
+import { columns } from './partials/table/columns';
+
+interface ExpenseReportPageProps {
+    data: ExpenseReport[];
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ExpenseReportPage() {
+export default function ExpenseReportPage({ data }: ExpenseReportPageProps) {
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title="Laporan Pengeluaran" />
@@ -24,6 +31,10 @@ export default function ExpenseReportPage() {
                     <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola laporan pengeluaran anda di sini</p>
                 </div>
                 <ButtonPartials />
+            </div>
+
+            <div className="p-4">
+                <ExpenseReportTable data={data} columns={columns} />
             </div>
         </AdminLayout>
     );
