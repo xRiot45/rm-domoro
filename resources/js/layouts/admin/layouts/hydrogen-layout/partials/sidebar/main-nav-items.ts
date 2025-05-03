@@ -136,7 +136,7 @@ const mainNavItems: NavGroup[] = [
             },
             {
                 title: 'Laba Bersih',
-                href: '/admin/financial-reports/profit',
+                href: '/admin/financial-reports/net-profit',
                 icon: 'tabler:currency-dollar',
             },
         ],

@@ -13,6 +13,7 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\ManageRolePermissionController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuItemController;
+use App\Http\Controllers\NetProfitController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RevenueReportController;
@@ -269,6 +270,13 @@ Route::middleware(['auth', 'verified', 'role:admin'])
                         Route::get('/detail/date/{reportDate}', 'detailReport')->name('detailReport');
                         Route::get('/create', 'create')->name('create');
                         Route::post('/create', 'store')->name('store');
+                    });
+
+                Route::prefix('net-profit')
+                    ->name('net-profit.')
+                    ->controller(NetProfitController::class)
+                    ->group(function () {
+                        Route::get('/', 'index')->name('index');
                     });
             });
 
