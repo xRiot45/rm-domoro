@@ -23,7 +23,7 @@ class ExpenseReportController extends Controller
     public function detailReport($reportDate): Response
     {
         $expenseReport = ExpenseReport::with('expenseItems')->where('report_date', $reportDate)->first();
-        return Inertia::render('admin/pages/financial-reports/expense/pages/detail', [
+        return Inertia::render('admin/pages/financial-reports/expense/pages/detail-report/index', [
             'data' => $expenseReport
         ]);
     }

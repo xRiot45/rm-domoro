@@ -10,10 +10,11 @@ export interface ExpenseReport {
     report_date: string;
     description: string;
     total_expense: number;
-    items: ExpenseReportItem[];
+    expense_items: ExpenseReportItem[];
 }
 
 export interface ExpenseReportItem {
+    id: number;
     expense_name: string;
     description: string;
     amount: number;
