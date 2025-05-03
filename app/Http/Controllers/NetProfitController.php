@@ -18,24 +18,44 @@ class NetProfitController extends Model
         $dates = $revenueDates
             ->union($expenseDates)
             ->distinct()
-            ->orderBy('report_date', 'desc')
+            ->orderBy('report_date', 'asc') // urutan waktu untuk chart
             ->get()
             ->pluck('report_date');
 
-        $netProfits = $dates->map(function ($date) {
+        $labels = [];
+        $revenues = [];
+        $expenses = [];
+        $netProfitsChart = [];
+        $netProfitsTable = [];
+
+        foreach ($dates as $date) {
             $revenue = RevenueReport::where('report_date', $date)->sum('total_revenue');
             $expense = ExpenseReport::where('report_date', $date)->sum('total_expense');
+            $netProfit = $revenue - $expense;
 
-            return [
+            $labels[] = $date;
+            $revenues[] = $revenue;
+            $expenses[] = $expense;
+            $netProfitsChart[] = $netProfit;
+
+            $netProfitsTable[] = [
                 'date' => $date,
                 'revenue' => $revenue,
                 'expense' => $expense,
-                'net_profit' => $revenue - $expense,
+                'net_profit' => $netProfit,
             ];
-        });
+        }
 
         return Inertia::render('admin/pages/financial-reports/net-profit/index', [
-            'netProfits' => $netProfits,
+            'netProfits' => $netProfitsTable,
+            'chartData' => [
+                'labels' => $labels,
+                'datasets' => [
+                    'revenue' => $revenues,
+                    'expense' => $expenses,
+                    'net_profit' => $netProfitsChart,
+                ],
+            ],
         ]);
     }
 }

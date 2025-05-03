@@ -1,13 +1,15 @@
 import AdminLayout from '@/layouts/admin/layout';
-import { NetProfit } from '@/models/financial-reports';
+import { NetProfit, NetProfitChart } from '@/models/financial-reports';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import NetProfitTrendChart from './components/net-profit-chart';
 import ButtonPartials from './partials/buttons';
 import NetProfitTable from './partials/table';
 import { columns } from './partials/table/columns';
 
 interface NetProfitPageProps {
     netProfits: NetProfit[];
+    chartData: NetProfitChart;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function NetProfitPage({ netProfits }: NetProfitPageProps) {
+export default function NetProfitPage({ netProfits, chartData }: NetProfitPageProps) {
     return (
         <>
             <AdminLayout breadcrumbs={breadcrumbs}>
@@ -32,6 +34,10 @@ export default function NetProfitPage({ netProfits }: NetProfitPageProps) {
                         <p className="text-muted-foreground mt-1.5 text-[14px]">Kelola laporan laba bersih anda di sini</p>
                     </div>
                     <ButtonPartials />
+                </div>
+
+                <div className="p-4">
+                    <NetProfitTrendChart {...chartData} />
                 </div>
 
                 <div className="p-4">

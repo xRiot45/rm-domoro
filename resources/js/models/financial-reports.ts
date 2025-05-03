@@ -38,3 +38,12 @@ export interface NetProfit {
     expense: number;
     net_profit: number;
 }
+
+export interface NetProfitChart {
+    labels: string[];
+    datasets: {
+        revenue: number[];
+        expense: number[];
+        net_profit: number[];
+    };
+}
