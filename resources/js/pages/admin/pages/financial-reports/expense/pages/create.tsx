@@ -39,7 +39,6 @@ interface ExpenseReportItem {
 }
 
 export default function CreateExpenseReportPage({ availableDates }: { availableDates: string[] }) {
-    console.log(availableDates);
     const { data, setData, processing, errors, reset } = useForm({
         report_date: '',
         description: '',
@@ -92,7 +91,8 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
                 });
                 reset();
             },
-            onError: () => {
+            onError: (error) => {
+                console.log(error);
                 toast.error('Error', {
                     description: 'Laporan Pengeluaran Gagal Ditambahkan!',
                     action: {

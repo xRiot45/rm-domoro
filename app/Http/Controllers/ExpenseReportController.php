@@ -34,7 +34,6 @@ class ExpenseReportController extends Controller
         $validated = $request->validated();
         $validated['report_date'] = \Carbon\Carbon::parse($validated['report_date'])->toDateString();
 
-
         try {
             $totalExpense = collect($validated['items'])->sum('amount');
             $expenseReport = ExpenseReport::create([
@@ -51,12 +50,10 @@ class ExpenseReportController extends Controller
                 ]);
             }
 
-
             return redirect()
-                ->route('admin.expense-reports.index')
+                ->route('admin.financial-reports.expense.index')
                 ->with(['success' => 'Laporan pengeluaran berhasil ditambahkan.']);
         } catch (\Exception $e) {
-
             return redirect()
                 ->back()
                 ->withInput()
