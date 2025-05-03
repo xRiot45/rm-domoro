@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin/layout';
+import { ExpenseReportItem } from '@/models/expense';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
 import { Head, router, useForm } from '@inertiajs/react';
@@ -27,18 +28,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface ExpenseReportForm {
-    report_date: Date | null;
-    description: string;
-    items: ExpenseReportItem[];
-}
-
-interface ExpenseReportItem {
-    expense_name: string;
-    description: string;
-    amount: number;
-}
-
 export default function CreateExpenseReportPage({ availableDates }: { availableDates: string[] }) {
     const { data, setData, processing, errors, reset } = useForm({
         report_date: '',
@@ -47,7 +36,7 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
             {
                 expense_name: '',
                 description: '',
-                amount: '', // string kosong
+                amount: '',
             },
         ],
     });
