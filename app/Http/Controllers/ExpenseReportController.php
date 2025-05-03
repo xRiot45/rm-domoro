@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ExpenseReportRequest;
 use App\Models\ExpenseReport;
 use App\Models\RevenueReport;
-use Illuminate\Container\Attributes\DB;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,8 +19,8 @@ class ExpenseReportController extends Controller
 
     public function create(): Response
     {
-        $revenueReports = RevenueReport::pluck('report_date')->map(fn($date) => \Carbon\Carbon::parse($date)->toDateString());
-        $expenseReports = ExpenseReport::pluck('report_date')->map(fn($date) => \Carbon\Carbon::parse($date)->toDateString());
+        $revenueReports = RevenueReport::pluck('report_date')->map(fn($date) => Carbon::parse($date)->toDateString());
+        $expenseReports = ExpenseReport::pluck('report_date')->map(fn($date) => Carbon::parse($date)->toDateString());
         $availableDates = $revenueReports->diff($expenseReports);
 
         return Inertia::render('admin/pages/financial-reports/expense/pages/create', [
@@ -32,7 +31,7 @@ class ExpenseReportController extends Controller
     public function store(ExpenseReportRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $validated['report_date'] = \Carbon\Carbon::parse($validated['report_date'])->toDateString();
+        $validated['report_date'] = Carbon::parse($validated['report_date'])->toDateString();
 
         try {
             $totalExpense = collect($validated['items'])->sum('amount');
