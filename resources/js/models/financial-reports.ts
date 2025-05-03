@@ -19,3 +19,15 @@ export interface ExpenseReportItem {
     description: string;
     amount: number;
 }
+
+export interface ExpenseSummary {
+    total_expense: number;
+    total_reports: number;
+    total_items: number;
+    max_report_expense: number;
+    average_report_expense: number;
+    expense_by_date: {
+        report_date: string;
+        total: number;
+    }[];
+}

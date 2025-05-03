@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseReportRequest;
+use App\Models\ExpenseItem;
 use App\Models\ExpenseReport;
 use App\Models\RevenueReport;
 use Carbon\Carbon;
@@ -15,10 +16,24 @@ class ExpenseReportController extends Controller
     public function index(): Response
     {
         $expenseReport = ExpenseReport::with('expenseItems')->get();
+        $summary = [
+            'total_expense' => ExpenseReport::sum('total_expense'),
+            'total_reports' => ExpenseReport::count(),
+            'total_items' => ExpenseItem::count(),
+            'max_report_expense' => ExpenseReport::max('total_expense'),
+            'average_report_expense' => ExpenseReport::average('total_expense'),
+            'expense_by_date' => ExpenseReport::selectRaw('report_date, SUM(total_expense) as total')
+                ->groupBy('report_date')
+                ->orderBy('report_date', 'asc')
+                ->get(),
+        ];
+
         return Inertia::render('admin/pages/financial-reports/expense/index', [
-            'data' => $expenseReport
+            'data' => $expenseReport,
+            'summary' => $summary,
         ]);
     }
+
 
     public function detailReport($reportDate): Response
     {
