@@ -9,7 +9,7 @@ import AdminLayout from '@/layouts/admin/layout';
 import { ExpenseReportItem } from '@/models/expense';
 import { BreadcrumbItem } from '@/types';
 import { Icon } from '@iconify/react';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -66,7 +66,7 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
             ...data,
             items: data.items.map((item) => ({
                 ...item,
-                amount: parseInt(item.amount) || 0, // konversi ke number
+                amount: parseInt(item.amount) || 0,
             })),
         };
 
@@ -97,8 +97,8 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Laporan Pengeluaran" />
-            <form onSubmit={handleSubmit} className="mb-4">
-                <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="mb-4 px-4">
+                <div className="space-y-6">
                     <div id="report_date" className="flex flex-col">
                         <Label htmlFor="report_date" className="mb-2">
                             Tanggal Laporan
@@ -142,7 +142,7 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
                 </div>
 
                 {/* Form for items */}
-                <div className="mt-4">
+                <div className="mt-6">
                     <Label className="text-lg font-semibold">Detail Pengeluaran</Label>
 
                     {data.items.map((item, index) => (
@@ -195,6 +195,11 @@ export default function CreateExpenseReportPage({ availableDates }: { availableD
                         <Icon icon={'heroicons:plus'} />
                         Tambah Item
                     </Button>
+                    <Link href={route('admin.financial-reports.expense.index')}>
+                        <Button variant="destructive" className="cursor-pointer">
+                            Batalkan <Icon icon="iconoir:cancel" />
+                        </Button>
+                    </Link>
                     <Button type="submit" disabled={processing} className="cursor-pointer">
                         <Icon icon={'ic:outline-done-all'} />
                         Simpan Data
