@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Transaction } from '@/models/transaction';
+import { ExpenseReportItem } from '@/models/financial-reports';
 import { DataTableProps } from '@/types/tanstack';
 import {
     ColumnFiltersState,
@@ -17,7 +17,6 @@ import {
 import { useState } from 'react';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
-import { ExpenseReportItem } from '@/models/financial-reports';
 
 export default function DetailExpenseTable({ columns, data }: DataTableProps<ExpenseReportItem>) {
     const [rowSelection, setRowSelection] = useState({});
