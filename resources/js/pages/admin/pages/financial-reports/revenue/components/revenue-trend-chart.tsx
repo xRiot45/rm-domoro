@@ -3,15 +3,22 @@ import { Line } from 'react-chartjs-2';
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-export default function ExpenseTrendChart({ data }: { data: { report_date: string; total: number }[] }) {
+interface RevenueTrendChartProps {
+    data: {
+        report_date: string;
+        total_revenue: number;
+    }[];
+}
+
+export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
     const chartData = {
         labels: data.map((item) => item.report_date),
         datasets: [
             {
-                label: 'Pengeluaran Harian',
-                data: data.map((item) => item.total),
-                borderColor: '#fb2c36',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                label: 'Pendapatan Harian',
+                data: data.map((item) => item.total_revenue),
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
                 fill: true,
                 tension: 0.4,
             },
